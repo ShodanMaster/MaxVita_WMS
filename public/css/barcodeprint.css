@@ -1,0 +1,11 @@
+@media screen {
+    #printing pre {
+        display: none;
+    }
+}
+
+@media print {
+    #printing pre {
+        display: block;
+    }
+}
