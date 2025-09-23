@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('title');
             $table->string('link');
             $table->string('icon');
-            $table->integer('lisitng_order');
+            $table->integer('listing_order');
             $table->softDeletes();
             $table->timestamps();
         });

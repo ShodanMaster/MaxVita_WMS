@@ -20,12 +20,6 @@
           </div>
           <div class="dropdown-body">
             <ul class="profile-nav p-0 pt-3">
-			  <li class="nav-item">
-                <a href="{{ url('/') }}" class="nav-link">
-                  <i data-feather="user"></i>
-                  <span>Profile</span>
-                </a>
-              </li>
               <li class="nav-item">
                 <a href="javascript:;" class="nav-link">
                     <form method="POST" action="{{ route('logout') }}" id="frm">

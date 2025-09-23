@@ -8,6 +8,11 @@ Route::group(['middleware' => ['auth']], function () {
     // Add your authenticated routes here
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('logout', [LoginController::class, 'logout'])->name('logout');
+
+    //Masters
+
+    //Branch Master
+    Route::resource('branch', BranchController::class);
 });
 // Route::get('/', [DashboardController::class, 'index']);
 

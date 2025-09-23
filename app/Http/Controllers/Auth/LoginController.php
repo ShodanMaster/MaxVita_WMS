@@ -14,6 +14,7 @@ class LoginController extends Controller
 
     public function store(Request $request){
         try{
+            // dd($request->all());
             $request->validate([
                 'username' => 'required|string',
                 'password' => 'required|string',
@@ -27,6 +28,7 @@ class LoginController extends Controller
             if(Auth::attempt($credentials, $request->rememberMe)){
                 return redirect()->route('dashboard')->with('success', 'Logged In Succesfully');
             }
+
             return redirect()->back()->with('warning', 'Wrong Credentials');
 
         }catch(\Exception $e){
