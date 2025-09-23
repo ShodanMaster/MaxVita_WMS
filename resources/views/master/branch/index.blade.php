@@ -22,10 +22,6 @@
         <div class="row">
             <div class="col-md-12 text-right">
 
-
-
-
-
                 <a class="btn " href="{{route('branch.create')}}"> Add Branch
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" data-toggle="tooltip" data-placement="bottom" title="Add Branch" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-toggle="tooltip" data-placement="bottom" title="Add Product" class="feather feather-plus-circle text-primary">
                         <circle cx="12" cy="12" r="10"></circle>
@@ -41,9 +37,8 @@
 
             </div>
         </div>
-        {{-- </div> --}}
         <div class="table-responsive">
-            <table id="dataTableExample" class="table">
+            <table id="branchesTable" class="table">
                 <thead>
                     <tr>
                         <th align="center" style="width:80px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SI.No</th>
@@ -55,66 +50,6 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php
-                    $branch = $master;
-                    $i = $branch->perPage() * ($branch->currentPage() - 1);
-                    ?>
-                    @foreach($branch as $branches)
-                    <tr>
-                        <td align="center" style="width: 20px">
-
-                            {{ ++$i }}
-                        </td>
-
-                        <td align="left">
-                            {{$branches->name}}
-                        </td>
-                        <td align="left">
-                            {{$branches->branch_code}}
-                        </td>
-
-                        <td align="left">
-                            {{$branches->address}}
-                        </td>
-
-                        <td align="left">
-                            {{$branches->gst_no}}
-                        </td>
-
-                        </td>
-
-                        <div class="btn-group title-quick-actions">
-
-                            <td width="150px"><a href="{{route('branch.edit',$branches->id)}}" data-toggle="tooltip" data-placement="bottom" title="Edit">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit text-primary">
-                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                                    </svg></a>
-                                <div class="btn-group">
-                                    <form method="POST" action="/branch/{{ $branches->id }}" onsubmit="return confirm('Are you sure, You want to delete this Branch?')">
-                                        <!-- CSRF Token -->
-                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
-
-                                        <!-- Method Spoofing for DELETE -->
-                                        <input type="hidden" name="_method" value="DELETE">
-
-                                        <button type="submit" class="btn" data-toggle="tooltip" title="Delete">
-                                            <span class="fa fa-trash"></span>
-                                        </button>
-                                    </form>
-                                </div>
-                            </td>
-                        </div>
-
-
-                    </tr>
-                    @endforeach
-
-                    @if($i==0)
-                    <tr>
-                        <td align="center" colspan="8" style="color: red">No Record Found</td>
-                    </tr>
-                    @endif
                 </tbody>
             </table>
         </div>
@@ -156,5 +91,26 @@
 <script src="{{ asset('assets/js/dropify.js') }}"></script>
 <script src="{{ asset('assets/js/data-table.js') }}"></script>
 
+<script>
+    var table = $('#branchesTable').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: {
+            url: "{{ route('get-branches') }}",
+            type: "POST",
+            data: function(d) {
+                d._token = "{{ csrf_token() }}";
+            }
+        },
+        columns: [
+            { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+            { data: 'name', name: 'name' },
+            { data: 'branch_code', name: 'branch_code' },
+            { data: 'address', name: 'address' },
+            { data: 'gst_no', name: 'gst_no' },
+            { data: 'action', name: 'action', orderable: false, searchable: false }
+        ]
+    });
 
+</script>
 @endpush

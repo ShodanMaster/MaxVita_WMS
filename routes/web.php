@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Master\BranchController;
+use App\Http\Controllers\Master\LocationController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => ['auth']], function () {
@@ -14,6 +15,11 @@ Route::group(['middleware' => ['auth']], function () {
 
     //Branch Master
     Route::resource('branch', BranchController::class);
+    Route::post('get-branches', [BranchController::class, 'getBranches'])->name('get-branches');
+
+    //Location Master
+    Route::resource('location', LocationController::class);
+
 });
 
 Route::get('login', [LoginController::class, 'index'])->name('login');
