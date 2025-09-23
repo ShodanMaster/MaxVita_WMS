@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Master\BranchController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => ['auth']], function () {
@@ -14,7 +15,6 @@ Route::group(['middleware' => ['auth']], function () {
     //Branch Master
     Route::resource('branch', BranchController::class);
 });
-// Route::get('/', [DashboardController::class, 'index']);
 
 Route::get('login', [LoginController::class, 'index'])->name('login');
 Route::post('loging-in', [LoginController::class, 'store'])->name('login.store');

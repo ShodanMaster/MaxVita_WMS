@@ -60,7 +60,7 @@ class ThemeComposer
         $menu = Menu::all()->sortBy('listing_order');
         $submenu = (new Submenu)->getTable();
 
-        $branch_id = Auth::user()->branch_id ?? 0;
+        $branch_id = Auth::user()->branch_id;
 
         $config = Configuration::where('configurations.branch_id', '=', "{$branch_id}")->first();
 
@@ -165,7 +165,7 @@ class ThemeComposer
         } else {
             $pageSubtitle = '';
         }
-        $darkmode = Auth()->user()->darkmode ?? 0;
+        $darkmode = Auth()->user()->darkmode;
 
         $view->with(['activeMenu' => $mainmenu, 'activeSubmenu' => $submenu, 'pageTitle' => $pageTitle, 'pageSubtitle' => $pageSubtitle, 'darkmode' => $darkmode]);
     }
