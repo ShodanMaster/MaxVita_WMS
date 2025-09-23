@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Models\Sidebar;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Submenu extends Model
+class Branch extends Model
 {
     //
 }

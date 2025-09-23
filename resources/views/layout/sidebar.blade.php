@@ -2,7 +2,7 @@
 
 	<div class="sidebar-header">
 
-		<a href="{{route('home')}}" class="sidebar-brand">
+		<a href="{{route('dashboard')}}" class="sidebar-brand">
 
 			{{-- Stallion<span>  WMS</span> --}}
 			{{-- {{dd($config->front_logo);}} --}}

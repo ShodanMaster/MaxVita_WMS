@@ -21,18 +21,19 @@
           <div class="dropdown-body">
             <ul class="profile-nav p-0 pt-3">
 			  <li class="nav-item">
-                <a href="{{ url('/profile') }}" class="nav-link">
+                <a href="{{ url('/') }}" class="nav-link">
                   <i data-feather="user"></i>
                   <span>Profile</span>
                 </a>
               </li>
               <li class="nav-item">
                 <a href="javascript:;" class="nav-link">
-                  <i data-feather="log-out"></i>
-				         {{ Form::open( array("route"=>["logout"],"method"=>"POST","id"=>"frm") ) }}
-                  {{ csrf_field() }}
-                  <button type="submit" class="btn btn-primary" id="idOfButton">Sign out</button>
-                  {{ Form::close() }}
+                    <form method="POST" action="{{ route('logout') }}" id="frm">
+                        @csrf
+                        <button type="submit" class="nav-link btn btn-link" style="padding: 0; border: none; background: none;">
+                            <i data-feather="log-out"></i> Sign out
+                        </button>
+                    </form>
                 </a>
               </li>
             </ul>
