@@ -18,7 +18,6 @@
     <div class="card-body">
         <h6 class="card-title">Location Master</h6>
         @include('messages')
-        {{-- <p class="card-description">Add class <code>.table</code></p> --}}
         <div class="row">
             <div class="col-md-12 text-right">
                 <a class="btn " href="{{route('location.create')}}"> Add Location
@@ -30,14 +29,14 @@
                         <line x1="8" y1="12" x2="16" y2="12"></line>
                     </svg>
                 </a>
-                <a href=" {{route('location.uploadForm')}}" class="btn " data-toggle="tooltip" data-placement="bottom" title=" Location Upload" type="button"><i data-feather="upload" class="text-primary" style="font-size: 24px;"></i><b> Upload </b> </a>
+                {{-- <a href=" {{route('location.uploadForm')}}" class="btn " data-toggle="tooltip" data-placement="bottom" title=" Location Upload" type="button"><i data-feather="upload" class="text-primary" style="font-size: 24px;"></i><b> Upload </b> </a> --}}
 
-                <a href="{{ route("location.download.xls", ['format'=>'xls','id'=>null])}}" class="btn " data-toggle="tooltip" data-placement="bottom" title="Export Excel" type="button"><i class="mdi mdi-file-excel text-primary" style="font-size: 24px;"></i><b> Export </b> </a>
+                {{-- <a href="{{ route("location.download.xls", ['format'=>'xls','id'=>null])}}" class="btn " data-toggle="tooltip" data-placement="bottom" title="Export Excel" type="button"><i class="mdi mdi-file-excel text-primary" style="font-size: 24px;"></i><b> Export </b> </a> --}}
             </div>
         </div>
 
         <div class="table-responsive">
-            <table id="dataTableExample" class="table">
+            <table id="locationsTable" class="table">
                 <thead>
                     <tr>
                         <th align="center" style="width:80px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SI.No</th>
@@ -51,75 +50,10 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($location as $locations)
-                    <tr>
-                        <td align="center" style="width: 20px">{{ ++$i }}</td>
-                        <td align="left">{{$locations->Loc_Name}}</td>
-                        <td align="left">{{$locations->Prefix}}</td>
-                        <td align="left">{{$locations->branch->name}}</td>
-                        <td align="left">{{$locations->NAV_loc_code}}</td>
-                        <td align="left">
-                             @if ($locations->loc_type==1)
-                            QC Pending
-                            @endif
-                            @if ($locations->loc_type==2)
-                            Storage
-                            @endif
-                            @if ($locations->loc_type==3)
-                            Rejection
-                            @endif
-                            @if ($locations->loc_type==4)
-                            Dispatch
-                            @endif
-                        </td>
-                        <td align="left">{{$locations->Loc_Desc}}</td>
-                        </td>
-
-                        <div class="btn-group title-quick-actions">
-                            <td width="150px"><a href="{{route('location.edit',$locations->id)}}" data-toggle="tooltip" data-placement="bottom" title="Edit">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit text-primary">
-                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                                    </svg></a>
-
-                                <div class='btn-group'>
-                                    {{Form::open(array('method'=>'delete','route'=>["location.destroy",$locations->id]))}}<button data-toggle='tooltip' title='Delete' type='submit' class='btn btn-sm btn-default act-view' onclick="return confirm('Are you sure, You want to delete this Location?')"><span class='fa fa-trash'></span></button>{{Form::close()}}
-
-                                    <form method="POST" action="/location/{{ $branches->id }}" onsubmit="return confirm('Are you sure, You want to delete this Branch?')">
-                                        <!-- CSRF Token -->
-                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
-
-                                        <!-- Method Spoofing for DELETE -->
-                                        <input type="hidden" name="_method" value="DELETE">
-
-                                        <button type="submit" class="btn" data-toggle="tooltip" title="Delete">
-                                            <span class="fa fa-trash"></span>
-                                        </button>
-                                    </form>
-                                </div>
-
-                            </td>
-                        </div>
-
-
-                    </tr>
-                    @endforeach
-
-                    @if($i==0)
-                    <tr>
-                        <td align="center" colspan="8" style="color: red">No Record Found</td>
-                    </tr>
-                    @endif
                 </tbody>
             </table>
-
-
-
-
         </div>
     </div>
-
-    <!-- /.card-body -->
 </div>
 
 
@@ -150,5 +84,29 @@
 <script src="{{ asset('assets/js/dropify.js') }}"></script>
 <script src="{{ asset('assets/js/data-table.js') }}"></script>
 
+<script>
+    var table = $('#locationsTable').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: {
+            url: "{{ route('get-locations') }}",
+            type: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}'
+            }
+        },
+        columns: [
+            { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+            { data: 'name', name: 'name' },
+            { data: 'prefix', name: 'prefix' },
+            { data: 'branch_name', name: 'branch.name' },
+            { data: 'nav_loc_code', name: 'nav_loc_code' },
+            { data: 'location_type', name: 'location_type' },
+            { data: 'description', name: 'description' },
+            { data: 'action', name: 'action', orderable: false, searchable: false }
+        ]
+    });
+
+</script>
 
 @endpush

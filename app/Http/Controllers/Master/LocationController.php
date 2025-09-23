@@ -3,8 +3,12 @@
 namespace App\Http\Controllers\Master;
 
 use App\Http\Controllers\Controller;
+use App\Models\Branch;
 use App\Models\Location;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use RealRashid\SweetAlert\Facades\Alert;
+use Yajra\DataTables\Facades\DataTables;
 
 class LocationController extends Controller
 {
@@ -13,16 +17,57 @@ class LocationController extends Controller
      */
     public function index()
     {
-        $location = Location::all();
-        return view('master.location.index', compact('location'));
+        return view('master.location.index');
     }
 
+    public function getlocations(Request $request){
+        if ($request->ajax()) {
+
+            $locations = Location::with('branch')->select(['id', 'name', 'prefix', 'nav_loc_code', 'location_type', 'description', 'branch_id']);
+
+            return DataTables::of($locations)
+                ->addIndexColumn()
+                ->addColumn('branch_name', function ($row) {
+                    return $row->branch->name ?? '-';
+                })
+                ->addColumn('action', function ($row) {
+                    $editUrl = route('location.edit', $row->id);
+                    $deleteUrl = route('location.destroy', $row->id);
+                    $csrf = csrf_field();
+                    $method = method_field('DELETE');
+
+                    $btn = '
+                    <td width="150px">
+                        <a href="' . $editUrl . '" data-toggle="tooltip" data-placement="bottom" title="Edit">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit text-primary">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                            </svg>
+                        </a>
+                        <div class="btn-group">
+                            <form method="POST" action="' . $deleteUrl . '" onsubmit="return confirm(\'Are you sure, You want to delete this location?\')" style="display:inline;">
+                                ' . $csrf . '
+                                ' . $method . '
+                                <button type="submit" class="btn" data-toggle="tooltip" title="Delete">
+                                    <span class="fa fa-trash text-danger"></span>
+                                </button>
+                            </form>
+                        </div>
+                    </td>';
+
+                    return $btn;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+    }
     /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
-        //
+        $branches = Branch::all();
+        return view('master.location.create', compact('branches'));
     }
 
     /**
@@ -30,7 +75,35 @@ class LocationController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        try{
+            $request->validate([
+                'name' => 'required|string|unique:locations,name',
+                'prefix' => 'required|string',
+                'branch_id' => 'required|integer|exists:branches,id',
+                'nav_loc_code' => 'required|string',
+                'location_type' => 'required|string',
+                'description' => 'required|string'
+            ]);
+
+            Location::create([
+                'name' => $request->name,
+                'prefix' => $request->prefix,
+                'branch_id' => $request->branch_id,
+                'nav_loc_code' => $request->nav_loc_code,
+                'location_type' => $request->location_type,
+                'description' => $request->description
+            ]);
+
+            Alert::toast('Location added successfully!', 'success')->autoClose(3000);
+            return redirect()->route('location.index');
+        } catch (\Exception $e) {
+            dd($e);
+            Log::error('Location Store Error: ' . $e->getMessage());
+
+            Alert::toast('An error occurred while adding the location.', 'error')->autoClose(3000);
+            return redirect()->route('location.index');
+        }
     }
 
     /**
@@ -44,9 +117,10 @@ class LocationController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Location $location)
     {
-        //
+        $branches = Branch::all();
+        return view('master.location.create', compact('location', 'branches'));
     }
 
     /**
@@ -54,7 +128,34 @@ class LocationController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        try{
+            $request->validate([
+                'name' => 'required|string|unique:locations,name,'.$id,
+                'prefix' => 'required|string',
+                'branch_id' => 'required|integer|exists:branches,id',
+                'nav_loc_code' => 'required|string',
+                'location_type' => 'required|string',
+                'description' => 'required|string'
+            ]);
+
+            Location::where('id', $id)->update([
+                'name' => $request->name,
+                'prefix' => $request->prefix,
+                'branch_id' => $request->branch_id,
+                'nav_loc_code' => $request->nav_loc_code,
+                'location_type' => $request->location_type,
+                'description' => $request->description
+            ]);
+            Alert::toast('Location modified successfully', 'success')->autoClose(3000);
+            return redirect()->route('location.index');
+
+        } catch (\Exception $e) {
+            dd($e);
+            Log::error('Location Store Error: ' . $e->getMessage());
+
+            Alert::toast('An error occurred while adding the location.', 'error')->autoClose(3000);
+            return redirect()->route('location.index');
+        }
     }
 
     /**
@@ -62,6 +163,14 @@ class LocationController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try{
+            Location::where('id', $id)->delete();
+            Alert::toast('Location Deleted Successfully', 'success')->autoClose(3000);
+            return redirect()->route('branch.index');
+        } catch(\Exception $e){
+            Log::error('Location Delete Error: ' . $e->getMessage());
+            Alert::toast('An error occurred while deleting the branch.', 'error')->autoClose(3000);
+            return redirect()->route('branch.index');
+        }
     }
 }

@@ -15,4 +15,9 @@ class Branch extends Model
         'address',
         'gst_no',
     ];
+
+    public function locations()
+    {
+        return $this->hasMany(Location::class);
+    }
 }
