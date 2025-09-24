@@ -11,19 +11,17 @@
 <link href="{{ asset('assets/plugins/datatables-net/dataTables.bootstrap4.css') }}" rel="stylesheet" />
 
 @endpush
+
 @section('content')
 @include('sweetalert::alert')
-@include('messages')
-
 <div class="card">
     <div class="card-body">
-        <h6 class="card-title">Warehouse Master</h6>
-
+        <h6 class="card-title">Category Master</h6>
+        @include('messages')
         <div class="row">
             <div class="col-md-12 text-right">
-
-                <a class="btn " href="{{route('branch.create')}}"> Add Warehouse
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" data-toggle="tooltip" data-placement="bottom" title="Add Warehouse" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-toggle="tooltip" data-placement="bottom" title="Add Product" class="feather feather-plus-circle text-primary">
+                <a class="btn " href="{{route('category.create')}}"> Add Category
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" data-toggle="tooltip" data-placement="bottom" title="Add Location" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-toggle="tooltip" data-placement="bottom" title="Add Product" class="feather feather-plus-circle text-primary">
                         <circle cx="12" cy="12" r="10"></circle>
                         <line x1="12" y1="8" x2="12" y2="16">
 
@@ -31,18 +29,20 @@
                         <line x1="8" y1="12" x2="16" y2="12"></line>
                     </svg>
                 </a>
-                {{-- <a href="{{ route("branch.download.xls", ['format'=>'xls','id'=>null])}}" class="btn " data-toggle="tooltip" data-placement="bottom" title="Export Excel" type="button">Export<i class="mdi mdi-file-excel text-primary" style="font-size: 24px;"></i> </a> --}}
+                {{-- <a href=" {{route('category.uploadForm')}}" class="btn " data-toggle="tooltip" data-placement="bottom" title=" Category Upload" type="button"><i data-feather="upload" class="text-primary" style="font-size: 24px;"></i><b> Upload </b> </a> --}}
+
+                {{-- <a href="{{ route("category.download.xls", ['format'=>'xls','id'=>null])}}" class="btn " data-toggle="tooltip" data-placement="bottom" title="Export Excel" type="button"><i class="mdi mdi-file-excel text-primary" style="font-size: 24px;"></i><b> Export </b> </a> --}}
             </div>
         </div>
+
         <div class="table-responsive">
-            <table id="branchesTable" class="table">
+            <table id="categoriesTable" class="table">
                 <thead>
                     <tr>
                         <th align="center" style="width:80px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SI.No</th>
-                        <th>Warehouse Name</th>
-                        <th>Warehouse Code</th>
-                        <th>Address</th>
-                        <th>GST Number</th>
+                        <th>Category Name</th>
+                        <th>ERP Code</th>
+                        <th>Description</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -52,6 +52,8 @@
         </div>
     </div>
 </div>
+
+
 
 @endsection
 @push('plugin-scripts')
@@ -80,25 +82,42 @@
 <script src="{{ asset('assets/js/data-table.js') }}"></script>
 
 <script>
-    var table = $('#branchesTable').DataTable({
+    var table = $('#categoriesTable').DataTable({
         processing: true,
         serverSide: true,
         ajax: {
-            url: "{{ route('get-branches') }}",
-            type: "POST",
-            data: function(d) {
-                d._token = "{{ csrf_token() }}";
+            url: "{{ route('get-categories') }}",
+            type: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}'
             }
         },
-        columns: [
-            { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
-            { data: 'name', name: 'name' },
-            { data: 'branch_code', name: 'branch_code' },
-            { data: 'address', name: 'address' },
-            { data: 'gst_no', name: 'gst_no' },
-            { data: 'action', name: 'action', orderable: false, searchable: false }
+        columns: [{
+                data: 'DT_RowIndex',
+                name: 'DT_RowIndex',
+                orderable: false,
+                searchable: false
+            },
+            {
+                data: 'name',
+                name: 'name'
+            },
+            {
+                data: 'erp_code',
+                name: 'erp_code'
+            },
+            {
+                data: 'description',
+                name: 'description'
+            },
+            {
+                data: 'action',
+                name: 'action',
+                orderable: false,
+                searchable: false
+            }
         ]
     });
-
 </script>
+
 @endpush

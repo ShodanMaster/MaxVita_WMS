@@ -9,14 +9,17 @@
 <link href="{{ asset('assets/plugins/tempusdominus-bootstrap-4/tempusdominus-bootstrap-4.min.css') }}" rel="stylesheet" />
 <link href="{{ asset('assets/plugins/@mdi/css/materialdesignicons.min.css') }}" rel="stylesheet" />
 <link href="{{ asset('assets/plugins/datatables-net/dataTables.bootstrap4.css') }}" rel="stylesheet" />
-@endpush
+
+
+
 
 <style>
-    #branch_code {
+    #prifix {
         text-transform: uppercase;
     }
 </style>
 
+@endpush
 @section('content')
 @include('messages')
 <div class="container">
@@ -25,93 +28,59 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">
-                        @if (isset($branch))
-                            Update Warehouse
+                        @if (isset($uom))
+                        Update Uom
                         @else
-                            Add Warehouse
+                        Add Uom
                         @endif
                     </h5>
 
                     <form
-                        action="{{ isset($branch) ? route('branch.update', $branch->id) : route('branch.store') }}"
+                        action="{{ isset($uom) ? route('uom.update', $uom->id) : route('uom.store') }}"
                         method="POST"
                         enctype="multipart/form-data"
                         class="form-horizontal validate"
-                        autocomplete="off"
-                    >
+                        autocomplete="off">
                         @csrf
-                        @if (isset($branch))
-                            @method('PATCH')
+                        @if (isset($uom))
+                        @method('PATCH')
                         @endif
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <div class="form-group">
-                                    <label for="branch_code" class="col-sm-4 control-label">
-                                        Branch Code <font color="#FF0000">*</font>
-                                    </label>
-                                    <input
-                                        type="text"
-                                        name="branch_code"
-                                        id="branch_code"
-                                        maxlength="2"
-                                        required
-                                        class="form-control form-control-sm"
-                                        value="{{ old('branch_code', $branch->branch_code ?? '') }}"
-                                    >
-                                </div>
-                            </div>
-
-                            <div class="col-md-6 mb-3">
-                                <div class="form-group">
                                     <label for="name" class="col-sm-4 control-label">
-                                        Branch Name <font color="#FF0000">*</font>
+                                       Uom Name <font color="#FF0000">*</font>
                                     </label>
                                     <input
                                         type="text"
                                         name="name"
-                                        required
                                         class="form-control form-control-sm"
-                                        value="{{ old('name', $branch->name ?? '') }}"
-                                    >
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <div class="form-group">
-                                    <label for="address" class="col-sm-4 control-label">
-                                        Address <font color="#FF0000">*</font>
-                                    </label>
-                                    <textarea
-                                        name="address"
                                         required
-                                        class="form-control form-control-sm"
-                                        rows="4"
-                                    >{{ old('address', $branch->address ?? '') }}</textarea>
+                                        value="{{ old('name', $uom->name ?? '') }}">
                                 </div>
                             </div>
 
                             <div class="col-md-6 mb-3">
                                 <div class="form-group">
-                                    <label for="gst_no" class="col-sm-4 control-label">
-                                        GST Number <font color="#FF0000">*</font>
+                                    <label for="erp_code" class="col-sm-4 control-label">
+                                        Uom Code <font color="#FF0000">*</font>
                                     </label>
                                     <input
                                         type="text"
-                                        name="gst_no"
-                                        required
+                                        name="uom_code"
+                                        id="uom_code"
+                                        maxlength="3"
                                         class="form-control form-control-sm"
-                                        value="{{ old('gst_no', $branch->gst_no ?? '') }}"
-                                    >
+                                        required
+                                        value="{{ old('uom_code', $uom->uom_code ?? '') }}">
                                 </div>
                             </div>
                         </div>
 
                         <div class="card-body">
                             <button type="submit" class="btn btn-primary">
-                                {{ isset($branch) ? 'Update' : 'Add' }}
+                                {{ isset($uom) ? 'Update' : 'Add' }}
                             </button>
                             <input type="reset" class="btn btn-default" value="Clear" />
                         </div>
@@ -121,6 +90,15 @@
         </div>
     </div>
 </div>
+
+
+
+<script>
+
+
+</script>
+
+
 @endsection
 
 @push('plugin-scripts')
@@ -134,6 +112,7 @@
 <script src="{{ asset('assets/plugins/dropify/js/dropify.min.js') }}"></script>
 <script src="{{ asset('assets/plugins/datatables-net/jquery.dataTables.js') }}"></script>
 <script src="{{ asset('assets/plugins/datatables-net-bs4/dataTables.bootstrap4.js') }}"></script>
+
 @endpush
 
 @push('custom-scripts')
@@ -146,4 +125,6 @@
 <script src="{{ asset('assets/js/dropzone.js') }}"></script>
 <script src="{{ asset('assets/js/dropify.js') }}"></script>
 <script src="{{ asset('assets/js/data-table.js') }}"></script>
+
+
 @endpush
