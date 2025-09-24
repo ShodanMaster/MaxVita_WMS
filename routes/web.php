@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Master\BinController;
 use App\Http\Controllers\Master\BranchController;
+use App\Http\Controllers\Master\ItemController;
 use App\Http\Controllers\Master\LocationController;
 use Illuminate\Support\Facades\Route;
 
@@ -25,6 +26,10 @@ Route::group(['middleware' => ['auth']], function () {
     //Bin Master
     Route::resource('bin', BinController::class);
     Route::post('get-bins', [BinController::class, 'getBins'])->name('get-bins');
+
+    //Item Master
+    Route::resource('item', ItemController::class);
+    Route::post('get-item', [ItemController::class, 'getBins'])->name('get-items');
 
 });
 
