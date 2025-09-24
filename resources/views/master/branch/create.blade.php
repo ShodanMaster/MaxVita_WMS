@@ -48,7 +48,7 @@
                             <div class="col-md-6 mb-3">
                                 <div class="form-group">
                                     <label for="branch_code" class="col-sm-4 control-label">
-                                        Branch Code <font color="#FF0000">*</font>
+                                        Warehouse Code <font color="#FF0000">*</font>
                                     </label>
                                     <input
                                         type="text"
@@ -65,7 +65,7 @@
                             <div class="col-md-6 mb-3">
                                 <div class="form-group">
                                     <label for="name" class="col-sm-4 control-label">
-                                        Branch Name <font color="#FF0000">*</font>
+                                        Warehouse Name <font color="#FF0000">*</font>
                                     </label>
                                     <input
                                         type="text"

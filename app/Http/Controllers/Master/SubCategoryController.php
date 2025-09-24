@@ -80,7 +80,7 @@ class SubCategoryController extends Controller
         ]);
 
         try {
-           
+
 
             SubCategory::create([
                 'name' => $request->name,
@@ -89,7 +89,7 @@ class SubCategoryController extends Controller
                 'description' => $request->description
             ]);
 
-            Alert::toast('Subcategory added successfully!', 'success')->autoClose(3000);
+            Alert::toast('Sub Category added successfully!', 'success')->autoClose(3000);
             return redirect()->route('sub-category.index');
         } catch (\Exception $e) {
             // dd($e);
@@ -117,7 +117,7 @@ class SubCategoryController extends Controller
             'description' => 'required|string'
         ]);
         try {
-          
+
 
             SubCategory::where('id', $id)->update([
                 'name' => $request->name,

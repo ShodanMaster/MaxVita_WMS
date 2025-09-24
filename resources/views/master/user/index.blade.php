@@ -11,17 +11,19 @@
 <link href="{{ asset('assets/plugins/datatables-net/dataTables.bootstrap4.css') }}" rel="stylesheet" />
 
 @endpush
-
 @section('content')
 @include('sweetalert::alert')
+@include('messages')
+
 <div class="card">
     <div class="card-body">
-        <h6 class="card-title">Location Master</h6>
-        @include('messages')
+        <h6 class="card-title">User Master</h6>
+
         <div class="row">
             <div class="col-md-12 text-right">
-                <a class="btn " href="{{route('location.create')}}"> Add Location
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" data-toggle="tooltip" data-placement="bottom" title="Add Location" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-toggle="tooltip" data-placement="bottom" title="Add Product" class="feather feather-plus-circle text-primary">
+
+                <a class="btn " href="{{route('user.create')}}"> Add User
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" data-toggle="tooltip" data-placement="bottom" title="Add User" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-toggle="tooltip" data-placement="bottom" title="Add Product" class="feather feather-plus-circle text-primary">
                         <circle cx="12" cy="12" r="10"></circle>
                         <line x1="12" y1="8" x2="12" y2="16">
 
@@ -29,23 +31,20 @@
                         <line x1="8" y1="12" x2="16" y2="12"></line>
                     </svg>
                 </a>
-                {{-- <a href=" {{route('location.uploadForm')}}" class="btn " data-toggle="tooltip" data-placement="bottom" title=" Location Upload" type="button"><i data-feather="upload" class="text-primary" style="font-size: 24px;"></i><b> Upload </b> </a> --}}
-
-                {{-- <a href="{{ route("location.download.xls", ['format'=>'xls','id'=>null])}}" class="btn " data-toggle="tooltip" data-placement="bottom" title="Export Excel" type="button"><i class="mdi mdi-file-excel text-primary" style="font-size: 24px;"></i><b> Export </b> </a> --}}
+                {{-- <a href="{{ route("user.download.xls", ['format'=>'xls','id'=>null])}}" class="btn " data-toggle="tooltip" data-placement="bottom" title="Export Excel" type="button">Export<i class="mdi mdi-file-excel text-primary" style="font-size: 24px;"></i> </a> --}}
             </div>
         </div>
-
         <div class="table-responsive">
-            <table id="locationsTable" class="table">
+            <table id="usersTable" class="table">
                 <thead>
                     <tr>
                         <th align="center" style="width:80px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SI.No</th>
-                        <th>Location Name</th>
-                        <th>Location Prefix</th>
-                        <th>Warehouse Name</th>
-                        <th>ERP Code</th>
-                        <th>Location Type</th>
-                        <th>Description</th>
+                        <th>Name</th>
+                        <th>User Name</th>
+                        <th>Email</th>
+                        <th>User Type</th>
+                        <th>Location</th>
+                        <th>Permission Level</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -55,8 +54,6 @@
         </div>
     </div>
 </div>
-
-
 
 @endsection
 @push('plugin-scripts')
@@ -85,28 +82,27 @@
 <script src="{{ asset('assets/js/data-table.js') }}"></script>
 
 <script>
-    var table = $('#locationsTable').DataTable({
+    var table = $('#usersTable').DataTable({
         processing: true,
         serverSide: true,
         ajax: {
-            url: "{{ route('get-locations') }}",
-            type: 'POST',
-            data: {
-                _token: '{{ csrf_token() }}'
+            url: "{{ route('get-users') }}",
+            type: "POST",
+            data: function(d) {
+                d._token = "{{ csrf_token() }}";
             }
         },
         columns: [
             { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
             { data: 'name', name: 'name' },
-            { data: 'prefix', name: 'prefix' },
-            { data: 'branch_name', name: 'branch.name' },
-            { data: 'nav_loc_code', name: 'nav_loc_code' },
-            { data: 'location_type', name: 'location_type' },
-            { data: 'description', name: 'description' },
+            { data: 'username', name: 'username' },
+            { data: 'email', name: 'email' },
+            { data: 'user_type', name: 'user_type' },
+            { data: 'location_name', name: 'location_name' },
+            { data: 'permission_level', name: 'permission_level' },
             { data: 'action', name: 'action', orderable: false, searchable: false }
         ]
     });
 
 </script>
-
 @endpush

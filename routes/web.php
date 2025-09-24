@@ -12,6 +12,7 @@ use App\Http\Controllers\Master\LocationController;
 use App\Http\Controllers\Master\ReasonController;
 use App\Http\Controllers\Master\SubCategoryController;
 use App\Http\Controllers\Master\UomController;
+use App\Http\Controllers\Master\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => ['auth']], function () {
@@ -60,6 +61,10 @@ Route::group(['middleware' => ['auth']], function () {
     //Customer Master
     Route::resource('customer', CustomerController::class);
     Route::post('get-customers', [CustomerController::class, 'getCustomers'])->name('get-customers');
+
+    //user Master
+    Route::resource('user', UserController::class);
+    Route::post('get-users', [UserController::class, 'getUsers'])->name('get-users');
 
 });
 

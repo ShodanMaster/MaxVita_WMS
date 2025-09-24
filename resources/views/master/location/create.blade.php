@@ -85,7 +85,7 @@
                             <div class="col-md-6 mb-3">
                                 <div class="form-group">
                                     <label for="branch_id" class="col-sm-4 control-label">
-                                        Branch Name <font color="#FF0000">*</font>
+                                        Warehouse Name <font color="#FF0000">*</font>
                                     </label>
                                     <select
                                         name="branch_id"
