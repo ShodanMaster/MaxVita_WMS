@@ -52,7 +52,7 @@ class BinController extends Controller
 
                     return $btn;
                 })
-                ->rawColumns(['action']) // Allow HTML in 'action' column
+                ->rawColumns(['action'])
                 ->make(true);
         }
     }
