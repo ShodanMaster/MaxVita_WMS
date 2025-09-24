@@ -7,6 +7,7 @@ use App\Http\Controllers\Master\BranchController;
 use App\Http\Controllers\Master\BrandController;
 use App\Http\Controllers\Master\ItemController;
 use App\Http\Controllers\Master\LocationController;
+use App\Http\Controllers\Master\ReasonController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => ['auth']], function () {
@@ -35,6 +36,10 @@ Route::group(['middleware' => ['auth']], function () {
     //Brand Master
     Route::resource('brand', BrandController::class);
     Route::post('get-brands', [BrandController::class, 'getBrands'])->name('get-brands');
+
+    //Reason Master
+    Route::resource('reason', ReasonController::class);
+    Route::post('get-reasons', [ReasonController::class, 'getReasons'])->name('get-reasons');
 
 });
 
