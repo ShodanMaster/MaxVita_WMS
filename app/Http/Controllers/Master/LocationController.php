@@ -20,7 +20,7 @@ class LocationController extends Controller
         return view('master.location.index');
     }
 
-    public function getlocations(Request $request){
+    public function getLocations(Request $request){
         if ($request->ajax()) {
 
             $locations = Location::with('branch')->select(['id', 'name', 'prefix', 'nav_loc_code', 'location_type', 'description', 'branch_id']);
@@ -76,15 +76,16 @@ class LocationController extends Controller
     public function store(Request $request)
     {
 
+        $request->validate([
+            'name' => 'required|string|unique:locations,name',
+            'prefix' => 'required|string',
+            'branch_id' => 'required|integer|exists:branches,id',
+            'nav_loc_code' => 'required|string',
+            'location_type' => 'required|string',
+            'description' => 'required|string'
+        ]);
+
         try{
-            $request->validate([
-                'name' => 'required|string|unique:locations,name',
-                'prefix' => 'required|string',
-                'branch_id' => 'required|integer|exists:branches,id',
-                'nav_loc_code' => 'required|string',
-                'location_type' => 'required|string',
-                'description' => 'required|string'
-            ]);
 
             Location::create([
                 'name' => $request->name,
@@ -128,15 +129,16 @@ class LocationController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        $request->validate([
+            'name' => 'required|string|unique:locations,name,'.$id,
+            'prefix' => 'required|string',
+            'branch_id' => 'required|integer|exists:branches,id',
+            'nav_loc_code' => 'required|string',
+            'location_type' => 'required|string',
+            'description' => 'required|string'
+        ]);
+
         try{
-            $request->validate([
-                'name' => 'required|string|unique:locations,name,'.$id,
-                'prefix' => 'required|string',
-                'branch_id' => 'required|integer|exists:branches,id',
-                'nav_loc_code' => 'required|string',
-                'location_type' => 'required|string',
-                'description' => 'required|string'
-            ]);
 
             Location::where('id', $id)->update([
                 'name' => $request->name,
@@ -146,6 +148,7 @@ class LocationController extends Controller
                 'location_type' => $request->location_type,
                 'description' => $request->description
             ]);
+
             Alert::toast('Location modified successfully', 'success')->autoClose(3000);
             return redirect()->route('location.index');
 

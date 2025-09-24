@@ -12,106 +12,115 @@
 @endpush
 
 <style>
-    #branch_code {
+    #bin_code {
         text-transform: uppercase;
     }
 </style>
 
 @section('content')
-@include('messages')
 <div class="container">
     <div class="row">
         <div class="col-md-12 grid-margin">
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">
-                        @if (isset($branch))
-                            Update Branch
+                        @if (isset($bin))
+                            Update Bin
                         @else
-                            Add Branch
+                            Add Bin
                         @endif
                     </h5>
 
                     <form
-                        action="{{ isset($branch) ? route('branch.update', $branch->id) : route('branch.store') }}"
+                        action="{{ isset($bin) ? route('bin.update', $bin->id) : route('bin.store') }}"
                         method="POST"
                         enctype="multipart/form-data"
                         class="form-horizontal validate"
                         autocomplete="off"
                     >
                         @csrf
-                        @if (isset($branch))
+                        @if (isset($bin))
                             @method('PATCH')
                         @endif
 
+                        <!-- Bin Form Fields -->
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <div class="form-group">
-                                    <label for="branch_code" class="col-sm-4 control-label">
-                                        Branch Code <font color="#FF0000">*</font>
+                                    <label for="location_id" class="col-sm-4 control-label">
+                                        Storage Location <font color="#FF0000">*</font>
                                     </label>
-                                    <input
-                                        type="text"
-                                        name="branch_code"
-                                        id="branch_code"
-                                        maxlength="2"
+                                    <select
+                                        name="location_id"
+                                        class="js-example-basic-single form-select mandatory"
+                                        style="width: 100%;"
                                         required
-                                        class="form-control form-control-sm"
-                                        value="{{ old('branch_code', $branch->branch_code ?? '') }}"
                                     >
+                                        <option value="">--select--</option>
+                                        @foreach($locations as $location)
+                                            <option value="{{ $location->id }}"
+                                                {{ old('location_id', $bin->location_id ?? '') == $location->id ? 'selected' : '' }}>
+                                                {{ $location->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
 
                             <div class="col-md-6 mb-3">
                                 <div class="form-group">
+                                    <label for="bin_code" class="col-sm-4 control-label">
+                                        Bin Code <font color="#FF0000">*</font>
+                                    </label>
+                                    <input
+                                        type="text"
+                                        name="bin_code"
+                                        id="bin_code"
+                                        maxlength="2"
+                                        required
+                                        class="form-control form-control-sm"
+                                        value="{{ old('bin_code', $bin->bin_code ?? '') }}"
+                                    >
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Bin Name & Address -->
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="form-group">
                                     <label for="name" class="col-sm-4 control-label">
-                                        Branch Name <font color="#FF0000">*</font>
+                                        Bin Name <font color="#FF0000">*</font>
                                     </label>
                                     <input
                                         type="text"
                                         name="name"
                                         required
                                         class="form-control form-control-sm"
-                                        value="{{ old('name', $branch->name ?? '') }}"
+                                        value="{{ old('name', $bin->name ?? '') }}"
                                     >
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="row">
                             <div class="col-md-6 mb-3">
                                 <div class="form-group">
-                                    <label for="address" class="col-sm-4 control-label">
-                                        Address <font color="#FF0000">*</font>
+                                    <label for="description" class="col-sm-4 control-label">
+                                        Description <font color="#FF0000">*</font>
                                     </label>
                                     <textarea
-                                        name="address"
+                                        name="description"
                                         required
                                         class="form-control form-control-sm"
                                         rows="4"
-                                    >{{ old('address', $branch->address ?? '') }}</textarea>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6 mb-3">
-                                <div class="form-group">
-                                    <label for="gst_no" class="col-sm-4 control-label">
-                                        GST Number <font color="#FF0000">*</font>
-                                    </label>
-                                    <input
-                                        type="text"
-                                        name="gst_no"
-                                        required
-                                        class="form-control form-control-sm"
-                                        value="{{ old('gst_no', $branch->gst_no ?? '') }}"
-                                    >
+                                    >{{ old('description', $bin->description ?? '') }}</textarea>
                                 </div>
                             </div>
                         </div>
 
+                        <!-- Action Buttons -->
                         <div class="card-body">
                             <button type="submit" class="btn btn-primary">
-                                {{ isset($branch) ? 'Update' : 'Add' }}
+                                {{ isset($bin) ? 'Update' : 'Add' }}
                             </button>
                             <input type="reset" class="btn btn-default" value="Clear" />
                         </div>

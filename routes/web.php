@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Master\BinController;
 use App\Http\Controllers\Master\BranchController;
 use App\Http\Controllers\Master\LocationController;
 use Illuminate\Support\Facades\Route;
@@ -19,7 +20,11 @@ Route::group(['middleware' => ['auth']], function () {
 
     //Location Master
     Route::resource('location', LocationController::class);
-    Route::post('get-locations', [LocationController::class, 'getlocations'])->name('get-locations');
+    Route::post('get-locations', [LocationController::class, 'getLocations'])->name('get-locations');
+
+    //Bin Master
+    Route::resource('bin', BinController::class);
+    Route::post('get-bins', [BinController::class, 'getBins'])->name('get-bins');
 
 });
 
