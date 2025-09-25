@@ -26,6 +26,7 @@ Route::group(['middleware' => ['auth']], function () {
     //Branch Master
     Route::resource('branch', BranchController::class);
     Route::post('get-branches', [BranchController::class, 'getBranches'])->name('get-branches');
+    Route::get('branch-excel-export', [BranchController::class, 'branchExcelExport'])->name('branch-excel-export');
 
     //Location Master
     Route::resource('location', LocationController::class);

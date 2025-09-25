@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Master;
 
+use App\Exports\Master\BranchExport;
 use App\Http\Controllers\Controller;
 use App\Models\Branch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Facades\Excel;
 use RealRashid\SweetAlert\Facades\Alert;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -170,5 +172,9 @@ class BranchController extends Controller
             Alert::toast('An error occurred while deleting the branch.', 'error')->autoClose(3000);
             return redirect()->route('branch.index');
         }
+    }
+
+    public function branchExcelExport(){
+        return Excel::download(new BranchExport, 'warehouses.xlsx');
     }
 }
