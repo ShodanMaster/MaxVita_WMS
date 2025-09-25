@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers\Master;
 
+use App\Enums\PermissionLevel;
+use App\Enums\UserType;
+use App\Exports\Master\UserExport;
 use App\Http\Controllers\Controller;
 use App\Models\Location;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Facades\Excel;
 use RealRashid\SweetAlert\Facades\Alert;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -28,6 +32,10 @@ class UserController extends Controller
                 })
                 ->addColumn('location_name', function ($row) {
                     return $row->location->name ?? '-';
+                })->addColumn('user_type', function($row){
+                    return UserType::from($row->user_type)->label();
+                })->addColumn('permission_level', function($row){
+                    return PermissionLevel::from($row->permission_level)->label();
                 })
                 ->addColumn('action', function ($row) {
                     $editUrl = route('user.edit', $row->id);
@@ -156,6 +164,18 @@ class UserController extends Controller
             Log::error('User Delete Error: ' . $e->getMessage());
 
             Alert::toast('An error occurred while deleting the user.', 'error')->autoClose(3000);
+            return redirect()->route('user.index');
+        }
+    }
+
+    public function userExcelExport()
+    {
+        try {
+
+            return Excel::download(new UserExport, 'users.xlsx');
+        } catch (\Exception $e) {
+            Log::error('User Excel Export Error: ' . $e->getMessage());
+            Alert::toast('An error occurred while exporting users to Excel.', 'error')->autoClose(3000);
             return redirect()->route('user.index');
         }
     }
