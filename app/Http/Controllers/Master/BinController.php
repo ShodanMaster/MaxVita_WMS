@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Master;
 
+use App\Exports\Master\BinExport;
 use App\Http\Controllers\Controller;
 use App\Models\Bin;
 use App\Models\Location;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 use RealRashid\SweetAlert\Facades\Alert;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -155,5 +157,10 @@ class BinController extends Controller
         }catch(\Exception $e){
             return redirect()->back()->with('error', 'Something went wrong. Please try again.');
         }
+    }
+
+    public function binExcelExport()
+    {
+       return Excel::download(new BinExport, 'bins.xlsx');
     }
 }

@@ -36,6 +36,7 @@ Route::group(['middleware' => ['auth']], function () {
     //Bin Master
     Route::resource('bin', BinController::class);
     Route::post('get-bins', [BinController::class, 'getBins'])->name('get-bins');
+    Route::get('bin-excel-export', [BinController::class, 'binExcelExport'])->name('bin-excel-export');
 
     //Item Master
     Route::resource('item', ItemController::class);
