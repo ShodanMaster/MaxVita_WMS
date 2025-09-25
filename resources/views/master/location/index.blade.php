@@ -31,7 +31,7 @@
                 </a>
                 {{-- <a href=" {{route('location.uploadForm')}}" class="btn " data-toggle="tooltip" data-placement="bottom" title=" Location Upload" type="button"><i data-feather="upload" class="text-primary" style="font-size: 24px;"></i><b> Upload </b> </a> --}}
 
-                {{-- <a href="{{ route("location.download.xls", ['format'=>'xls','id'=>null])}}" class="btn " data-toggle="tooltip" data-placement="bottom" title="Export Excel" type="button"><i class="mdi mdi-file-excel text-primary" style="font-size: 24px;"></i><b> Export </b> </a> --}}
+                <a href="{{ route("location-excel-export")}}" class="btn " data-toggle="tooltip" data-placement="bottom" title="Export Excel" type="button"><i class="mdi mdi-file-excel text-primary" style="font-size: 24px;"></i><b> Export </b> </a>
             </div>
         </div>
 

@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers\Master;
 
+use App\Enums\LocationType;
+use App\Exports\Master\LocationExport;
 use App\Http\Controllers\Controller;
 use App\Models\Branch;
 use App\Models\Location;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Facades\Excel;
 use RealRashid\SweetAlert\Facades\Alert;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -29,6 +32,8 @@ class LocationController extends Controller
                 ->addIndexColumn()
                 ->addColumn('branch_name', function ($row) {
                     return $row->branch->name ?? '-';
+                })->addColumn('location_type', function ($row) {
+                    return LocationType::from($row->location_type)->label();
                 })
                 ->addColumn('action', function ($row) {
                     $editUrl = route('location.edit', $row->id);
@@ -175,5 +180,9 @@ class LocationController extends Controller
             Alert::toast('An error occurred while deleting the branch.', 'error')->autoClose(3000);
             return redirect()->route('branch.index');
         }
+    }
+
+    public function locationExcelExport(){
+        return Excel::download(new LocationExport, 'locations.xlsx');
     }
 }

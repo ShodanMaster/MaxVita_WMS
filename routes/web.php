@@ -31,6 +31,7 @@ Route::group(['middleware' => ['auth']], function () {
     //Location Master
     Route::resource('location', LocationController::class);
     Route::post('get-locations', [LocationController::class, 'getLocations'])->name('get-locations');
+    Route::get('location-excel-export', [LocationController::class, 'locationExcelExport'])->name('location-excel-export');
 
     //Bin Master
     Route::resource('bin', BinController::class);
