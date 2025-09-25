@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Master;
 
+use App\Exports\Master\CustomerExport;
 use App\Http\Controllers\Controller;
 use App\Models\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Facades\Excel;
 use RealRashid\SweetAlert\Facades\Alert;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -147,5 +149,11 @@ class CustomerController extends Controller
             Alert::toast('An error occurred while deleting the customer.', 'error')->autoClose(3000);
             return redirect()->route('customer.index');
         }
+    }
+
+    public function CustomerExcelExport()
+    {
+
+        return Excel::download(new CustomerExport, 'Customer Master.xlsx');
     }
 }

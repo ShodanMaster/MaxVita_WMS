@@ -45,6 +45,7 @@ Route::group(['middleware' => ['auth']], function () {
     //Brand Master
     Route::resource('brand', BrandController::class);
     Route::post('get-brands', [BrandController::class, 'getBrands'])->name('get-brands');
+    Route::get('brand-excel-export', [BrandController::class, 'brandExcelExport'])->name('brand-excel-export');
 
     //Reason Master
     Route::resource('reason', ReasonController::class);

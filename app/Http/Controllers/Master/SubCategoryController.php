@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Master;
 
+use App\Exports\Master\SubCategoryExport;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\SubCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Facades\Excel;
 use NunoMaduro\Collision\Adapters\Phpunit\Subscribers\Subscriber;
 use RealRashid\SweetAlert\Facades\Alert;
 use Yajra\DataTables\Facades\DataTables;
@@ -147,5 +149,11 @@ class SubCategoryController extends Controller
             Alert::toast('An error occurred while deleting the subcategory.', 'error')->autoClose(3000);
             return redirect()->route('sub-category.index');
         }
+    }
+
+    public function SubCategoryExcelExport()
+    {
+
+        return Excel::download(new SubCategoryExport, 'Category Master.xlsx');
     }
 }

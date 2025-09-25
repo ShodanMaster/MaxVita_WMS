@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Master;
 
+use App\Exports\Master\VendorExport;
 use App\Http\Controllers\Controller;
 use App\Models\Vendor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Facades\Excel;
 use RealRashid\SweetAlert\Facades\Alert;
 use Yajra\DataTables\Facades\DataTables;
 class VendorController extends Controller
@@ -150,5 +152,11 @@ class VendorController extends Controller
             Alert::toast('An error occurred while deleting the vendor.', 'error')->autoClose(3000);
             return redirect()->route('vendr.index');
         }
+    }
+
+    public function VendorExcelExport()
+    {
+
+        return Excel::download(new VendorExport, 'VendorMaster.xlsx');
     }
 }

@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Master;
 
+use App\Exports\Master\UomExport;
 use App\Http\Controllers\Controller;
 use App\Models\Uom;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Facades\Excel;
 use RealRashid\SweetAlert\Facades\Alert;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -134,5 +136,11 @@ class UomController extends Controller
             Alert::toast('An error occurred while deleting the uom.', 'error')->autoClose(3000);
             return redirect()->route('uom.index');
         }
+    }
+
+    public function UomExcelExport()
+    {
+
+        return Excel::download(new UomExport, 'Uom Master.xlsx');
     }
 }

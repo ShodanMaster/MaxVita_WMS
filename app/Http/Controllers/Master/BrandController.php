@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Master;
 
+use App\Exports\Master\BrandExport;
 use App\Http\Controllers\Controller;
 use App\Models\Brand;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Facades\Excel;
 use RealRashid\SweetAlert\Facades\Alert;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -115,6 +117,17 @@ class BrandController extends Controller
             Log::error('Brand Delete Error: ' . $e->getMessage());
 
             Alert::toast('An error occurred while deleting the brand.', 'error')->autoClose(3000);
+            return redirect()->route('brand.index');
+        }
+    }
+
+    public function brandExcelExport(){
+        try {
+            return Excel::download(new BrandExport, 'brands.xlsx');
+        } catch (\Exception $e) {
+            Log::error('Brand Excel Export Error: ' . $e->getMessage());
+
+            Alert::toast('An error occurred while exporting brands to Excel.', 'error')->autoClose(3000);
             return redirect()->route('brand.index');
         }
     }

@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Master;
 
+use App\Exports\Master\CategoryExport;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use RealRashid\SweetAlert\Facades\Alert;
 use Yajra\DataTables\Facades\DataTables;
+use Maatwebsite\Excel\Facades\Excel;
 
 class CategoryController extends Controller
 {
@@ -138,6 +140,12 @@ class CategoryController extends Controller
             Alert::toast('An error occurred while deleting the category.', 'error')->autoClose(3000);
             return redirect()->route('category.index');
         }
+    }
+
+    public function CategoryExcelExport()
+    {
+
+        return Excel::download(new CategoryExport,'Category Master.xlsx');
     }
 }
 
