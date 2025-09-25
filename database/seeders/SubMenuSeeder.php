@@ -81,7 +81,7 @@ class SubMenuSeeder extends Seeder
             [
                 'menu_id' => 2,
                 'title' => 'Vendor',
-                'link' => 'vendor',
+                'link' => 'vendr',
                 'listing_order' => 9,
                 'created_at' => now(),
             ],
