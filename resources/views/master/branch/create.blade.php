@@ -47,6 +47,21 @@
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <div class="form-group">
+                                    <label for="name" class="col-sm-4 control-label">
+                                        Warehouse Name <font color="#FF0000">*</font>
+                                    </label>
+                                    <input
+                                        type="text"
+                                        name="name"
+                                        required
+                                        class="form-control form-control-sm"
+                                        value="{{ old('name', $branch->name ?? '') }}"
+                                    >
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <div class="form-group">
                                     <label for="branch_code" class="col-sm-4 control-label">
                                         Warehouse Code <font color="#FF0000">*</font>
                                     </label>
@@ -58,21 +73,6 @@
                                         required
                                         class="form-control form-control-sm"
                                         value="{{ old('branch_code', $branch->branch_code ?? '') }}"
-                                    >
-                                </div>
-                            </div>
-
-                            <div class="col-md-6 mb-3">
-                                <div class="form-group">
-                                    <label for="name" class="col-sm-4 control-label">
-                                        Warehouse Name <font color="#FF0000">*</font>
-                                    </label>
-                                    <input
-                                        type="text"
-                                        name="name"
-                                        required
-                                        class="form-control form-control-sm"
-                                        value="{{ old('name', $branch->name ?? '') }}"
                                     >
                                 </div>
                             </div>

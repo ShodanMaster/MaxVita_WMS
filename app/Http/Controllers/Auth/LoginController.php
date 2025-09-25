@@ -25,11 +25,15 @@ class LoginController extends Controller
                 'password' => $request->password,
             ];
 
-            if(Auth::attempt($credentials, $request->rememberMe)){
+            $remember = $request->has('rememberMe') && $request->rememberMe;
+
+            if(Auth::attempt($credentials, $remember)){
                 return redirect()->route('dashboard')->with('success', 'Logged In Succesfully');
             }
 
-            return redirect()->back()->with('warning', 'Wrong Credentials');
+            return back()->withErrors([
+                'login' => 'Invalid username or password.'
+            ])->withInput();
 
         }catch(\Exception $e){
             return redirect()->back()->with('error', $e->getMessage());

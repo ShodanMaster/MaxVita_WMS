@@ -76,7 +76,7 @@ class BranchController extends Controller
     {
         $request->validate([
             'name' => 'required|string|unique:branches,name',
-            'branch_code' => 'required|string',
+            'branch_code' => 'required|string|unique:branches,branch_code',
             'address' => 'nullable|string',
             'gst_no' => 'nullable|string',
         ]);
@@ -132,14 +132,15 @@ class BranchController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        $request->validate([
+            'name' => 'required|string|unique:branches,name,'.$id,
+            'branch_code' => 'required|string|unique:branches,branch_code,'.$id,
+            'address' => 'nullable|string',
+            'gst_no' => 'nullable|string',
+        ]);
+        
         try{
 
-            $request->validate([
-                'name' => 'required|string|unique:branches,name,'.$id,
-                'branch_code' => 'required|string',
-                'address' => 'nullable|string',
-                'gst_no' => 'nullable|string',
-            ]);
 
             Branch::where('id', $id)->update([
                 'name'        => $request->get('name'),

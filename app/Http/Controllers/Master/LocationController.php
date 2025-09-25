@@ -83,7 +83,7 @@ class LocationController extends Controller
 
         $request->validate([
             'name' => 'required|string|unique:locations,name',
-            'prefix' => 'required|string',
+            'prefix' => 'required|string|unique:locations,prefix',
             'branch_id' => 'required|integer|exists:branches,id',
             'nav_loc_code' => 'required|string',
             'location_type' => 'required|string',
@@ -136,7 +136,7 @@ class LocationController extends Controller
     {
         $request->validate([
             'name' => 'required|string|unique:locations,name,'.$id,
-            'prefix' => 'required|string',
+            'prefix' => 'required|string|unique:locations,prefix,'.$id,
             'branch_id' => 'required|integer|exists:branches,id',
             'nav_loc_code' => 'required|string',
             'location_type' => 'required|string',
