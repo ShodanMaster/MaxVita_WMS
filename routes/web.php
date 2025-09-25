@@ -49,6 +49,7 @@ Route::group(['middleware' => ['auth']], function () {
     //Reason Master
     Route::resource('reason', ReasonController::class);
     Route::post('get-reasons', [ReasonController::class, 'getReasons'])->name('get-reasons');
+    Route::get('reason-excel-export', [ReasonController::class, 'reasonExcelExport'])->name('reason-excel-export');
 
     //Category Master
     Route::resource('category', CategoryController::class);

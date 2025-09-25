@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Master;
 
+use App\Exports\Master\ReasonExport;
 use App\Http\Controllers\Controller;
 use App\Models\Reason;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Facades\Excel;
 use RealRashid\SweetAlert\Facades\Alert;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -124,6 +126,17 @@ class ReasonController extends Controller
             Log::error('Reason Delete Error: ' . $e->getMessage());
 
             Alert::toast('An error occurred while deleting the reason.', 'error')->autoClose(3000);
+            return redirect()->route('reason.index');
+        }
+    }
+
+    public function reasonExcelExport()
+    {
+        try {
+            return Excel::download(new ReasonExport, 'reasons.xlsx');
+        } catch (\Exception $e) {
+            Log::error('Reason Excel Export Error: ' . $e->getMessage());
+            Alert::toast('An error occurred while exporting reasons to Excel.', 'error')->autoClose(3000);
             return redirect()->route('reason.index');
         }
     }
