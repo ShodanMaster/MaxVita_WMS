@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Master;
 
 use App\Exports\Master\BranchExport;
 use App\Http\Controllers\Controller;
+use App\Imports\Master\BranchImport;
 use App\Models\Branch;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
@@ -93,7 +95,7 @@ class BranchController extends Controller
             Alert::toast('Warehouse Added Successfully', 'success')->autoClose(3000);
             return redirect()->route('branch.index');
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             dd($e);
             Log::error('Warehouse Store Error: ' . $e->getMessage());
 
@@ -120,7 +122,7 @@ class BranchController extends Controller
 
             return view("master.branch.create", compact('branch'));
 
-        } catch(\Exception $e){
+        } catch(Exception $e){
             Log::error('Warehouse Edit Error: ' . $e->getMessage());
             Alert::toast('An error occurred while fetching the warehouse details.', 'error')->autoClose(3000);
             return redirect()->route('branch.index');
@@ -151,7 +153,7 @@ class BranchController extends Controller
 
             Alert::toast('Branch Modified successfully', 'success')->autoClose(3000);
             return redirect()->route('branch.index');
-        } catch(\Exception $e){
+        } catch(Exception $e){
             dd($e);
             Log::error('Warehouse Update Error: ' . $e->getMessage());
             Alert::toast('An error occurred while updating the warehouse details.', 'error')->autoClose(3000);
@@ -168,7 +170,7 @@ class BranchController extends Controller
             Branch::where('id', $id)->delete();
             Alert::toast('Warehouse Deleted Successfully', 'success')->autoClose(3000);
             return redirect()->route('branch.index');
-        } catch(\Exception $e){
+        } catch(Exception $e){
             Log::error('Warehouse Delete Error: ' . $e->getMessage());
             Alert::toast('An error occurred while deleting the warehouse.', 'error')->autoClose(3000);
             return redirect()->route('branch.index');
@@ -178,10 +180,30 @@ class BranchController extends Controller
     public function branchExcelExport(){
         try{
             return Excel::download(new BranchExport, 'warehouses.xlsx');
-        } catch(\Exception $e){
+        } catch(Exception $e){
             Log::error('Branch Excel Export Error: ' . $e->getMessage());
             Alert::toast('An error occurred while branch excel exporting.', 'error')->autoClose(3000);
             return redirect()->route('branch.index');
         }
     }
+
+    public function branchExcelUpload(Request $request){
+        $request->validate([
+            'excel_file' => 'required|file|mimes:xlsx,xls'
+        ]);
+
+        try{
+            Excel::import(new BranchImport, $request->file('excel_file'));
+
+            Alert::toast('Branch Excel file imported successfully.', 'success')->autoClose(3000);
+            return redirect()->route('branch.index');
+
+        } catch(Exception $e){
+            // dd($e);
+            Log::error('Branch Excel Import Error: ' . $e->getMessage());
+            Alert::toast('An error occurred while branch excel importin: .'. $e->getMessage(), 'error')->autoClose(3000);
+            return redirect()->route('branch.index');
+        }
+    }
+
 }

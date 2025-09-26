@@ -13,12 +13,11 @@
 @endpush
 @section('content')
 @include('sweetalert::alert')
-@include('messages')
 
 <div class="card">
     <div class="card-body">
         <h6 class="card-title">User Master</h6>
-
+        @include('messages')
         <div class="row">
             <div class="col-md-12 text-right">
 

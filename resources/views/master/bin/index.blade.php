@@ -11,19 +11,17 @@
 <link href="{{ asset('assets/plugins/datatables-net/dataTables.bootstrap4.css') }}" rel="stylesheet" />
 
 @endpush
+
 @section('content')
 @include('sweetalert::alert')
-@include('messages')
-
 <div class="card">
     <div class="card-body">
         <h6 class="card-title">Bin Master</h6>
-
+        @include('messages')
         <div class="row">
             <div class="col-md-12 text-right">
-
                 <a class="btn " href="{{route('bin.create')}}"> Add Bin
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" data-toggle="tooltip" data-placement="bottom" title="Add Bin" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-toggle="tooltip" data-placement="bottom" title="Add Product" class="feather feather-plus-circle text-primary">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" data-toggle="tooltip" data-placement="bottom" title="Add Location" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-toggle="tooltip" data-placement="bottom" title="Add Product" class="feather feather-plus-circle text-primary">
                         <circle cx="12" cy="12" r="10"></circle>
                         <line x1="12" y1="8" x2="12" y2="16">
 
@@ -31,15 +29,13 @@
                         <line x1="8" y1="12" x2="16" y2="12"></line>
                     </svg>
                 </a>
-                {{-- <a href=" {{route('customer.uploadForm')}}" class="btn " data-toggle="tooltip" data-placement="bottom" title="Customer Upload" type="button"></a> --}}
 
                 <!-- Button trigger modal -->
-                <button type="button" class="btn" data-toggle="modal" data-target="#exampleModal">
+                <button type="button" class="btn" data-toggle="modal" data-target="#uploadModal">
                     <i data-feather="upload" class="text-primary" style="font-size: 24px;"></i><b> Upload </b>
                 </button>
 
-
-                <a href="{{ route("bin-excel-export")}}" class="btn " data-toggle="tooltip" data-placement="bottom" title="Export Excel" type="button"><i class="mdi mdi-file-excel text-primary" style="font-size: 24px;"></i><b>Export</b></a>
+                <a href="{{ route("bin-excel-export")}}" class="btn " data-toggle="tooltip" data-placement="bottom" title="Export Excel" type="button"><i class="mdi mdi-file-excel text-primary" style="font-size: 24px;"></i><b> Export </b> </a>
             </div>
         </div>
         <div class="table-responsive">
@@ -62,11 +58,11 @@
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Bin Excel Upload</h5>
+        <h5 class="modal-title" id="uploadModalLabel">Bin Excel Upload</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -82,7 +78,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary">Upload</button>
+            <button type="submit" class="btn btn-primary" id="uploadButton">Upload</button>
           </div>
       </form>
     </div>
@@ -134,6 +130,10 @@
             { data: 'description', name: 'description' },
             { data: 'action', name: 'action', orderable: false, searchable: false }
         ]
+    });
+
+    $('#uploadModal form').on('submit', function () {
+        $('#uploadButton').prop('disabled', true).text('Uploading...');
     });
 
 </script>

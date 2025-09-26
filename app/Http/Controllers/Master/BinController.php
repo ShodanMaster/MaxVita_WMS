@@ -197,9 +197,9 @@ class BinController extends Controller
             return redirect()->route('bin.index');
 
         } catch(Exception $e){
-            dd($e);
+            // dd($e);
             Log::error('Bin Excel Import Error: ' . $e->getMessage());
-            Alert::toast('An error occurred while bin excel importing.', 'error')->autoClose(3000);
+            Alert::toast('An error occurred while bin excel importing: '.$e->getMessage(), 'error')->autoClose(3000);
             return redirect()->route('bin.index');
         }
     }
