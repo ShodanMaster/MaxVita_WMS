@@ -90,14 +90,14 @@ class BranchController extends Controller
                 'gst_no'      => $request->get('gst_no'),
             ]);
 
-            Alert::toast('Branch Added Successfully', 'success')->autoClose(3000);
+            Alert::toast('Warehouse Added Successfully', 'success')->autoClose(3000);
             return redirect()->route('branch.index');
 
         } catch (\Exception $e) {
             dd($e);
-            Log::error('Branch Store Error: ' . $e->getMessage());
+            Log::error('Warehouse Store Error: ' . $e->getMessage());
 
-            Alert::toast('An error occurred while adding the branch.', 'error')->autoClose(3000);
+            Alert::toast('An error occurred while adding the warehouse.', 'error')->autoClose(3000);
             return redirect()->route('branch.index');
         }
     }
@@ -121,8 +121,8 @@ class BranchController extends Controller
             return view("master.branch.create", compact('branch'));
 
         } catch(\Exception $e){
-            Log::error('Branch Edit Error: ' . $e->getMessage());
-            Alert::toast('An error occurred while fetching the branch details.', 'error')->autoClose(3000);
+            Log::error('Warehouse Edit Error: ' . $e->getMessage());
+            Alert::toast('An error occurred while fetching the warehouse details.', 'error')->autoClose(3000);
             return redirect()->route('branch.index');
         }
     }
@@ -138,7 +138,7 @@ class BranchController extends Controller
             'address' => 'nullable|string',
             'gst_no' => 'nullable|string',
         ]);
-        
+
         try{
 
 
@@ -153,8 +153,8 @@ class BranchController extends Controller
             return redirect()->route('branch.index');
         } catch(\Exception $e){
             dd($e);
-            Log::error('Branch Update Error: ' . $e->getMessage());
-            Alert::toast('An error occurred while updating the branch details.', 'error')->autoClose(3000);
+            Log::error('Warehouse Update Error: ' . $e->getMessage());
+            Alert::toast('An error occurred while updating the warehouse details.', 'error')->autoClose(3000);
             return redirect()->route('branch.index');
         }
     }
@@ -166,16 +166,22 @@ class BranchController extends Controller
     {
         try{
             Branch::where('id', $id)->delete();
-            Alert::toast('Branch Deleted Successfully', 'success')->autoClose(3000);
+            Alert::toast('Warehouse Deleted Successfully', 'success')->autoClose(3000);
             return redirect()->route('branch.index');
         } catch(\Exception $e){
-            Log::error('Branch Delete Error: ' . $e->getMessage());
-            Alert::toast('An error occurred while deleting the branch.', 'error')->autoClose(3000);
+            Log::error('Warehouse Delete Error: ' . $e->getMessage());
+            Alert::toast('An error occurred while deleting the warehouse.', 'error')->autoClose(3000);
             return redirect()->route('branch.index');
         }
     }
 
     public function branchExcelExport(){
-        return Excel::download(new BranchExport, 'warehouses.xlsx');
+        try{
+            return Excel::download(new BranchExport, 'warehouses.xlsx');
+        } catch(\Exception $e){
+            Log::error('Branch Excel Export Error: ' . $e->getMessage());
+            Alert::toast('An error occurred while branch excel exporting.', 'error')->autoClose(3000);
+            return redirect()->route('branch.index');
+        }
     }
 }

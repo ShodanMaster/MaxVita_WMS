@@ -96,7 +96,15 @@ class CategoryController extends Controller
 
     public function edit(Category $category)
     {
-        return view('master.category.create', compact('category'));
+        try{
+
+            return view('master.category.create', compact('category'));
+        } catch (\Exception $e) {
+            Log::error('Category Update Error: ' . $e->getMessage());
+
+            Alert::toast('An error occurred while updating the category.', 'error')->autoClose(3000);
+            return redirect()->route('category.index');
+        }
     }
 
     public function update(Request $request, string $id)
@@ -142,7 +150,14 @@ class CategoryController extends Controller
 
     public function CategoryExcelExport()
     {
-        return Excel::download(new CategoryExport,'Category Master.xlsx');
+        try{
+            return Excel::download(new CategoryExport,'Category Master.xlsx');
+        } catch (\Exception $e) {
+            Log::error('Category Excel Export Error: ' . $e->getMessage());
+
+            Alert::toast('An error occurred while exporting categorys to Excel.', 'error')->autoClose(3000);
+            return redirect()->route('category.index');
+        }
     }
 }
 

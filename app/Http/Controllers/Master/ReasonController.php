@@ -88,7 +88,15 @@ class ReasonController extends Controller
     }
 
     public function edit(Reason $reason){
-        return view('master.reason.create', compact('reason'));
+        try{
+            return view('master.reason.create', compact('reason'));
+        } catch (\Exception $e) {
+            dd($e);
+            Log::error('Reason Store Error: ' . $e->getMessage());
+
+            Alert::toast('An error occurred while fetching the reason.', 'error')->autoClose(3000);
+            return redirect()->route('reason.index');
+        }
     }
 
     public function update(Request $request, Reason $reason){

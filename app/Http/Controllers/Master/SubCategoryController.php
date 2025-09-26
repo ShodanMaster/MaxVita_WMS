@@ -104,8 +104,16 @@ class SubCategoryController extends Controller
 
     public function edit(SubCategory $sub_category)
     {
-        $categories = Category::all();
-        return view('master.subcategory.create', compact('sub_category','categories'));
+        try{
+            $categories = Category::all();
+            return view('master.subcategory.create', compact('sub_category','categories'));
+        } catch (\Exception $e) {
+            // dd($e);
+            Log::error('SubCategory Edit Error: ' . $e->getMessage());
+
+            Alert::toast('An error occurred while Fetching the subcategory.', 'error')->autoClose(3000);
+            return redirect()->route('sub-category.index');
+        }
     }
 
 
@@ -153,6 +161,12 @@ class SubCategoryController extends Controller
 
     public function subCategoryExcelExport()
     {
-        return Excel::download(new SubCategoryExport, 'Sub_Categories.xlsx');
+        try{
+            return Excel::download(new SubCategoryExport, 'Sub_Categories.xlsx');
+        } catch (\Exception $e) {
+            Log::error('Subcategory Excel Export Error: ' . $e->getMessage());
+            Alert::toast('An error occurred while excel exporting the subcategory.', 'error')->autoClose(3000);
+            return redirect()->route('sub-category.index');
+        }
     }
 }

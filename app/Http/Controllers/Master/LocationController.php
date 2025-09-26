@@ -125,8 +125,16 @@ class LocationController extends Controller
      */
     public function edit(Location $location)
     {
-        $branches = Branch::all();
-        return view('master.location.create', compact('location', 'branches'));
+        try{
+            $branches = Branch::all();
+            return view('master.location.create', compact('location', 'branches'));
+        } catch (\Exception $e) {
+            dd($e);
+            Log::error('Location Fetch Error: ' . $e->getMessage());
+
+            Alert::toast('An error occurred while fetching the location.', 'error')->autoClose(3000);
+            return redirect()->route('location.index');
+        }
     }
 
     /**
@@ -174,15 +182,21 @@ class LocationController extends Controller
         try{
             Location::where('id', $id)->delete();
             Alert::toast('Location Deleted Successfully', 'success')->autoClose(3000);
-            return redirect()->route('branch.index');
+            return redirect()->route('location.index');
         } catch(\Exception $e){
             Log::error('Location Delete Error: ' . $e->getMessage());
-            Alert::toast('An error occurred while deleting the branch.', 'error')->autoClose(3000);
-            return redirect()->route('branch.index');
+            Alert::toast('An error occurred while deleting the location.', 'error')->autoClose(3000);
+            return redirect()->route('location.index');
         }
     }
 
     public function locationExcelExport(){
-        return Excel::download(new LocationExport, 'locations.xlsx');
+        try{
+            return Excel::download(new LocationExport, 'locations.xlsx');
+        } catch(\Exception $e){
+            Log::error('Location Excel Exporting Error: ' . $e->getMessage());
+            Alert::toast('An error occurred while excel exporting the location.', 'error')->autoClose(3000);
+            return redirect()->route('location.index');
+        }
     }
 }

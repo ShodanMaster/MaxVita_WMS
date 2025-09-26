@@ -83,8 +83,15 @@ class BrandController extends Controller
     }
 
     public function edit(Brand $brand){
+        try{
+            return view('master.brand.create', compact('brand'));
+        } catch (\Exception $e) {
+            dd($e);
+            Log::error('Brand Fetch Error: ' . $e->getMessage());
 
-        return view('master.brand.create', compact('brand'));
+            Alert::toast('An error occurred while fetching the brand.', 'error')->autoClose(3000);
+            return redirect()->route('brand.index');
+        }
     }
 
     public function update(Request $request, Brand $brand){

@@ -102,17 +102,25 @@ class UserController extends Controller
 
         }catch(\Exception $e){
             dd($e);
-            Log::error('SubCategory Store Error: ' . $e->getMessage());
+            Log::error('User Store Error: ' . $e->getMessage());
 
-            Alert::toast('An error occurred while adding the subcategory.', 'error')->autoClose(3000);
-            return redirect()->route('sub-category.index');
+            Alert::toast('An error occurred while adding the user.', 'error')->autoClose(3000);
+            return redirect()->route('user.index');
         }
 
     }
 
     public function edit(User $user){
-        $locations = Location::all();
-        return view('master.user.create', compact('user', 'locations'));
+        try{
+            $locations = Location::all();
+            return view('master.user.create', compact('user', 'locations'));
+        }catch(\Exception $e){
+            dd($e);
+            Log::error('User Edit Error: ' . $e->getMessage());
+
+            Alert::toast('An error occurred while fetching the user.', 'error')->autoClose(3000);
+            return redirect()->route('user.index');
+        }
     }
 
     public function update(Request $request, User $user){
@@ -171,7 +179,6 @@ class UserController extends Controller
     public function userExcelExport()
     {
         try {
-
             return Excel::download(new UserExport, 'users.xlsx');
         } catch (\Exception $e) {
             Log::error('User Excel Export Error: ' . $e->getMessage());

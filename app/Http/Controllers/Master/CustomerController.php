@@ -153,6 +153,12 @@ class CustomerController extends Controller
 
     public function CustomerExcelExport()
     {
-        return Excel::download(new CustomerExport, 'Customer_Master.xlsx');
+        try{
+            return Excel::download(new CustomerExport, 'Customer_Master.xlsx');
+        } catch (\Exception $e) {
+            Log::error('Customer Excel Export Error: ' . $e->getMessage());
+            Alert::toast('An error occurred while excel exporting the customer.', 'error')->autoClose(3000);
+            return redirect()->route('customer.index');
+        }
     }
 }

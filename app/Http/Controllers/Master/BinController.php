@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Bin;
 use App\Models\Location;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 use RealRashid\SweetAlert\Facades\Alert;
 use Yajra\DataTables\Facades\DataTables;
@@ -88,11 +89,13 @@ class BinController extends Controller
                 'description' => $request->description,
             ]);
 
-            Alert::toast('Branch Added Successfully', 'success')->autoClose(3000);
+            Alert::toast('Bin Added Successfully', 'success')->autoClose(3000);
             return redirect()->route('bin.index');
 
-        }catch(\Exception $e){
-            return redirect()->back()->with('error', 'Something went wrong. Please try again.');
+        } catch(\Exception $e){
+            Log::error('Bin Store Error: ' . $e->getMessage());
+            Alert::toast('An error occurred while storing the Bin.', 'error')->autoClose(3000);
+            return redirect()->route('bin.index');
         }
     }
 
@@ -109,8 +112,14 @@ class BinController extends Controller
      */
     public function edit(Bin $bin)
     {
-        $locations = Location::all();
-        return view('master.bin.create', compact('bin', 'locations'));
+        try{
+            $locations = Location::all();
+            return view('master.bin.create', compact('bin', 'locations'));
+        } catch(\Exception $e){
+            Log::error('Bin Edit Error: ' . $e->getMessage());
+            Alert::toast('An error occurred while fetching the bin details.', 'error')->autoClose(3000);
+            return redirect()->route('bin.index');
+        }
     }
 
     /**
@@ -137,8 +146,10 @@ class BinController extends Controller
             Alert::toast('Bin Updated Successfully', 'success')->autoClose(3000);
             return redirect()->route('bin.index');
 
-        }catch(\Exception $e){
-            return redirect()->back()->with('error', 'Something went wrong. Please try again.');
+        } catch(\Exception $e){
+            Log::error('Bin Update Error: ' . $e->getMessage());
+            Alert::toast('An error occurred while updating the Bin.', 'error')->autoClose(3000);
+            return redirect()->route('bin.index');
         }
     }
 
@@ -154,13 +165,21 @@ class BinController extends Controller
             Alert::toast('Bin Deleted Successfully', 'success')->autoClose(3000);
             return redirect()->route('bin.index');
 
-        }catch(\Exception $e){
-            return redirect()->back()->with('error', 'Something went wrong. Please try again.');
+        } catch(\Exception $e){
+            Log::error('Bin Delete Error: ' . $e->getMessage());
+            Alert::toast('An error occurred while deleting the Bin.', 'error')->autoClose(3000);
+            return redirect()->route('bin.index');
         }
     }
 
     public function binExcelExport()
     {
-       return Excel::download(new BinExport, 'bins.xlsx');
+        try{
+            return Excel::download(new BinExport, 'bins.xlsx');
+        } catch(\Exception $e){
+            Log::error('Bin Excel Export Error: ' . $e->getMessage());
+            Alert::toast('An error occurred while bin excel exporting.', 'error')->autoClose(3000);
+            return redirect()->route('bin.index');
+        }
     }
 }

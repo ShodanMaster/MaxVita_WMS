@@ -85,7 +85,7 @@ class UomController extends Controller
             Alert::toast('Uom added successfully!', 'success')->autoClose(3000);
             return redirect()->route('uom.index');
         } catch (\Exception $e) {
-             dd($e);
+            dd($e);
             Log::error('Uom Store Error: ' . $e->getMessage());
 
             Alert::toast('An error occurred while adding the uom.', 'error')->autoClose(3000);
@@ -95,8 +95,15 @@ class UomController extends Controller
 
     public function edit(Uom $uom)
     {
+        try{
+            return view('master.uom.create', compact('uom'));
+        } catch (\Exception $e) {
+            dd($e);
+            Log::error('Uom Edit Error: ' . $e->getMessage());
 
-        return view('master.uom.create', compact('uom'));
+            Alert::toast('An error occurred while fetching the uom.', 'error')->autoClose(3000);
+            return redirect()->route('uom.index');
+        }
     }
 
     public function update(Request $request, string $id)
@@ -140,6 +147,12 @@ class UomController extends Controller
 
     public function uomExcelExport()
     {
-        return Excel::download(new UomExport, 'Uom_Master.xlsx');
+        try{
+            return Excel::download(new UomExport, 'Uom_Master.xlsx');
+        } catch (\Exception $e) {
+            Log::error('Uom Excel Export Error: ' . $e->getMessage());
+            Alert::toast('An error occurred while excel exporting the uom.', 'error')->autoClose(3000);
+            return redirect()->route('uom.index');
+        }
     }
 }

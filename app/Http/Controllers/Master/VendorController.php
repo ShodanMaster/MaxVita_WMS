@@ -102,7 +102,15 @@ class VendorController extends Controller
 
     public function edit(Vendor $vendr)
     {
-        return view('master.vendor.create', compact('vendr'));
+        try{
+            return view('master.vendor.create', compact('vendr'));
+        } catch (\Exception $e) {
+            // dd($e);
+            Log::error('Vendor Edit Error: ' . $e->getMessage());
+
+            Alert::toast('An error occurred while fetching the vendor.', 'error')->autoClose(3000);
+            return redirect()->route('vendr.index');
+        }
     }
 
     public function update(Request $request, string $id)
@@ -156,6 +164,14 @@ class VendorController extends Controller
 
     public function vendorExcelExport()
     {
-        return Excel::download(new VendorExport, 'VendorMaster.xlsx');
+        try{
+            return Excel::download(new VendorExport, 'VendorMaster.xlsx');
+        } catch (\Exception $e) {
+            // dd($e);
+            Log::error('Vendor Excel Export Error: ' . $e->getMessage());
+
+            Alert::toast('An error occurred while excel exporting the vendor.', 'error')->autoClose(3000);
+            return redirect()->route('vendr.index');
+        }
     }
 }
