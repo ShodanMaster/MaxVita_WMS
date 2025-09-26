@@ -55,18 +55,22 @@ Route::group(['middleware' => ['auth']], function () {
     //Category Master
     Route::resource('category', CategoryController::class);
     Route::post('get-categories', [CategoryController::class, 'getCategories'])->name('get-categories');
+    Route::get('category-excel-export', [CategoryController::class, 'categoryExcelExport'])->name('category-excel-export');
 
     //subcategory Master
     Route::resource('sub-category', SubCategoryController::class);
     Route::post('get-sub-categories', [SubCategoryController::class, 'getSubCategory'])->name('get-sub-categories');
+    Route::get('sub-category-excel-export', [SubCategoryController::class, 'subCategoryExcelExport'])->name('sub-category-excel-export');
 
     //Uom  Mater
     Route::resource('uom',UomController::class);
     Route::post('get-uoms', [UomController::class, 'getUoms'])->name('get-uoms');
+    Route::get('uom-excel-export', [UomController::class, 'uomExcelExport'])->name('uom-excel-export');
 
     //Customer Master
     Route::resource('customer', CustomerController::class);
     Route::post('get-customers', [CustomerController::class, 'getCustomers'])->name('get-customers');
+    Route::get('customer-excel-export', [CustomerController::class, 'customerExcelExport'])->name('customer-excel-export');
 
     //User Master
     Route::resource('user', UserController::class);
@@ -76,6 +80,7 @@ Route::group(['middleware' => ['auth']], function () {
     //Vendor Master
     Route::resource('vendr', VendorController::class);
     Route::post('get-vendors', [VendorController::class, 'getVendors'])->name('get-vendors');
+    Route::get('vendor-excel-export', [VendorController::class, 'vendorExcelExport'])->name('vendor-excel-export');
 
 });
 

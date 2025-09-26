@@ -26,7 +26,7 @@ class CustomerController extends Controller
 
             return DataTables::of($customers)
                 ->addIndexColumn()
-                
+
                 ->addColumn('action', function ($row) {
                     $editUrl = route('customer.edit', $row->id);
                     $deleteUrl = route('customer.destroy', $row->id);
@@ -68,7 +68,7 @@ class CustomerController extends Controller
     {
 
         $request->validate([
-            'name' => 'required|string|unique:customers,name',
+            'name' => 'required|string',
             'customer_code' => 'required|string',
             'shipping_code' => 'required|string',
             'customer_address' => 'required|string',
@@ -106,7 +106,7 @@ class CustomerController extends Controller
     {
 
         $request->validate([
-            'name' => 'required|string|unique:customers,name',
+            'name' => 'required|string',
             'customer_code' => 'required|string',
             'shipping_code' => 'required|string',
             'customer_address' => 'required|string',
@@ -153,7 +153,6 @@ class CustomerController extends Controller
 
     public function CustomerExcelExport()
     {
-
-        return Excel::download(new CustomerExport, 'Customer Master.xlsx');
+        return Excel::download(new CustomerExport, 'Customer_Master.xlsx');
     }
 }

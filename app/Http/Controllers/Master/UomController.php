@@ -26,7 +26,7 @@ class UomController extends Controller
 
             return DataTables::of($uoms)
                 ->addIndexColumn()
-                
+
                 ->addColumn('action', function ($row) {
                     $editUrl = route('uom.edit', $row->id);
                     $deleteUrl = route('uom.destroy', $row->id);
@@ -72,16 +72,16 @@ class UomController extends Controller
 
         $request->validate([
             'name' => 'required|string|unique:uoms,name',
-            'uom_code' => 'required|string'
+            'uom_code' => 'required|string|unique:uoms,uom_code'
         ]);
-       
+
         try {
 
          Uom::create([
                 'name' => $request->name,
                 'uom_code' => $request->uom_code
             ]);
-           
+
             Alert::toast('Uom added successfully!', 'success')->autoClose(3000);
             return redirect()->route('uom.index');
         } catch (\Exception $e) {
@@ -104,7 +104,7 @@ class UomController extends Controller
 
         $request->validate([
             'name' => 'required|string|unique:uoms,name,' . $id,
-            'uom_code' => 'required|string'
+            'uom_code' => 'required|string|unique:uoms,uom_code,' . $id,
         ]);
         try {
 
@@ -138,9 +138,8 @@ class UomController extends Controller
         }
     }
 
-    public function UomExcelExport()
+    public function uomExcelExport()
     {
-
-        return Excel::download(new UomExport, 'Uom Master.xlsx');
+        return Excel::download(new UomExport, 'Uom_Master.xlsx');
     }
 }

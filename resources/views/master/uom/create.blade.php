@@ -14,7 +14,7 @@
 
 
 <style>
-    #prifix {
+    #uom_code {
         text-transform: uppercase;
     }
 </style>

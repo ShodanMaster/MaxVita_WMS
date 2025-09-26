@@ -77,7 +77,7 @@ class SubCategoryController extends Controller
         $request->validate([
             'name' => 'required|string|unique:sub_categories,name',
             'category_id' => 'required|integer|exists:categories,id',
-            'sub_category_code' => 'required|string',
+            'sub_category_code' => 'required|string|unique:sub_categories,sub_category_code',
             'description' => 'required|string'
         ]);
 
@@ -113,9 +113,9 @@ class SubCategoryController extends Controller
     {
 
         $request->validate([
-            'name' => 'required|string|unique:sub_categories,name',
+            'name' => 'required|string|unique:sub_categories,name,'. $id,
             'category_id' => 'required|integer|exists:categories,id',
-            'sub_category_code' => 'required|string',
+            'sub_category_code' => 'required|string|unique:sub_categories,sub_category_code,'. $id,
             'description' => 'required|string'
         ]);
         try {
@@ -151,9 +151,8 @@ class SubCategoryController extends Controller
         }
     }
 
-    public function SubCategoryExcelExport()
+    public function subCategoryExcelExport()
     {
-
-        return Excel::download(new SubCategoryExport, 'Category Master.xlsx');
+        return Excel::download(new SubCategoryExport, 'Sub_Categories.xlsx');
     }
 }

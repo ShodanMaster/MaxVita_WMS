@@ -15,7 +15,7 @@ class CategoryController extends Controller
 {
     public function index()
     {
-        
+
         return view('master.category.index');
     }
 
@@ -27,7 +27,7 @@ class CategoryController extends Controller
 
             return DataTables::of($categories)
                 ->addIndexColumn()
-              
+
                 ->addColumn('action', function ($row) {
                     $editUrl = route('category.edit', $row->id);
                     $deleteUrl = route('category.destroy', $row->id);
@@ -63,8 +63,7 @@ class CategoryController extends Controller
 
     public function create()
     {
-        $categories = Category::all();
-        return view('master.category.create', compact('categories'));
+        return view('master.category.create');
     }
 
     public function store(Request $request)
@@ -72,7 +71,7 @@ class CategoryController extends Controller
 
         $request->validate([
             'name' => 'required|string|unique:categories,name',
-            'erp_code' => 'required|string',
+            'erp_code' => 'required|string|unique:categories,erp_code',
             'description' => 'required|string'
         ]);
 
@@ -97,20 +96,19 @@ class CategoryController extends Controller
 
     public function edit(Category $category)
     {
-      
         return view('master.category.create', compact('category'));
     }
 
     public function update(Request $request, string $id)
     {
-
         $request->validate([
             'name' => 'required|string|unique:categories,name,' . $id,
-            'erp_code' => 'required|string',
+            'erp_code' => 'required|string|unique:categories,erp_code,' . $id,
             'description' => 'required|string'
         ]);
+
         try {
-          
+
 
             Category::where('id', $id)->update([
                 'name' => $request->name,
@@ -144,7 +142,6 @@ class CategoryController extends Controller
 
     public function CategoryExcelExport()
     {
-
         return Excel::download(new CategoryExport,'Category Master.xlsx');
     }
 }

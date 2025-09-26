@@ -31,7 +31,7 @@
                 </a>
                 {{-- <a href=" {{route('sub-category.uploadForm')}}" class="btn " data-toggle="tooltip" data-placement="bottom" title=" sub-category Upload" type="button"><i data-feather="upload" class="text-primary" style="font-size: 24px;"></i><b> Upload </b> </a> --}}
 
-                {{-- <a href="{{ route("sub-category.download.xls", ['format'=>'xls','id'=>null])}}" class="btn " data-toggle="tooltip" data-placement="bottom" title="Export Excel" type="button"><i class="mdi mdi-file-excel text-primary" style="font-size: 24px;"></i><b> Export </b> </a> --}}
+                <a href="{{ route("sub-category-excel-export")}}" class="btn " data-toggle="tooltip" data-placement="bottom" title="Export Excel" type="button"><i class="mdi mdi-file-excel text-primary" style="font-size: 24px;"></i><b> Export </b> </a>
             </div>
         </div>
 
@@ -40,7 +40,7 @@
                 <thead>
                     <tr>
                         <th align="center" style="width:80px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SI.No</th>
-                        <th>SubCategory Name</th>
+                        <th>Sub Category Name</th>
                         <th>Category Name</th>
                         <th>SubCategory Code</th>
                         <th>Description</th>

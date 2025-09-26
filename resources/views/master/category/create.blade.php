@@ -14,7 +14,7 @@
 
 
 <style>
-    #prifix {
+    #erp_code {
         text-transform: uppercase;
     }
 </style>
@@ -93,7 +93,7 @@
                             </div>
                         </div>
 
-                        
+
 
                         <div class="card-body">
                             <button type="submit" class="btn btn-primary">

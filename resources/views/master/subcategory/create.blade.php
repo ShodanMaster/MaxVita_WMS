@@ -50,7 +50,7 @@
                             <div class="col-md-6 mb-3">
                                 <div class="form-group">
                                     <label for="category_id" class="col-sm-4 control-label">
-                                        Category Name<font color="#FF0000">*</font>
+                                        Category<font color="#FF0000">*</font>
                                     </label>
                                     <select
                                         name="category_id"
@@ -71,7 +71,7 @@
                             <div class="col-md-6 mb-3">
                                 <div class="form-group">
                                     <label for="name" class="col-sm-4 control-label">
-                                        SubCategory Name <font color="#FF0000">*</font>
+                                        Name<font color="#FF0000">*</font>
                                     </label>
                                     <input
                                         type="text"
@@ -87,7 +87,7 @@
                             <div class="col-md-6 mb-3">
                                 <div class="form-group">
                                     <label for="sub_category_code" class="col-sm-4 control-label">
-                                        SubCategory Code <font color="#FF0000">*</font>
+                                        Sub Category Code<font color="#FF0000">*</font>
                                     </label>
                                     <input
                                         type="text"
@@ -101,7 +101,7 @@
                             <div class="col-md-6 mb-3">
                                 <div class="form-group">
                                     <label for="description" class="col-sm-4 control-label">
-                                        Description <font color="#FF0000">*</font>
+                                        Description<font color="#FF0000">*</font>
                                     </label>
                                     <input
                                         type="text"

@@ -25,7 +25,7 @@ class VendorController extends Controller
 
             return DataTables::of($vendors)
                 ->addIndexColumn()
-                
+
                 ->addColumn('action', function ($row) {
                     $editUrl = route('vendr.edit', $row->id);
                     $deleteUrl = route('vendr.destroy', $row->id);
@@ -67,7 +67,7 @@ class VendorController extends Controller
     {
 
         $request->validate([
-            'name' => 'required|string|unique:vendors,name',
+            'name' => 'required|string',
             'vendor_code' => 'required|string',
             'location' => 'required|string',
             'address' => 'required|string',
@@ -77,7 +77,7 @@ class VendorController extends Controller
         ]);
 
         try {
-           
+
 
             Vendor::create([
                 'name' => $request->name,
@@ -110,7 +110,7 @@ class VendorController extends Controller
 
 
         $request->validate([
-            'name' => 'required|string|unique:vendors,name,' . $id,
+            'name' => 'required|string',
             'vendor_code' => 'required|string',
             'location' => 'required|string',
             'address' => 'required|string',
@@ -154,9 +154,8 @@ class VendorController extends Controller
         }
     }
 
-    public function VendorExcelExport()
+    public function vendorExcelExport()
     {
-
         return Excel::download(new VendorExport, 'VendorMaster.xlsx');
     }
 }

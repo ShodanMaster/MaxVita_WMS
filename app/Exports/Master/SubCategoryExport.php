@@ -27,7 +27,7 @@ class SubCategoryExport implements FromCollection, WithHeadings, ShouldAutoSize,
                 'Description'         => $sub->description,
             ];
         });
-        
+
     }
 
     public function headings(): array
@@ -55,7 +55,7 @@ class SubCategoryExport implements FromCollection, WithHeadings, ShouldAutoSize,
     {
         $sheet->getStyle('1')->getFont()->setBold(true);
 
-        $sheet->getStyle('A1:C1')->applyFromArray([
+        $sheet->getStyle('A1:D1')->applyFromArray([
             'fill' => [
                 'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
                 'color' => ['argb' => "FFaeaaaa"]
