@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Master;
 use App\Enums\LocationType;
 use App\Exports\Master\LocationExport;
 use App\Http\Controllers\Controller;
+use App\Imports\Master\LocationImport;
 use App\Models\Branch;
 use App\Models\Location;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
@@ -103,7 +105,7 @@ class LocationController extends Controller
 
             Alert::toast('Location added successfully!', 'success')->autoClose(3000);
             return redirect()->route('location.index');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             dd($e);
             Log::error('Location Store Error: ' . $e->getMessage());
 
@@ -128,7 +130,7 @@ class LocationController extends Controller
         try{
             $branches = Branch::all();
             return view('master.location.create', compact('location', 'branches'));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             dd($e);
             Log::error('Location Fetch Error: ' . $e->getMessage());
 
@@ -165,7 +167,7 @@ class LocationController extends Controller
             Alert::toast('Location modified successfully', 'success')->autoClose(3000);
             return redirect()->route('location.index');
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             dd($e);
             Log::error('Location Store Error: ' . $e->getMessage());
 
@@ -183,7 +185,7 @@ class LocationController extends Controller
             Location::where('id', $id)->delete();
             Alert::toast('Location Deleted Successfully', 'success')->autoClose(3000);
             return redirect()->route('location.index');
-        } catch(\Exception $e){
+        } catch(Exception $e){
             Log::error('Location Delete Error: ' . $e->getMessage());
             Alert::toast('An error occurred while deleting the location.', 'error')->autoClose(3000);
             return redirect()->route('location.index');
@@ -193,9 +195,28 @@ class LocationController extends Controller
     public function locationExcelExport(){
         try{
             return Excel::download(new LocationExport, 'locations.xlsx');
-        } catch(\Exception $e){
+        } catch(Exception $e){
             Log::error('Location Excel Exporting Error: ' . $e->getMessage());
             Alert::toast('An error occurred while excel exporting the location.', 'error')->autoClose(3000);
+            return redirect()->route('location.index');
+        }
+    }
+
+    public function locationExcelUpload(Request $request){
+        $request->validate([
+            'excel_file' => 'required|file|mimes:xlsx,xls'
+        ]);
+
+        try{
+            Excel::import(new LocationImport, $request->file('excel_file'));
+
+            Alert::toast('Location Excel file imported successfully.', 'success')->autoClose(3000);
+            return redirect()->route('location.index');
+
+        } catch(Exception $e){
+            // dd($e);
+            Log::error('Location Excel Import Error: ' . $e->getMessage());
+            Alert::toast('An error occurred while location excel importin: .'. $e->getMessage(), 'error')->autoClose(3000);
             return redirect()->route('location.index');
         }
     }
