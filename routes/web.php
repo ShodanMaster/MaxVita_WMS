@@ -14,6 +14,7 @@ use App\Http\Controllers\Master\SubCategoryController;
 use App\Http\Controllers\Master\UomController;
 use App\Http\Controllers\Master\UserController;
 use App\Http\Controllers\Master\VendorController;
+use App\Http\Controllers\Utility\PermissionController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => ['auth']], function () {
@@ -90,6 +91,12 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('get-vendors', [VendorController::class, 'getVendors'])->name('get-vendors');
     Route::get('vendor-excel-export', [VendorController::class, 'vendorExcelExport'])->name('vendor-excel-export');
     Route::post('vendor-excel-upload', [VendorController::class, 'vendorExcelUpload'])->name('vendor-excel-upload');
+
+    //Utitlity
+
+    //Permission
+    Route::resource('permission', PermissionController::class);
+    Route::post('get-permission-menu', [PermissionController::class, 'getPermissionMenu'])->name('get-permission-menu');
 
 });
 
