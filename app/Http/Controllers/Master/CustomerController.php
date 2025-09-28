@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Master;
 
 use App\Exports\Master\CustomerExport;
 use App\Http\Controllers\Controller;
+use App\Imports\Master\CustomerImport;
 use App\Models\Customer;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
@@ -88,7 +90,7 @@ class CustomerController extends Controller
 
             Alert::toast('Customer added successfully!', 'success')->autoClose(3000);
             return redirect()->route('customer.index');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // dd($e);
             Log::error('Customer Store Error: ' . $e->getMessage());
 
@@ -126,7 +128,7 @@ class CustomerController extends Controller
             ]);
             Alert::toast('Customer modified successfully', 'success')->autoClose(3000);
             return redirect()->route('customer.index');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             dd($e);
             Log::error('Customer Store Error: ' . $e->getMessage());
 
@@ -144,7 +146,7 @@ class CustomerController extends Controller
             Customer::where('id', $id)->delete();
             Alert::toast('Customer Deleted Successfully', 'success')->autoClose(3000);
             return redirect()->route('customer.index');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('Customer Delete Error: ' . $e->getMessage());
             Alert::toast('An error occurred while deleting the customer.', 'error')->autoClose(3000);
             return redirect()->route('customer.index');
@@ -155,9 +157,28 @@ class CustomerController extends Controller
     {
         try{
             return Excel::download(new CustomerExport, 'Customer_Master.xlsx');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('Customer Excel Export Error: ' . $e->getMessage());
             Alert::toast('An error occurred while excel exporting the customer.', 'error')->autoClose(3000);
+            return redirect()->route('customer.index');
+        }
+    }
+
+    public function customerExcelUpload(Request $request)
+    {
+        $request->validate([
+            'excel_file' => 'required|file|mimes:xlsx,xls'
+        ]);
+
+        try {
+            Excel::import(new CustomerImport,$request->file('excel_file'));
+
+            Alert::toast('Customer Excel file imported successfully.', 'success')->autoClose(3000);
+            return redirect()->route('customer.index');
+        } catch (Exception $e) {
+            dd($e);
+            Log::error('Customer Excel Import Error: ' . $e->getMessage());
+            Alert::toast('An error occurred while customer excel importing.', 'error')->autoClose(3000);
             return redirect()->route('customer.index');
         }
     }

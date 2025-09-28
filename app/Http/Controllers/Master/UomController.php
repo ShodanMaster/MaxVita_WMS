@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Master;
 
 use App\Exports\Master\UomExport;
 use App\Http\Controllers\Controller;
+use App\Imports\Master\UomImport;
 use App\Models\Uom;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
@@ -84,7 +86,7 @@ class UomController extends Controller
 
             Alert::toast('Uom added successfully!', 'success')->autoClose(3000);
             return redirect()->route('uom.index');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             dd($e);
             Log::error('Uom Store Error: ' . $e->getMessage());
 
@@ -97,7 +99,7 @@ class UomController extends Controller
     {
         try{
             return view('master.uom.create', compact('uom'));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             dd($e);
             Log::error('Uom Edit Error: ' . $e->getMessage());
 
@@ -122,7 +124,7 @@ class UomController extends Controller
             ]);
             Alert::toast('Uom modified successfully', 'success')->autoClose(3000);
             return redirect()->route('uom.index');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             dd($e);
             Log::error('Uom Store Error: ' . $e->getMessage());
 
@@ -138,7 +140,7 @@ class UomController extends Controller
             Uom::where('id', $id)->delete();
             Alert::toast('Uom Deleted Successfully', 'success')->autoClose(3000);
             return redirect()->route('uom.index');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('Uom Delete Error: ' . $e->getMessage());
             Alert::toast('An error occurred while deleting the uom.', 'error')->autoClose(3000);
             return redirect()->route('uom.index');
@@ -149,9 +151,28 @@ class UomController extends Controller
     {
         try{
             return Excel::download(new UomExport, 'Uom_Master.xlsx');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('Uom Excel Export Error: ' . $e->getMessage());
             Alert::toast('An error occurred while excel exporting the uom.', 'error')->autoClose(3000);
+            return redirect()->route('uom.index');
+        }
+    }
+
+    public function uomExcelUpload(Request $request)
+    {
+        $request->validate([
+            'excel_file' => 'required|file|mimes:xlsx,xls'
+        ]);
+
+        try {
+            Excel::import(new UomImport, $request->file('excel_file'));
+
+            Alert::toast('Uom Excel file imported successfully.', 'success')->autoClose(3000);
+            return redirect()->route('uom.index');
+        } catch (Exception $e) {
+            dd($e);
+            Log::error('Uom Excel Import Error: ' . $e->getMessage());
+            Alert::toast('An error occurred while uom excel importing.', 'error')->autoClose(3000);
             return redirect()->route('uom.index');
         }
     }

@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Master;
 
 use App\Exports\Master\CategoryExport;
 use App\Http\Controllers\Controller;
+use App\Imports\Master\CategoryImport;
 use App\Models\Category;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -85,7 +87,7 @@ class CategoryController extends Controller
 
             Alert::toast('Category added successfully!', 'success')->autoClose(3000);
             return redirect()->route('category.index');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             //  dd($e);
             Log::error('Category Store Error: ' . $e->getMessage());
 
@@ -99,7 +101,7 @@ class CategoryController extends Controller
         try{
 
             return view('master.category.create', compact('category'));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('Category Update Error: ' . $e->getMessage());
 
             Alert::toast('An error occurred while updating the category.', 'error')->autoClose(3000);
@@ -125,7 +127,7 @@ class CategoryController extends Controller
             ]);
             Alert::toast('Category modified successfully', 'success')->autoClose(3000);
             return redirect()->route('category.index');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             dd($e);
             Log::error('Category Store Error: ' . $e->getMessage());
 
@@ -141,7 +143,7 @@ class CategoryController extends Controller
             Category::where('id', $id)->delete();
             Alert::toast('Category Deleted Successfully', 'success')->autoClose(3000);
             return redirect()->route('category.index');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('Category Delete Error: ' . $e->getMessage());
             Alert::toast('An error occurred while deleting the category.', 'error')->autoClose(3000);
             return redirect()->route('category.index');
@@ -152,10 +154,29 @@ class CategoryController extends Controller
     {
         try{
             return Excel::download(new CategoryExport,'Category Master.xlsx');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('Category Excel Export Error: ' . $e->getMessage());
 
             Alert::toast('An error occurred while exporting categorys to Excel.', 'error')->autoClose(3000);
+            return redirect()->route('category.index');
+        }
+    }
+
+    public function categoryExcelUpload(Request $request)
+    {
+        $request->validate([
+            'excel_file' => 'required|file|mimes:xlsx,xls'
+        ]);
+
+        try {
+            Excel::import(new CategoryImport, $request->file('excel_file'));
+
+            Alert::toast('Category Excel file imported successfully.', 'success')->autoClose(3000);
+            return redirect()->route('category.index');
+        } catch (Exception $e) {
+            dd($e);
+            Log::error('Category Excel Import Error: ' . $e->getMessage());
+            Alert::toast('An error occurred while bin excel importing.', 'error')->autoClose(3000);
             return redirect()->route('category.index');
         }
     }

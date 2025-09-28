@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Master;
 
 use App\Exports\Master\VendorExport;
 use App\Http\Controllers\Controller;
+use App\Imports\Master\VendorImport;
 use App\Models\Vendor;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
@@ -91,7 +93,7 @@ class VendorController extends Controller
 
             Alert::toast('Vendor added successfully!', 'success')->autoClose(3000);
             return redirect()->route('vendr.index');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // dd($e);
             Log::error('Vendor Store Error: ' . $e->getMessage());
 
@@ -104,7 +106,7 @@ class VendorController extends Controller
     {
         try{
             return view('master.vendor.create', compact('vendr'));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // dd($e);
             Log::error('Vendor Edit Error: ' . $e->getMessage());
 
@@ -140,7 +142,7 @@ class VendorController extends Controller
             ]);
             Alert::toast('Vendor modified successfully', 'success')->autoClose(3000);
             return redirect()->route('vendr.index');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             dd($e);
             Log::error('vendor Store Error: ' . $e->getMessage());
 
@@ -155,7 +157,7 @@ class VendorController extends Controller
             Vendor::where('id', $id)->delete();
             Alert::toast('Vendor Deleted Successfully', 'success')->autoClose(3000);
             return redirect()->route('vendr.index');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('Vendor Delete Error: ' . $e->getMessage());
             Alert::toast('An error occurred while deleting the vendor.', 'error')->autoClose(3000);
             return redirect()->route('vendr.index');
@@ -166,11 +168,30 @@ class VendorController extends Controller
     {
         try{
             return Excel::download(new VendorExport, 'VendorMaster.xlsx');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // dd($e);
             Log::error('Vendor Excel Export Error: ' . $e->getMessage());
 
             Alert::toast('An error occurred while excel exporting the vendor.', 'error')->autoClose(3000);
+            return redirect()->route('vendr.index');
+        }
+    }
+
+    public function vendorExcelUpload(Request $request)
+    {
+        $request->validate([
+            'excel_file' => 'required|file|mimes:xlsx,xls'
+        ]);
+
+        try {
+            Excel::import(new VendorImport, $request->file('excel_file'));
+
+            Alert::toast('Vendor Excel file imported successfully.', 'success')->autoClose(3000);
+            return redirect()->route('vendr.index');
+        } catch (Exception $e) {
+            dd($e);
+            Log::error('Vendor Excel Import Error: ' . $e->getMessage());
+            Alert::toast('An error occurred while vendor excel importing.', 'error')->autoClose(3000);
             return redirect()->route('vendr.index');
         }
     }
