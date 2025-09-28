@@ -59,6 +59,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('category', CategoryController::class);
     Route::post('get-categories', [CategoryController::class, 'getCategories'])->name('get-categories');
     Route::get('category-excel-export', [CategoryController::class, 'categoryExcelExport'])->name('category-excel-export');
+    Route::post('category-excel-upload', [CategoryController::class, 'categoryExcelUpload'])->name('category-excel-upload');
 
     //subcategory Master
     Route::resource('sub-category', SubCategoryController::class);
@@ -69,11 +70,13 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('uom',UomController::class);
     Route::post('get-uoms', [UomController::class, 'getUoms'])->name('get-uoms');
     Route::get('uom-excel-export', [UomController::class, 'uomExcelExport'])->name('uom-excel-export');
+    Route::post('uom-excel-upload', [UomController::class, 'uomExcelUpload'])->name('uom-excel-upload');
 
     //Customer Master
     Route::resource('customer', CustomerController::class);
     Route::post('get-customers', [CustomerController::class, 'getCustomers'])->name('get-customers');
     Route::get('customer-excel-export', [CustomerController::class, 'customerExcelExport'])->name('customer-excel-export');
+    Route::post('customer-excel-upload', [CustomerController::class, 'customerExcelUpload'])->name('customer-excel-upload');
 
     //User Master
     Route::resource('user', UserController::class);
@@ -84,6 +87,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('vendr', VendorController::class);
     Route::post('get-vendors', [VendorController::class, 'getVendors'])->name('get-vendors');
     Route::get('vendor-excel-export', [VendorController::class, 'vendorExcelExport'])->name('vendor-excel-export');
+    Route::post('vendor-excel-upload', [VendorController::class, 'vendorExcelUpload'])->name('vendor-excel-upload');
 
 });
 
