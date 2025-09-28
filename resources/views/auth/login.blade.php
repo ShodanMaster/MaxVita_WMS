@@ -70,7 +70,7 @@
 
                 <div class="form-check form-check-flat form-check-primary">
                   <label class="form-check-label">
-                    <input type="checkbox" class="form-check-input" name="remember">
+                    <input type="checkbox" class="form-check-input" name="rememberMe">
                     Remember me
                   </label>
                 </div>
