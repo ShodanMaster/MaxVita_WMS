@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Master;
 
 use App\Exports\Master\BrandExport;
 use App\Http\Controllers\Controller;
+use App\Imports\Master\BrandImport;
 use App\Models\Brand;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
@@ -73,7 +75,7 @@ class BrandController extends Controller
 
             Alert::toast('Brand Added Successfully', 'success')->autoClose(3000);
             return redirect()->route('brand.index');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             dd($e);
             Log::error('Brand Store Error: ' . $e->getMessage());
 
@@ -85,7 +87,7 @@ class BrandController extends Controller
     public function edit(Brand $brand){
         try{
             return view('master.brand.create', compact('brand'));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             dd($e);
             Log::error('Brand Fetch Error: ' . $e->getMessage());
 
@@ -106,7 +108,7 @@ class BrandController extends Controller
 
             Alert::toast('Brand Updated Successfully', 'success')->autoClose(3000);
             return redirect()->route('brand.index');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('Brand Update Error: ' . $e->getMessage());
 
             Alert::toast('An error occurred while updating the brand.', 'error')->autoClose(3000);
@@ -120,7 +122,7 @@ class BrandController extends Controller
 
             Alert::toast('Brand Deleted Successfully', 'success')->autoClose(3000);
             return redirect()->route('brand.index');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('Brand Delete Error: ' . $e->getMessage());
 
             Alert::toast('An error occurred while deleting the brand.', 'error')->autoClose(3000);
@@ -131,10 +133,29 @@ class BrandController extends Controller
     public function brandExcelExport(){
         try {
             return Excel::download(new BrandExport, 'brands.xlsx');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('Brand Excel Export Error: ' . $e->getMessage());
 
             Alert::toast('An error occurred while exporting brands to Excel.', 'error')->autoClose(3000);
+            return redirect()->route('brand.index');
+        }
+    }
+
+    public function brandExcelUpload(Request $request){
+        $request->validate([
+            'excel_file' => 'required|file|mimes:xlsx,xls'
+        ]);
+
+        try{
+            Excel::import(new BrandImport, $request->file('excel_file'));
+
+            Alert::toast('Brand Excel file imported successfully.', 'success')->autoClose(3000);
+            return redirect()->route('brand.index');
+
+        } catch(Exception $e){
+            // dd($e);
+            Log::error('Brand Excel Import Error: ' . $e->getMessage());
+            Alert::toast('An error occurred while brand excel importin: .'. $e->getMessage(), 'error')->autoClose(3000);
             return redirect()->route('brand.index');
         }
     }

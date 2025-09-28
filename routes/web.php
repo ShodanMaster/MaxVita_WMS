@@ -49,11 +49,13 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('brand', BrandController::class);
     Route::post('get-brands', [BrandController::class, 'getBrands'])->name('get-brands');
     Route::get('brand-excel-export', [BrandController::class, 'brandExcelExport'])->name('brand-excel-export');
+    Route::post('brand-excel-upload', [BrandController::class, 'brandExcelUpload'])->name('brand-excel-upload');
 
     //Reason Master
     Route::resource('reason', ReasonController::class);
     Route::post('get-reasons', [ReasonController::class, 'getReasons'])->name('get-reasons');
     Route::get('reason-excel-export', [ReasonController::class, 'reasonExcelExport'])->name('reason-excel-export');
+    Route::post('reason-excel-upload', [ReasonController::class, 'reasonExcelUpload'])->name('reason-excel-upload');
 
     //Category Master
     Route::resource('category', CategoryController::class);

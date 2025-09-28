@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Master;
 
 use App\Exports\Master\ReasonExport;
 use App\Http\Controllers\Controller;
+use App\Imports\Master\ReasonImport;
 use App\Models\Reason;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
@@ -78,7 +80,7 @@ class ReasonController extends Controller
             Alert::toast('Reason added successfully!', 'success')->autoClose(3000);
             return redirect()->route('reason.index');
 
-        }  catch (\Exception $e) {
+        }  catch (Exception $e) {
             dd($e);
             Log::error('Reason Store Error: ' . $e->getMessage());
 
@@ -90,7 +92,7 @@ class ReasonController extends Controller
     public function edit(Reason $reason){
         try{
             return view('master.reason.create', compact('reason'));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             dd($e);
             Log::error('Reason Store Error: ' . $e->getMessage());
 
@@ -115,7 +117,7 @@ class ReasonController extends Controller
             Alert::toast('Reason updated successfully!', 'success')->autoClose(3000);
             return redirect()->route('reason.index');
 
-        }  catch (\Exception $e) {
+        }  catch (Exception $e) {
             Log::error('Reason Update Error: ' . $e->getMessage());
 
             Alert::toast('An error occurred while updating the reason.', 'error')->autoClose(3000);
@@ -130,7 +132,7 @@ class ReasonController extends Controller
             Alert::toast('Reason deleted successfully!', 'success')->autoClose(3000);
             return redirect()->route('reason.index');
 
-        }  catch (\Exception $e) {
+        }  catch (Exception $e) {
             Log::error('Reason Delete Error: ' . $e->getMessage());
 
             Alert::toast('An error occurred while deleting the reason.', 'error')->autoClose(3000);
@@ -142,9 +144,28 @@ class ReasonController extends Controller
     {
         try {
             return Excel::download(new ReasonExport, 'reasons.xlsx');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('Reason Excel Export Error: ' . $e->getMessage());
             Alert::toast('An error occurred while exporting reasons to Excel.', 'error')->autoClose(3000);
+            return redirect()->route('reason.index');
+        }
+    }
+
+    public function reasonExcelUpload(Request $request){
+        $request->validate([
+            'excel_file' => 'required|file|mimes:xlsx,xls'
+        ]);
+
+        try{
+            Excel::import(new ReasonImport, $request->file('excel_file'));
+
+            Alert::toast('Reason Excel file imported successfully.', 'success')->autoClose(3000);
+            return redirect()->route('reason.index');
+
+        } catch(Exception $e){
+            // dd($e);
+            Log::error('reason Excel Import Error: ' . $e->getMessage());
+            Alert::toast('An error occurred while reason excel importin: .'. $e->getMessage(), 'error')->autoClose(3000);
             return redirect()->route('reason.index');
         }
     }

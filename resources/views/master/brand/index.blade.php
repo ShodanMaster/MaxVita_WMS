@@ -30,6 +30,12 @@
                         <line x1="8" y1="12" x2="16" y2="12"></line>
                     </svg>
                 </a>
+
+                <!-- Button trigger modal -->
+                <button type="button" class="btn" data-toggle="modal" data-target="#uploadModal">
+                    <i data-feather="upload" class="text-primary" style="font-size: 24px;"></i><b> Upload </b>
+                </button>
+
                 <a href="{{ route("brand-excel-export")}}" class="btn " data-toggle="tooltip" data-placement="bottom" title="Export Excel" type="button">Export<i class="mdi mdi-file-excel text-primary" style="font-size: 24px;"></i> </a>
             </div>
         </div>
@@ -45,6 +51,34 @@
                 <tbody>
                 </tbody>
             </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="uploadModalLabel">Brand Excel Upload</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="{{ route('brand-excel-upload') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="excelFile" class="form-label"></label>
+                        <input type="file" class="form-control" id="excelFile" name="excel_file" required>
+                    </div>
+                    <span class="mt-2">You can download excel in predefined format by <a href="{{ URL::to( '/excel_templates/brand_template.xlsx')}}" class="text-primary ">Clicking Here</a></span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" id="uploadButton">Upload</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -93,5 +127,8 @@
         ]
     });
 
+    $('#uploadModal form').on('submit', function() {
+        $('#uploadButton').prop('disabled', true).text('Uploading...');
+    });
 </script>
 @endpush
