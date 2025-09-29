@@ -108,6 +108,13 @@ class SubMenuSeeder extends Seeder
                 'listing_order' => 0,
                 'created_at' => now(),
             ],
+            [
+                'menu_id' => 5,
+                'title' => 'Change Password',
+                'link' => 'change-password',
+                'listing_order' => 0,
+                'created_at' => now(),
+            ],
         ]);
     }
 }

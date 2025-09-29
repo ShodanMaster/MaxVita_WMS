@@ -10,4 +10,8 @@ class ItemController extends Controller
     public function index(){
         return view('master.item.index');
     }
+
+    public function getItems(Request $request){
+
+    }
 }

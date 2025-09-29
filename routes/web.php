@@ -14,6 +14,7 @@ use App\Http\Controllers\Master\SubCategoryController;
 use App\Http\Controllers\Master\UomController;
 use App\Http\Controllers\Master\UserController;
 use App\Http\Controllers\Master\VendorController;
+use App\Http\Controllers\Utility\PasswordChangeController;
 use App\Http\Controllers\Utility\PermissionController;
 use Illuminate\Support\Facades\Route;
 
@@ -44,7 +45,6 @@ Route::group(['middleware' => ['auth']], function () {
 
     //Item Master
     Route::resource('item', ItemController::class);
-    Route::post('get-item', [ItemController::class, 'getBins'])->name('get-items');
 
     //Brand Master
     Route::resource('brand', BrandController::class);
@@ -98,6 +98,9 @@ Route::group(['middleware' => ['auth']], function () {
     //Permission
     Route::resource('permission', PermissionController::class);
     Route::post('get-permission-menu', [PermissionController::class, 'getPermissionMenu'])->name('get-permission-menu');
+
+    //Password Change
+    Route::resource('change-password', PasswordChangeController::class);
 
 });
 
