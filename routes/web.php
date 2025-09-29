@@ -45,6 +45,9 @@ Route::group(['middleware' => ['auth']], function () {
 
     //Item Master
     Route::resource('item', ItemController::class);
+    Route::post('get-items', [ItemController::class, 'getItems'])->name('get-items');
+    Route::get('item-excel-export', [ItemController::class, 'itemExcelExport'])->name('item-excel-export');
+    Route::post('item-excel-upload', [ItemController::class, 'itemExcelUpload'])->name('item-excel-upload');
 
     //Brand Master
     Route::resource('brand', BrandController::class);

@@ -1,0 +1,59 @@
+<?php
+
+namespace App\Imports\Master;
+
+use App\Models\Category;
+use App\Models\Item;
+use App\Models\Uom;
+use Illuminate\Support\Collection;
+use Maatwebsite\Excel\Concerns\ToModel;
+use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Maatwebsite\Excel\Concerns\WithValidation;
+
+class ItemImport implements ToModel, WithValidation, WithHeadingRow
+{
+    /**
+    * @param Collection $collection
+    */
+    public function model(array $row)
+    {
+        $category=Category::select('id')->where('name',$row['item_group'])->first();
+        $uom=Uom::select('id')->where('name',$row['uom'])->first();
+
+        $data = [
+                'category_id' => $category->id,
+                'uom_id' => $uom->id,
+                'item_code' => $row['item_code'],
+                'name' => $row['item_description'],
+                'in_stock' => $row['in_stock'],
+                'item_type' => $row['item_type'],
+            ];
+
+        if(strtolower($row['item_type']) === 'fg'){
+            $fgData = [
+                'sku_code' => $row['sku_code'],
+                'spq_quantity' => $row['spq_quantity'],
+                'gst_rate' => $row['gst_rate'],
+            ];
+
+            $data = array_merge($data, $fgData);
+        }
+
+        return new Item($data);
+
+    }
+
+    public function rules(): array
+    {
+
+        return [
+            '*.item_group' => 'required|exists:categories,name',
+            '*.uom' => 'required|exists:uoms,name',
+            '*.item_code' => 'required|unique:items,item_code',
+            '*.item_description' => 'required|unique:items,name',
+            '*.in_stock' => 'required|integer',
+            'item_type' => 'required|in:FG,RM',
+        ];
+
+    }
+}

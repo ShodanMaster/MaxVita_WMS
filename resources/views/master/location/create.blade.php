@@ -168,14 +168,6 @@
     </div>
 </div>
 
-
-
-<script>
-
-
-</script>
-
-
 @endsection
 
 @push('plugin-scripts')
@@ -189,7 +181,6 @@
 <script src="{{ asset('assets/plugins/dropify/js/dropify.min.js') }}"></script>
 <script src="{{ asset('assets/plugins/datatables-net/jquery.dataTables.js') }}"></script>
 <script src="{{ asset('assets/plugins/datatables-net-bs4/dataTables.bootstrap4.js') }}"></script>
-
 @endpush
 
 @push('custom-scripts')
@@ -202,6 +193,4 @@
 <script src="{{ asset('assets/js/dropzone.js') }}"></script>
 <script src="{{ asset('assets/js/dropify.js') }}"></script>
 <script src="{{ asset('assets/js/data-table.js') }}"></script>
-
-
 @endpush
