@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Master;
 
 use App\Exports\Master\SubCategoryExport;
 use App\Http\Controllers\Controller;
+use App\Imports\Master\SubCategoryImport;
 use App\Models\Category;
 use App\Models\SubCategory;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
@@ -93,7 +95,7 @@ class SubCategoryController extends Controller
 
             Alert::toast('Sub Category added successfully!', 'success')->autoClose(3000);
             return redirect()->route('sub-category.index');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // dd($e);
             Log::error('SubCategory Store Error: ' . $e->getMessage());
 
@@ -107,7 +109,7 @@ class SubCategoryController extends Controller
         try{
             $categories = Category::all();
             return view('master.subcategory.create', compact('sub_category','categories'));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // dd($e);
             Log::error('SubCategory Edit Error: ' . $e->getMessage());
 
@@ -137,7 +139,7 @@ class SubCategoryController extends Controller
             ]);
             Alert::toast('SubCategory modified successfully', 'success')->autoClose(3000);
             return redirect()->route('sub-category.index');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             dd($e);
             Log::error('Subcategory Store Error: ' . $e->getMessage());
 
@@ -152,7 +154,7 @@ class SubCategoryController extends Controller
             SubCategory::where('id', $id)->delete();
             Alert::toast('Subcategory Deleted Successfully', 'success')->autoClose(3000);
             return redirect()->route('sub-category.index');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('Subcategory Delete Error: ' . $e->getMessage());
             Alert::toast('An error occurred while deleting the subcategory.', 'error')->autoClose(3000);
             return redirect()->route('sub-category.index');
@@ -163,10 +165,30 @@ class SubCategoryController extends Controller
     {
         try{
             return Excel::download(new SubCategoryExport, 'Sub_Categories.xlsx');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('Subcategory Excel Export Error: ' . $e->getMessage());
             Alert::toast('An error occurred while excel exporting the subcategory.', 'error')->autoClose(3000);
             return redirect()->route('sub-category.index');
         }
     }
+
+    public function subCategoryExcelUpload(Request $request)
+    {
+        $request->validate([
+            'excel_file' => 'required|file|mimes:xlsx,xls'
+        ]);
+
+        try {
+            Excel::import(new SubCategoryImport, $request->file('excel_file'));
+
+            Alert::toast('Subcategory Excel file imported successfully.', 'success')->autoClose(3000);
+            return redirect()->route('sub-category.index');
+        } catch (Exception $e) {
+            dd($e);
+            Log::error('Subcategory Excel Import Error: ' . $e->getMessage());
+            Alert::toast('An error occurred while Subcategory excel importing.', 'error')->autoClose(3000);
+            return redirect()->route('sub-category.index');
+        }
+    }
+
 }

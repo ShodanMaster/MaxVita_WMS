@@ -68,6 +68,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('sub-category', SubCategoryController::class);
     Route::post('get-sub-categories', [SubCategoryController::class, 'getSubCategory'])->name('get-sub-categories');
     Route::get('sub-category-excel-export', [SubCategoryController::class, 'subCategoryExcelExport'])->name('sub-category-excel-export');
+    Route::post('sub-category-excel-upload', [SubCategoryController::class, 'subCategoryExcelUpload'])->name('sub-category-excel-upload');
 
     //Uom  Mater
     Route::resource('uom',UomController::class);
