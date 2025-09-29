@@ -85,6 +85,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('user', UserController::class);
     Route::post('get-users', [UserController::class, 'getUsers'])->name('get-users');
     Route::get('user-excel-export', [UserController::class, 'userExcelExport'])->name('user-excel-export');
+    Route::post('user-excel-upload', [UserController::class, 'userExcelUpload'])->name('user-excel-upload');
 
     //Vendor Master
     Route::resource('vendr', VendorController::class);

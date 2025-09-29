@@ -36,7 +36,7 @@ class VendorImport implements ToModel, WithValidation, WithHeadingRow
         return [
 
             '*.name' => 'required',
-            '*.vendor_code' => 'required|unique:vendors,name',
+            '*.vendor_code' => 'required|unique:vendors,vendor_code',
             '*.location' => 'required',
             '*.address' => 'required',
             '*.city' => 'required',

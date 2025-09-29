@@ -4,6 +4,7 @@ namespace App\Enums;
 
 enum UserType: int
 {
+    case NO_VALUE = 0;
     case STANDARD_USER = 1;
     case ADMINISTRATOR = 2;
 
@@ -14,6 +15,8 @@ enum UserType: int
                 => 'Standard User',
             self::ADMINISTRATOR
                 => 'Administrator',
+            self::NO_VALUE
+                => 'No Value',
         };
     }
 
@@ -22,6 +25,7 @@ enum UserType: int
         return [
             self::STANDARD_USER->value => self::STANDARD_USER->label(),
             self::ADMINISTRATOR->value  => self::ADMINISTRATOR->label(),
+            self::NO_VALUE->value  => self::NO_VALUE->label(),
         ];
     }
 }

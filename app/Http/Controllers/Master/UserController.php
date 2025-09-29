@@ -6,8 +6,10 @@ use App\Enums\PermissionLevel;
 use App\Enums\UserType;
 use App\Exports\Master\UserExport;
 use App\Http\Controllers\Controller;
+use App\Imports\Master\UserImport;
 use App\Models\Location;
 use App\Models\User;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
@@ -33,9 +35,9 @@ class UserController extends Controller
                 ->addColumn('location_name', function ($row) {
                     return $row->location->name ?? '-';
                 })->addColumn('user_type', function($row){
-                    return UserType::from($row->user_type)->label();
+                    return UserType::from($row->user_type)->label() ?? '';
                 })->addColumn('permission_level', function($row){
-                    return PermissionLevel::from($row->permission_level)->label();
+                    return PermissionLevel::from($row->permission_level)->label() ?? '';
                 })
                 ->addColumn('action', function ($row) {
                     $editUrl = route('user.edit', $row->id);
@@ -100,7 +102,7 @@ class UserController extends Controller
             Alert::toast('User added successfully!', 'success')->autoClose(3000);
             return redirect()->route('user.index');
 
-        }catch(\Exception $e){
+        }catch(Exception $e){
             dd($e);
             Log::error('User Store Error: ' . $e->getMessage());
 
@@ -114,7 +116,7 @@ class UserController extends Controller
         try{
             $locations = Location::all();
             return view('master.user.create', compact('user', 'locations'));
-        }catch(\Exception $e){
+        }catch(Exception $e){
             dd($e);
             Log::error('User Edit Error: ' . $e->getMessage());
 
@@ -153,7 +155,7 @@ class UserController extends Controller
             Alert::toast('User updated successfully!', 'success')->autoClose(3000);
             return redirect()->route('user.index');
 
-        }catch(\Exception $e){
+        }catch(Exception $e){
             Log::error('User Update Error: ' . $e->getMessage());
 
             Alert::toast('An error occurred while updating the user.', 'error')->autoClose(3000);
@@ -168,7 +170,7 @@ class UserController extends Controller
             Alert::toast('User deleted successfully!', 'success')->autoClose(3000);
             return redirect()->route('user.index');
 
-        }catch(\Exception $e){
+        }catch(Exception $e){
             Log::error('User Delete Error: ' . $e->getMessage());
 
             Alert::toast('An error occurred while deleting the user.', 'error')->autoClose(3000);
@@ -180,9 +182,27 @@ class UserController extends Controller
     {
         try {
             return Excel::download(new UserExport, 'users.xlsx');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('User Excel Export Error: ' . $e->getMessage());
             Alert::toast('An error occurred while exporting users to Excel.', 'error')->autoClose(3000);
+            return redirect()->route('user.index');
+        }
+    }
+
+    public function userExcelUpload(Request $request){
+        $request->validate([
+            'excel_file' => 'required|file|mimes:xlsx,xls'
+        ]);
+
+        try {
+            Excel::import(new UserImport, $request->file('excel_file'));
+
+            Alert::toast("User Excel file imported successfully. Users password: 'example@123'.", 'success')->autoClose(3000);
+            return redirect()->route('user.index');
+        } catch (Exception $e) {
+            dd($e);
+            Log::error('User Excel Uplaod Error: ' . $e->getMessage());
+            Alert::toast('An error occurred while users to Excel uplaod.', 'error')->autoClose(3000);
             return redirect()->route('user.index');
         }
     }
