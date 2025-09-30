@@ -3,7 +3,6 @@
 namespace App\Imports\Master;
 
 use App\Models\Reason;
-use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
@@ -11,7 +10,7 @@ use Maatwebsite\Excel\Concerns\WithValidation;
 class ReasonImport implements ToModel, WithValidation, WithHeadingRow
 {
     /**
-    * @param Collection $collection
+    * @param ToModel $row
     */
     public function model(array $row)
     {

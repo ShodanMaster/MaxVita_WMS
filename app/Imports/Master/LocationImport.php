@@ -2,7 +2,6 @@
 
 namespace App\Imports\Master;
 
-use App\Enums\LocationType;
 use App\Models\Branch;
 use App\Models\Location;
 use Maatwebsite\Excel\Concerns\ToModel;
@@ -12,10 +11,10 @@ use Maatwebsite\Excel\Concerns\WithValidation;
 class LocationImport implements ToModel, WithValidation, WithHeadingRow
 {
     /**
-    * @param Collection $collection
+    * @param ToModel $row
     */
     public function model(array $row)
-    {   
+    {
         $branch=Branch::select('id')->where('name',$row['warehouse_name'])->first();
 
         $location_type = $this->getLcoationType($row['location_type']);
