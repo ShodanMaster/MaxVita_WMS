@@ -13,6 +13,7 @@ class Bin extends Model
         'location_id',
         'name',
         'bin_code',
+        'bin_type',
         'description',
     ];
 

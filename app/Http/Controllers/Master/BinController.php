@@ -27,7 +27,7 @@ class BinController extends Controller
     public function getBins(Request $request){
         if ($request->ajax()) {
             $bins = Bin::with('location')
-                ->select(['id', 'name', 'bin_code', 'description', 'location_id']);
+                ->select(['id', 'name', 'bin_code', 'bin_type', 'description', 'location_id']);
 
             return DataTables::of($bins)
                 ->addIndexColumn()
@@ -80,6 +80,7 @@ class BinController extends Controller
             'location_id' => 'required|integer|exists:locations,id',
             'name' => 'required|string|unique:bins,name',
             'bin_code' => 'required|string|unique:bins,bin_code',
+            'bin_type' => 'required|in:FG,RM',
             'address' => 'nullable|string',
         ]);
 
@@ -88,6 +89,7 @@ class BinController extends Controller
                 'location_id' => $request->location_id,
                 'name' => $request->name,
                 'bin_code' => $request->bin_code,
+                'bin_type' => $request->bin_type,
                 'description' => $request->description,
             ]);
 
@@ -133,6 +135,7 @@ class BinController extends Controller
             'location_id' => 'required|integer|exists:locations,id',
             'name' => 'required|string|unique:bins,name,'.$id,
             'bin_code' => 'required|string|unique:bins,bin_code,'.$id,
+            'bin_type' => 'required|in:FG,RM',
             'address' => 'nullable|string',
         ]);
 
@@ -142,6 +145,7 @@ class BinController extends Controller
                 'location_id' => $request->location_id,
                 'name' => $request->name,
                 'bin_code' => $request->bin_code,
+                'bin_type' => $request->bin_type,
                 'description' => $request->description,
             ]);
 

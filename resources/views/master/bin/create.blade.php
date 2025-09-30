@@ -102,7 +102,26 @@
                                     >
                                 </div>
                             </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="form-group">
+                                    <label for="bin_type" class="col-sm-4 control-label">
+                                        Bin Type <font color="#FF0000">*</font>
+                                    </label>
+                                    <select
+                                        name="bin_type"
+                                        class="js-example-basic-single form-select mandatory"
+                                        style="width: 100%;"
+                                        required
+                                    >
+                                        <option value="">--select--</option>
+                                        <option value="FG" {{ old('bin_type', $bin->bin_type ?? '') == 'FG' ? 'selected' : '' }}>FG</option>
+                                        <option value="RM" {{ old('bin_type', $bin->bin_type ?? '') == 'RM' ? 'selected' : '' }}>RM</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
 
+                        <div class="row">
                             <div class="col-md-6 mb-3">
                                 <div class="form-group">
                                     <label for="description" class="col-sm-4 control-label">

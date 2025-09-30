@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('location_id')->constrained('locations')->onDelete('cascade');
             $table->string('name')->unique();
             $table->string('bin_code')->unique();
+            $table->enum('bin_type', ['FG', 'RM']);
             $table->string('description')->nullable();
             $table->softDeletes();
             $table->timestamps();

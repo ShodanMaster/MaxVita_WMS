@@ -45,6 +45,7 @@
                         <th align="center" style="width:80px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SI.No</th>
                         <th>Bin Name</th>
                         <th>Bin Code</th>
+                        <th>Bin Type</th>
                         <th>Storage Location</th>
                         <th>Description</th>
                         <th>Action</th>
@@ -126,6 +127,7 @@
             { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
             { data: 'name', name: 'name' },
             { data: 'bin_code', name: 'bin_code' },
+            { data: 'bin_type', name: 'bin_type' },
             { data: 'location_name', name: 'location_name' },
             { data: 'description', name: 'description' },
             { data: 'action', name: 'action', orderable: false, searchable: false }
