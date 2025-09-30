@@ -72,7 +72,7 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="excelFile" class="form-label"></label>
-                        <input type="file" class="form-control" id="excelFile" name="excel_file" required>
+                        <input type="file" class="form-control" id="excelFile" name="excel_file" accept=".xls,.xlsx" required>
                     </div>
                     <span class="mt-2">You can download excel in predefined format by <a href="{{ URL::to( '/excel_templates/category_template.xlsx')}}" class="text-primary ">Clicking Here</a></span>
                 </div>
