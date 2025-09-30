@@ -20,6 +20,7 @@ class BinExport implements FromCollection, WithHeadings, ShouldAutoSize, WithEve
         return[
             'Bin Name',
             'ERP Code',
+            'Bin Type',
 			'Storage Location',
 			'Description',
         ];
@@ -40,7 +41,7 @@ class BinExport implements FromCollection, WithHeadings, ShouldAutoSize, WithEve
     {
         $sheet->getStyle('1')->getFont()->setBold(true);
 
-        $sheet->getStyle('A1:D1')->applyFromArray([
+        $sheet->getStyle('A1:E1')->applyFromArray([
             'fill' => [
                 'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
                 'color' => ['argb' => "FFaeaaaa"]
@@ -51,11 +52,12 @@ class BinExport implements FromCollection, WithHeadings, ShouldAutoSize, WithEve
     public function collection()
     {
         return Bin::with('location')
-            ->get(['name', 'bin_code', 'location_id', 'description'])
+            ->get(['name', 'bin_code', 'bin_type', 'location_id', 'description'])
             ->map(function ($bin) {
                 return [
                     'Bin Name' => $bin->name,
                     'ERP Code' => $bin->bin_code,
+                    'Bin Type' => $bin->bin_type,
                     'Storage Location' => $bin->location->name ?? 'N/A',
                     'Description' => $bin->description,
                 ];
