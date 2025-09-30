@@ -15,8 +15,8 @@ class LocationImport implements ToModel, WithValidation, WithHeadingRow
     * @param Collection $collection
     */
     public function model(array $row)
-    {
-        $branch=Branch::select('id')->where('name',$row['name'])->first();
+    {   
+        $branch=Branch::select('id')->where('name',$row['warehouse_name'])->first();
 
         $location_type = $this->getLcoationType($row['location_type']);
 
@@ -67,7 +67,7 @@ class LocationImport implements ToModel, WithValidation, WithHeadingRow
                 $location_type = 0;
                 break;
         }
-        
+
         return $location_type;
     }
 }

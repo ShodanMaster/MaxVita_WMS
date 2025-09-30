@@ -14,8 +14,10 @@ use App\Http\Controllers\Master\SubCategoryController;
 use App\Http\Controllers\Master\UomController;
 use App\Http\Controllers\Master\UserController;
 use App\Http\Controllers\Master\VendorController;
+use App\Http\Controllers\Transactions\PurchaseOrderController;
 use App\Http\Controllers\Utility\PasswordChangeController;
 use App\Http\Controllers\Utility\PermissionController;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => ['auth']], function () {
@@ -97,6 +99,11 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('vendor-excel-export', [VendorController::class, 'vendorExcelExport'])->name('vendor-excel-export');
     Route::post('vendor-excel-upload', [VendorController::class, 'vendorExcelUpload'])->name('vendor-excel-upload');
 
+    //Transactions
+
+    //PurchaseOrder
+    Route::resource('purchase-order', PurchaseOrderController::class);
+
     //Utitlity
 
     //Permission
@@ -106,6 +113,10 @@ Route::group(['middleware' => ['auth']], function () {
     //Password Change
     Route::resource('change-password', PasswordChangeController::class);
 
+    //AjaxCall
+    Route::post('ajax/{method}', function ($method) {
+		return App::call('\App\Http\Controllers\AjaxController@' . $method);
+	});
 });
 
 Route::get('login', [LoginController::class, 'index'])->name('login');

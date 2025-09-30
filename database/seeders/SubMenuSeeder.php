@@ -100,7 +100,16 @@ class SubMenuSeeder extends Seeder
                 'created_at' => now(),
             ],
 
-            //Utility Submenu
+            //Transaction Submenus
+            [
+                'menu_id' => 3,
+                'title' => 'Purchase Order',
+                'link' => 'purchase-order',
+                'listing_order' => 11,
+                'created_at' => now(),
+            ],
+
+            //Utility Submenus
             [
                 'menu_id' => 5,
                 'title' => 'Permission',

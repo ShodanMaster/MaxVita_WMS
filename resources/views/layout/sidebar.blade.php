@@ -38,7 +38,7 @@
 			<li class="nav-item nav-category">Mater</li>
 			@endif -->
 
-			@if ($menu['id'] == 11)
+			@if ($menu['id'] == 3)
 			<li class="nav-item nav-category">Transactions</li>
 			@endif
 

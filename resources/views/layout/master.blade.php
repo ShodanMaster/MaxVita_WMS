@@ -8,7 +8,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- CSRF Token -->
-    <meta name="_token" content="{{ csrf_token() }}">
+    {{-- <meta name="_token" content="{{ csrf_token() }}"> --}}
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- <script src="{{asset('assets/js/general.js')}}"></script> -->
 
 
@@ -89,6 +90,12 @@
       $('#favicon').attr('href', '{{ asset('dist/img/') }}' + '/' + favicon);
     }
   });
+});
+
+$.ajaxSetup({
+    headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
 });
     </script>
 

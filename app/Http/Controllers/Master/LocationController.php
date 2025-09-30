@@ -214,7 +214,7 @@ class LocationController extends Controller
             return redirect()->route('location.index');
 
         } catch(Exception $e){
-            // dd($e);
+            dd($e);
             Log::error('Location Excel Import Error: ' . $e->getMessage());
             Alert::toast('An error occurred while location excel importin: .'. $e->getMessage(), 'error')->autoClose(3000);
             return redirect()->route('location.index');
