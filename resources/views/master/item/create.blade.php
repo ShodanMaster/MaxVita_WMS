@@ -127,7 +127,7 @@
                             <div class="col-md-6 mb-3">
                                 <div class="form-group">
                                     <label for="in_stock" class="col-sm-4 control-label">
-                                        In Stock <font color="#FF0000">*</font>
+                                        In Stock
                                     </label>
                                     <input
                                         type="number"
@@ -135,7 +135,6 @@
                                         id="in_stock"
                                         min="1"
                                         class="form-control form-control-sm"
-                                        required
                                         value="{{ old('in_stock', $item->in_stock ?? '') }}"
                                     >
                                 </div>
@@ -197,10 +196,11 @@
                                 <div class="col-md-6 mb-3">
                                     <div class="form-group">
                                         <label for="gst_rate" class="col-sm-4 control-label">
-                                            GST Rate <font color="#FF0000">*</font>
+                                            GST Rate
                                         </label>
                                         <input
                                             type="text"
+                                            id="gst_rate"
                                             name="gst_rate"
                                             class="form-control form-control-sm"
                                             value="{{ old('gst_rate', $item->gst_rate ?? '') }}"
@@ -252,15 +252,16 @@
 <script>
 
     function toggleFgFields(select) {
-        console.log('changed');
-
         var fgFields = document.getElementById('fgFields');
         var requiredFields = fgFields.querySelectorAll('input');
 
         if (select.value == 'FG') {
             fgFields.style.display = 'block';
             requiredFields.forEach(function(field) {
-                field.setAttribute('required', true);
+
+                if (field.name !== 'gst_rate') {
+                    field.setAttribute('required', true);
+                }
             });
         } else {
             fgFields.style.display = 'none';
@@ -278,11 +279,15 @@
         if (itemType == 'FG') {
             fgFields.style.display = 'block';
             requiredFields.forEach(function(field) {
-                field.setAttribute('required', true);
+
+                if (field.name !== 'gst_rate') {
+                    field.setAttribute('required', true);
+                }
             });
         } else {
             fgFields.style.display = 'none';
         }
     });
+
 </script>
 @endpush

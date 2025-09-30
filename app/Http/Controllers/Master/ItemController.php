@@ -75,7 +75,7 @@ class ItemController extends Controller
         $request->validate([
             'item_code' => 'required|string|unique:items,item_code',
             'name' => 'required|string|unique:items,name',
-            'in_stock' => 'required|integer',
+            'in_stock' => 'nullable|integer',
             'category_id' => 'required|integer|exists:categories,id',
             'uom_id' => 'required|integer|exists:uoms,id',
             'item_type' => 'required|in:FG,RM',
@@ -133,7 +133,7 @@ class ItemController extends Controller
         $request->validate([
             'item_code' => 'required|string|unique:items,item_code,' . $id,
             'name' => 'required|string|unique:items,name,' . $id,
-            'in_stock' => 'required|integer',
+            'in_stock' => 'nullable|integer',
             'category_id' => 'required|integer|exists:categories,id',
             'uom_id' => 'required|integer|exists:uoms,id',
             'item_type' => 'required|in:FG,RM',

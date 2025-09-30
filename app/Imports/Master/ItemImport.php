@@ -51,8 +51,8 @@ class ItemImport implements ToModel, WithValidation, WithHeadingRow
             '*.uom' => 'required|exists:uoms,name',
             '*.item_code' => 'required|unique:items,item_code',
             '*.item_description' => 'required|unique:items,name',
-            '*.in_stock' => 'required|integer',
-            'item_type' => 'required|in:FG,RM',
+            '*.in_stock' => 'nullable|integer',
+            '*.item_type' => 'required|in:FG,RM',
         ];
 
     }

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('uom_id')->nullable()->constrained()->onDelete('cascade');
             $table->string('name')->unique();
             $table->string('item_code')->unique();
-            $table->integer('in_stock');
+            $table->integer('in_stock')->nullable();
             $table->string('gst_rate')->nullable();
             $table->string('sku_code')->nullable();
             $table->enum('item_type', ['RM', 'FG']);
