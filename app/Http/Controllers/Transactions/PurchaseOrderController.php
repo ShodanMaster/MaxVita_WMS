@@ -5,10 +5,12 @@ namespace App\Http\Controllers\Transactions;
 use App\Http\Controllers\Controller;
 use App\Models\Item;
 use App\Models\PurchaseOrder;
+use App\Models\PurchaseOrderCancel;
 use App\Models\PurchaseOrderSub;
 use App\Models\Vendor;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
@@ -170,5 +172,39 @@ class PurchaseOrderController extends Controller
         return $data;
     }
 
+    public function purchaseOrderCancel(){
+
+        $orders = PurchaseOrder::whereNot('status', 2)->get(['purchase_number']);
+        return view('transactions.purchaseorder.cancel', compact('orders'));
+    }
+
+    public function cancelPurchaseOrder(Request $request){
+
+        $user_id = Auth::user()->id;
+        $purchaseOrderNumber = $request->purchaseOrderNumber;
+
+        // $grn = Grn::where('po_no', '=', $id)->first();
+
+        // if ($grn) {
+
+        //     Alert::toast('The Purchase Order has initiated for GRN entry', 'error')->autoClose(3000);
+        //     return redirect()->route('purchase_order_cancel');
+        // }
+
+        $purchaseOrder = PurchaseOrder::where('purchase_number', $purchaseOrderNumber)->first(['id']);
+
+        $purchaseOrder->update([
+            'status' => 2
+        ]);
+
+        PurchaseOrderCancel::create([
+            'purchase_order_id' => $purchaseOrder->id,
+            'user_id' => $user_id
+        ]);
+
+
+        Alert::toast('Purchase Order Canceled Successfully', 'success')->autoClose(3000);
+        return redirect()->route('purchase-order-cancel');
+    }
 
 }

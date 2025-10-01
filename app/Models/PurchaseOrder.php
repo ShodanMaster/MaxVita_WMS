@@ -35,4 +35,9 @@ class PurchaseOrder extends Model
         return $purchaseNumber[0]->purchase_number;
     }
 
+    public function purchaseOrderSubs()
+    {
+        return $this->hasMany(PurchaseOrderSub::class);
+    }
+
 }
