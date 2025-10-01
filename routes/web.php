@@ -104,6 +104,7 @@ Route::group(['middleware' => ['auth']], function () {
     //PurchaseOrder
     Route::resource('purchase-order', PurchaseOrderController::class);
     Route::post('purchase-order-excel-upload', [PurchaseOrderController::class, 'purchaseOrderExcelUpload'])->name('purchase-order-excel-upload');
+    Route::post('purchase-order-cancel', [PurchaseOrderController::class, 'purchaseOrderCacel'])->name('purchase-order-cancel');
 
     //Utitlity
 

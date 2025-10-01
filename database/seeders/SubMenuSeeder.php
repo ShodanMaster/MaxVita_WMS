@@ -108,6 +108,13 @@ class SubMenuSeeder extends Seeder
                 'listing_order' => 11,
                 'created_at' => now(),
             ],
+            [
+                'menu_id' => 3,
+                'title' => 'Purchase Cancel',
+                'link' => 'purchase-order-cancel',
+                'listing_order' => 11,
+                'created_at' => now(),
+            ],
 
             //Utility Submenus
             [
