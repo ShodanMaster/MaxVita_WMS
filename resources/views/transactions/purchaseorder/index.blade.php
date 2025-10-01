@@ -18,7 +18,9 @@
 </style>
 
 @section('content')
+@include('sweetalert::alert')
 @include('messages')
+
 <div class="container">
     <div class="row">
         <div class="col-md-12 grid-margin">
@@ -28,7 +30,7 @@
                         Purchase Order Entry
                     </h5>
 
-                    <form action="{{ route('purchase-order.store')}}" method="POST">
+                    <form id="purchaseOrder" action="{{ route('purchase-order.store')}}" method="POST">
                         @csrf
 
                         <!-- User Form Fields -->
@@ -136,10 +138,9 @@
                         </div>
 
                         <div class="card-body">
-                            <input type="button" value="ADD TO GRID" class="btn btn-primary" id="addtogrid" />
-                            <input type="hidden" id="count" name="count" />
+                            <input type="button" value="ADD TO GRID" class="btn btn-primary" id="addtogrid"/>
                             &nbsp;
-                            <input type="button" name="reset" class="btn btn-default" value="Reset" onclick="rowreset()" />
+                            <input type="button" name="reset" id="reset" class="btn btn-default" value="Reset" onclick="rowReset()" />
                         </div>
 
                         <div class="table-responsive">
@@ -160,7 +161,7 @@
 
                         <!-- Action Buttons -->
                         <div class="card-body">
-                            <button type="submit" class="btn btn-primary">
+                            <button type="button" class="btn btn-primary" id="submitButton">
                                 Save
                             </button>
                             <input type="reset" class="btn btn-default" value="Clear" />
@@ -199,7 +200,46 @@
 
 <script>
     $(document).ready(function() {
+
+        let itemCount = 0;
+
         $('.select2').select2();
+
+        $('#total_quantity').change(function() {
+            checkSpq();
+        });
+
+        $('#submitButton').click(function() {
+            checkData();
+        });
+
+
+        function checkData() {
+            if ($('#purchase_date').val() == '') {
+                alert('Select Purchase Date');
+                return false;
+            }
+
+            if (itemCount == 0) {
+                alert('Empty Grid');
+                return false;
+            } else {
+                $("#purchaseOrder").submit();
+            }
+        }
+
+        function checkSpq() {
+            var qty=document.getElementById('total_quantity').value;
+            var spq=document.getElementById('spq').value;
+            if((Number(qty)%Number(spq)) != '0'){
+
+                alert('Quantity Not Multiple of Spq!');
+                document.getElementById('total_quantity').value='';
+                document.getElementById('total_quantity').focus();
+                return false;
+            }
+
+        }
 
         $('#item').on('change', function (e) {
             e.preventDefault();
@@ -226,8 +266,6 @@
                 }
             });
         });
-
-        let itemCount = 0;
 
         $('#addtogrid').click(function() {
             let itemId = $('#item').val();
@@ -259,7 +297,6 @@
                 </tr>
             `);
 
-            $('#count').val(itemCount);
             $('<input>').attr({
                 type: 'hidden',
                 name: `items[${itemCount}][item_id]`,
@@ -300,15 +337,16 @@
             });
         }
 
-        function rowreset() {
+        $('#reset').click(function() {
+            rowReset();
+        });
+
+        function rowReset() {
             $('#grngridbody').empty();
-            $('form input[type="hidden"]').not('#count').remove();
+            $('form input[type="hidden"]').remove();
             itemCount = 0;
         }
-        
-        $('input[type="reset"]').click(function() {
-            rowreset();
-        });
+
 
     });
 </script>
