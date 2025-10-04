@@ -145,9 +145,13 @@ class BrandController extends Controller
         $request->validate([
             'excel_file' => 'required|file|mimes:xlsx,xls'
         ]);
-
+        $current = date('Y-m-d_H-i-s');
         try{
             Excel::import(new BrandImport, $request->file('excel_file'));
+
+            $fileName = $current . '_' . $request->file('excel_file')->getClientOriginalName();
+
+            $request->file('excel_file')->storeAs('excel_uploads/master_uploads/brand_uploads', $fileName, 'public');
 
             Alert::toast('Brand Excel file imported successfully.', 'success')->autoClose(3000);
             return redirect()->route('brand.index');

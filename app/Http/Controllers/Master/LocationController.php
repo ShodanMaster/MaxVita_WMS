@@ -202,21 +202,29 @@ class LocationController extends Controller
         }
     }
 
-    public function locationExcelUpload(Request $request){
+    public function locationExcelUpload(Request $request)
+    {
         $request->validate([
             'excel_file' => 'required|file|mimes:xlsx,xls'
         ]);
 
+        $current = date('Y-m-d_H-i-s');
+
         try{
             Excel::import(new LocationImport, $request->file('excel_file'));
 
+            $fileName = $current . '_' . $request->file('excel_file')->getClientOriginalName();
+
+            $request->file('excel_file')->storeAs('excel_uploads/master_uploads/location_uploads', $fileName, 'public');
+
             Alert::toast('Location Excel file imported successfully.', 'success')->autoClose(3000);
             return redirect()->route('location.index');
-
-        } catch(Exception $e){
+        }
+        catch(Exception $e)
+        {
             dd($e);
             Log::error('Location Excel Import Error: ' . $e->getMessage());
-            Alert::toast('An error occurred while location excel importin: .'. $e->getMessage(), 'error')->autoClose(3000);
+            Alert::toast('An error occurred while location excel importing: .'. $e->getMessage(), 'error')->autoClose(3000);
             return redirect()->route('location.index');
         }
     }

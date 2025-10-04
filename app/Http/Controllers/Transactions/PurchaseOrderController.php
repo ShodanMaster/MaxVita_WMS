@@ -62,6 +62,8 @@ class PurchaseOrderController extends Controller
             'excel_file' => 'required|file|mimes:xlsx,xls'
         ]);
 
+        $current = date('Y-m-d_H-i-s');
+
         try{
             DB::beginTransaction();
 
@@ -92,7 +94,9 @@ class PurchaseOrderController extends Controller
                     'quantity' => $item['quantity'],
                 ]);
             }
+            $fileName = $current . '_' . $request->file('excel_file')->getClientOriginalName();
 
+            $request->file('excel_file')->storeAs('excel_uploads/transaction_uploads/purchaseorder_uploads', $fileName, 'public');
             DB::commit();
             Alert::toast('Purchase Order saved with Number ' . $purchaseNumber, 'success')->autoClose(3000);
             return redirect()->back();

@@ -193,14 +193,18 @@ class UserController extends Controller
         $request->validate([
             'excel_file' => 'required|file|mimes:xlsx,xls'
         ]);
-
+        $current = date('Y-m-d_H-i-s');
         try {
             Excel::import(new UserImport, $request->file('excel_file'));
+
+            $fileName = $current . '_' . $request->file('excel_file')->getClientOriginalName();
+
+            $request->file('excel_file')->storeAs('excel_uploads/master_uploads/user_uploads', $fileName, 'public');
 
             Alert::toast("User Excel file imported successfully. Users password: 'example@123'.", 'success')->autoClose(3000);
             return redirect()->route('user.index');
         } catch (Exception $e) {
-            dd($e);
+             dd($e);
             Log::error('User Excel Uplaod Error: ' . $e->getMessage());
             Alert::toast('An error occurred while users to Excel uplaod.', 'error')->autoClose(3000);
             return redirect()->route('user.index');
