@@ -106,23 +106,6 @@
 
                             <div class="col-md-6 mb-3">
                                 <div class="form-group">
-                                    <label for="nav_loc_code" class="col-sm-4 control-label">
-                                        ERP Code <font color="#FF0000">*</font>
-                                    </label>
-                                    <input
-                                        type="text"
-                                        name="nav_loc_code"
-                                        class="form-control form-control-sm"
-                                        required
-                                        value="{{ old('nav_loc_code', $location->nav_loc_code ?? '') }}"
-                                    >
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <div class="form-group">
                                     <label for="location_type" class="col-sm-4 control-label">
                                         Location Type <font color="#FF0000">*</font>
                                     </label>
@@ -139,17 +122,18 @@
                                     </select>
                                 </div>
                             </div>
+                        </div>
 
+                        <div class="row">
                             <div class="col-md-6 mb-3">
                                 <div class="form-group">
                                     <label for="description" class="col-sm-4 control-label">
-                                        Description <font color="#FF0000">*</font>
+                                        Description
                                     </label>
                                     <textarea
                                         name="description"
                                         class="form-control form-control-sm"
                                         rows="4"
-                                        required
                                     >{{ old('description', $location->description ?? '') }}</textarea>
                                 </div>
                             </div>

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('branch_id')->constrained('branches')->onDelete('cascade');
             $table->string('name');
             $table->string('prefix')->unique();
-            $table->string('nav_loc_code');
+            $table->string('location_code');
             $table->enum('location_type', ['1', '2', '3', '4']);
             $table->text('description')->nullable();
             $table->tinyInteger('barcode_enabled')->default(0);

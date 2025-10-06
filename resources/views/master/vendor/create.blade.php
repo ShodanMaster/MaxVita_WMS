@@ -26,7 +26,7 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">
-                        @if (isset($vendr))
+                        @if (isset($vendor))
                         Update Vendor
                         @else
                         Add Vendor
@@ -34,13 +34,13 @@
                     </h5>
 
                     <form
-                        action="{{ isset($vendr) ? route('vendr.update', $vendr->id) : route('vendr.store') }}"
+                        action="{{ isset($vendor) ? route('vendr.update', $vendor->id) : route('vendr.store') }}"
                         method="POST"
                         enctype="multipart/form-data"
                         class="form-horizontal validate"
                         autocomplete="off">
                         @csrf
-                        @if (isset($vendr))
+                        @if (isset($vendor))
                         @method('PATCH')
                         @endif
 
@@ -55,104 +55,80 @@
                                         name="name"
                                         class="form-control form-control-sm"
                                         required
-                                        value="{{ old('name', $vendr->name ?? '') }}">
+                                        value="{{ old('name', $vendor->name ?? '') }}">
                                 </div>
                             </div>
 
-                            <div class="col-md-6 mb-3">
-                                <div class="form-group">
-                                    <label for="vendor_code" class="col-sm-4 control-label">
-                                        Vendor Code <font color="#FF0000">*</font>
-                                    </label>
-                                    <input
-                                        type="text"
-                                        name="vendor_code"
-                                        id="vendor_code"
-                                        class="form-control form-control-sm"
-                                        required
-                                        value="{{ old('vendor_code', $vendr->vendor_code ?? '') }}">
-                                </div>
-                            </div>
-                        </div>
-
-                     
-                        <div class="row">
                             <div class="col-md-6 mb-3">
                                 <div class="form-group">
                                     <label for="location" class="col-sm-4 control-label">
-                                        Location <font color="#FF0000">*</font>
+                                        Location
                                     </label>
                                     <input
                                         type="text"
                                         name="location"
                                         id="location"
                                         class="form-control form-control-sm"
-                                        required
-                                        value="{{ old('location', $vendr->location ?? '') }}">
-                                </div>
-                            </div>
-
-                            <div class="col-md-6 mb-3">
-                                <div class="form-group">
-                                    <label for="address" class="col-sm-4 control-label">
-                                        Address <font color="#FF0000">*</font>
-                                    </label>
-                                    <textarea
-                                        name="address"
-                                        class="form-control form-control-sm"
-                                        rows="4"
-                                        required>{{ old('address', $vendr->address ?? '') }}</textarea>
+                                        value="{{ old('location', $vendor->location ?? '') }}">
                                 </div>
                             </div>
                         </div>
 
-                    
+
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <div class="form-group">
+                                    <label for="address" class="col-sm-4 control-label">
+                                        Address
+                                    </label>
+                                    <textarea
+                                        name="address"
+                                        class="form-control form-control-sm"
+                                        rows="4">{{ old('address', $vendor->address ?? '') }}</textarea>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="form-group">
                                     <label for="city" class="col-sm-4 control-label">
-                                        City <font color="#FF0000">*</font>
+                                        City
                                     </label>
                                     <input
                                         type="text"
                                         name="city"
                                         id="city"
                                         class="form-control form-control-sm"
-                                        required
-                                        value="{{ old('city', $vendr->city ?? '') }}">
+                                        value="{{ old('city', $vendor->city ?? '') }}">
                                 </div>
                             </div>
+                        </div>
+
+
+                        <div class="row">
 
                             <div class="col-md-6 mb-3">
                                 <div class="form-group">
                                     <label for="state" class="col-sm-4 control-label">
-                                        State <font color="#FF0000">*</font>
+                                        State
                                     </label>
                                     <input
                                         type="text"
                                         name="state"
                                         id="state"
                                         class="form-control form-control-sm"
-                                        required
-                                        value="{{ old('state', $vendr->state ?? '') }}">
+                                        value="{{ old('state', $vendor->state ?? '') }}">
                                 </div>
                             </div>
-                        </div>
-
-                        {{-- Row 4: Zip Code --}}
-                        <div class="row">
                             <div class="col-md-6 mb-3">
                                 <div class="form-group">
                                     <label for="zip_code" class="col-sm-4 control-label">
-                                        Zip Code <font color="#FF0000">*</font>
+                                        Zip Code
                                     </label>
                                     <input
                                         type="text"
                                         name="zip_code"
                                         id="zip_code"
                                         class="form-control form-control-sm"
-                                        required
-                                        value="{{ old('zip_code', $vendr->zip_code ?? '') }}">
+                                        value="{{ old('zip_code', $vendor->zip_code ?? '') }}">
                                 </div>
                             </div>
                         </div>

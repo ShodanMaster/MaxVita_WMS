@@ -47,7 +47,6 @@
                         <th>Location Name</th>
                         <th>Location Prefix</th>
                         <th>Warehouse Name</th>
-                        <th>ERP Code</th>
                         <th>Location Type</th>
                         <th>Description</th>
                         <th>Action</th>
@@ -130,7 +129,6 @@
             { data: 'name', name: 'name' },
             { data: 'prefix', name: 'prefix' },
             { data: 'branch_name', name: 'branch.name' },
-            { data: 'nav_loc_code', name: 'nav_loc_code' },
             { data: 'location_type', name: 'location_type' },
             { data: 'description', name: 'description' },
             { data: 'action', name: 'action', orderable: false, searchable: false }

@@ -79,7 +79,6 @@ class BinController extends Controller
         $request->validate([
             'location_id' => 'required|integer|exists:locations,id',
             'name' => 'required|string|unique:bins,name',
-            'bin_code' => 'required|string|unique:bins,bin_code',
             'bin_type' => 'required|in:FG,RM',
             'address' => 'nullable|string',
         ]);
@@ -88,7 +87,7 @@ class BinController extends Controller
             $bin = Bin::create([
                 'location_id' => $request->location_id,
                 'name' => $request->name,
-                'bin_code' => $request->bin_code,
+                'bin_code' => Bin::binCode($request->bin_type),
                 'bin_type' => $request->bin_type,
                 'description' => $request->description,
             ]);
@@ -134,7 +133,6 @@ class BinController extends Controller
         $request->validate([
             'location_id' => 'required|integer|exists:locations,id',
             'name' => 'required|string|unique:bins,name,'.$id,
-            'bin_code' => 'required|string|unique:bins,bin_code,'.$id,
             'bin_type' => 'required|in:FG,RM',
             'address' => 'nullable|string',
         ]);
@@ -144,7 +142,6 @@ class BinController extends Controller
             $bin->update([
                 'location_id' => $request->location_id,
                 'name' => $request->name,
-                'bin_code' => $request->bin_code,
                 'bin_type' => $request->bin_type,
                 'description' => $request->description,
             ]);

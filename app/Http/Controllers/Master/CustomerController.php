@@ -72,9 +72,9 @@ class CustomerController extends Controller
         $request->validate([
             'name' => 'required|string',
             'customer_code' => 'required|string',
-            'shipping_code' => 'required|string',
+            'shipping_code' => 'nullable|string',
             'customer_address' => 'required|string',
-            'zip_code' => 'required|integer',
+            'zip_code' => 'nullable|integer',
             'gst_number' => 'required|string'
         ]);
 
@@ -110,11 +110,12 @@ class CustomerController extends Controller
         $request->validate([
             'name' => 'required|string',
             'customer_code' => 'required|string',
-            'shipping_code' => 'required|string',
+            'shipping_code' => 'nullable|string',
             'customer_address' => 'required|string',
-            'zip_code' => 'required|integer',
+            'zip_code' => 'nullable|integer',
             'gst_number' => 'required|string'
         ]);
+
         try {
 
 

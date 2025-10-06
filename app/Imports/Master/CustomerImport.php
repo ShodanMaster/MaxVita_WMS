@@ -33,7 +33,7 @@ class CustomerImport implements ToModel, WithValidation, WithHeadingRow
 
             '*.name' => 'required|unique:customers,name',
             '*.customer_code' => 'required',
-            '*.shipping_code' => 'required',
+            '*.shipping_code' => 'nullable',
             '*.customer_address' => 'required',
             '*.zip_code	' => 'nullable',
             '*.gst_number' => 'required',

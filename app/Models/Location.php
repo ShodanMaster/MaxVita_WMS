@@ -13,7 +13,7 @@ class Location extends Model
         'branch_id',
         'name',
         'prefix',
-        'nav_loc_code',
+        'location_code',
         'location_type',
         'description',
     ];

@@ -83,6 +83,12 @@ class ItemController extends Controller
 
         try{
 
+            $spqQuantity = 1;
+
+            if ($request->item_type === 'FG') {
+                $spqQuantity = $request->spq_quantity;
+            }
+
             $data = [
                 'category_id' => $request->category_id,
                 'uom_id' => $request->uom_id,
@@ -90,12 +96,12 @@ class ItemController extends Controller
                 'item_code' => $request->item_code,
                 'in_stock' => $request->in_stock,
                 'item_type' => $request->item_type,
+                'spq_quantity' => $spqQuantity,
             ];
 
             if ($request->item_type === 'FG') {
                 $data = array_merge($data, [
                     'sku_code' => $request->sku_code,
-                    'spq_quantity' => $request->spq_quantity,
                     'gst_rate' => $request->gst_rate,
                 ]);
             }
@@ -140,6 +146,12 @@ class ItemController extends Controller
         ]);
         try{
 
+            $spqQuantity = 1;
+
+            if ($request->item_type === 'FG') {
+                $spqQuantity = $request->spq_quantity;
+            }
+
             $data = [
                 'category_id' => $request->category_id,
                 'uom_id' => $request->uom_id,
@@ -147,20 +159,19 @@ class ItemController extends Controller
                 'item_code' => $request->item_code,
                 'in_stock' => $request->in_stock,
                 'item_type' => $request->item_type,
+                'spq_quantity' => $spqQuantity,
             ];
 
             if ($request->item_type === 'FG') {
 
                 $data = array_merge($data, [
                     'sku_code' => $request->sku_code,
-                    'spq_quantity' => $request->spq_quantity,
                     'gst_rate' => $request->gst_rate,
                 ]);
             } else {
 
                 $data = array_merge($data, [
                     'sku_code' => null,
-                    'spq_quantity' => null,
                     'gst_rate' => null,
                 ]);
             }

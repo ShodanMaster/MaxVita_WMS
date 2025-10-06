@@ -82,11 +82,10 @@
                             <div class="col-md-6 mb-3">
                                 <div class="form-group">
                                     <label for="address" class="col-sm-4 control-label">
-                                        Address <font color="#FF0000">*</font>
+                                        Address
                                     </label>
                                     <textarea
                                         name="address"
-                                        required
                                         class="form-control form-control-sm"
                                         rows="4"
                                     >{{ old('address', $branch->address ?? '') }}</textarea>
@@ -96,12 +95,11 @@
                             <div class="col-md-6 mb-3">
                                 <div class="form-group">
                                     <label for="gst_no" class="col-sm-4 control-label">
-                                        GST Number <font color="#FF0000">*</font>
+                                        GST Number
                                     </label>
                                     <input
                                         type="text"
                                         name="gst_no"
-                                        required
                                         class="form-control form-control-sm"
                                         value="{{ old('gst_no', $branch->gst_no ?? '') }}"
                                     >

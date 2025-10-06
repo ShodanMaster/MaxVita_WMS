@@ -20,7 +20,7 @@ class BinImport implements ToModel, WithValidation, WithHeadingRow
         return new Bin([
             'location_id'    => $storage_loc_id->id,
             'name'    => $row['name'],
-            'bin_code'    => $row['erp_code'],
+            'bin_code'    => Bin::binCode($row['bin_type']),
             'bin_type'    => $row['bin_type'],
             'description'       => $row['description'],
         ]);
@@ -31,12 +31,10 @@ class BinImport implements ToModel, WithValidation, WithHeadingRow
     {
 
         return [
-
             '*.name' => 'required|unique:bins,name',
-            '*.erp_code' => 'required|unique:bins,bin_code',
             '*.bin_type' => 'required|in:FG,RM',
             '*.storage_location' => 'required|exists:locations,name',
-            '*.description' => 'required',
+            '*.description' => 'nullable',
         ];
 
     }

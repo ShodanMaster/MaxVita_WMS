@@ -81,14 +81,13 @@
                             <div class="col-md-6 mb-3">
                                 <div class="form-group">
                                     <label for="shipping_code" class="col-sm-4 control-label">
-                                        Shipping Code <font color="#FF0000">*</font>
+                                        Shipping Code
                                     </label>
                                     <input
                                         type="text"
                                         name="shipping_code"
                                         id="shipping_code"
                                         class="form-control form-control-sm"
-                                        required
                                         value="{{ old('shipping_code', $customer->shipping_code ?? '') }}">
                                 </div>
                             </div>
@@ -111,14 +110,13 @@
                             <div class="col-md-6 mb-3">
                                 <div class="form-group">
                                     <label for="zip_code" class="col-sm-4 control-label">
-                                        Zip Code <font color="#FF0000">*</font>
+                                        Zip Code
                                     </label>
                                     <input
                                         type="text"
                                         name="zip_code"
                                         id="zip_code"
                                         class="form-control form-control-sm"
-                                        required
                                         value="{{ old('zip_code', $customer->zip_code ?? '') }}">
                                 </div>
                             </div>

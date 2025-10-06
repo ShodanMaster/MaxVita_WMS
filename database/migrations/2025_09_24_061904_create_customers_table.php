@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('customer_code');
-            $table->string('shipping_code');
+            $table->string('shipping_code')->nullable();
             $table->string('customer_address');
-            $table->integer('zip_code');
+            $table->integer('zip_code')->nullable();
             $table->string('gst_number');
             $table->softDeletes();
             $table->timestamps();

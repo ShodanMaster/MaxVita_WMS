@@ -16,8 +16,14 @@ class ItemImport implements ToModel, WithValidation, WithHeadingRow
     */
     public function model(array $row)
     {
-        $category=Category::select('id')->where('name',$row['item_group'])->first();
+        $category=Category::select('id')->where('name',$row['category'])->first();
         $uom=Uom::select('id')->where('name',$row['uom'])->first();
+
+        $spqQuantity = 1;
+
+        if (strtolower($row['item_type']) === 'fg') {
+            $spqQuantity = $row['spq_quantity'];
+        }
 
         $data = [
                 'category_id' => $category->id,
@@ -26,12 +32,12 @@ class ItemImport implements ToModel, WithValidation, WithHeadingRow
                 'name' => $row['item_description'],
                 'in_stock' => $row['in_stock'],
                 'item_type' => $row['item_type'],
+                'spq_quantity' => $spqQuantity,
             ];
 
         if(strtolower($row['item_type']) === 'fg'){
             $fgData = [
                 'sku_code' => $row['sku_code'],
-                'spq_quantity' => $row['spq_quantity'],
                 'gst_rate' => $row['gst_rate'],
             ];
 
@@ -46,7 +52,7 @@ class ItemImport implements ToModel, WithValidation, WithHeadingRow
     {
 
         return [
-            '*.item_group' => 'required|exists:categories,name',
+            '*.category' => 'required|exists:categories,name',
             '*.uom' => 'required|exists:uoms,name',
             '*.item_code' => 'required|unique:items,item_code',
             '*.item_description' => 'required|unique:items,name',

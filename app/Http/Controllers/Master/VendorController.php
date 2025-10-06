@@ -71,11 +71,11 @@ class VendorController extends Controller
         $request->validate([
             'name' => 'required|string',
             'vendor_code' => 'required|string',
-            'location' => 'required|string',
-            'address' => 'required|string',
-            'city' => 'required|string',
-            'state' => 'required|string',
-            'zip_code' => 'required|string'
+            'location' => 'nullable|string',
+            'address' => 'nullable|string',
+            'city' => 'nullable|string',
+            'state' => 'nullable|string',
+            'zip_code' => 'nullable|string'
         ]);
 
         try {
@@ -102,10 +102,10 @@ class VendorController extends Controller
         }
     }
 
-    public function edit(Vendor $vendr)
+    public function edit(Vendor $vendor)
     {
         try{
-            return view('master.vendor.create', compact('vendr'));
+            return view('master.vendor.create', compact('vendor'));
         } catch (Exception $e) {
             // dd($e);
             Log::error('Vendor Edit Error: ' . $e->getMessage());
@@ -122,11 +122,11 @@ class VendorController extends Controller
         $request->validate([
             'name' => 'required|string',
             'vendor_code' => 'required|string',
-            'location' => 'required|string',
-            'address' => 'required|string',
-            'city' => 'required|string',
-            'state' => 'required|string',
-            'zip_code' => 'required|string'
+            'location' => 'nullable|string',
+            'address' => 'nullable|string',
+            'city' => 'nullable|string',
+            'state' => 'nullable|string',
+            'zip_code' => 'nullable|string'
         ]);
 
         try {

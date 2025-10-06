@@ -48,7 +48,7 @@
                         <th>Item Code</th>
                         <th>Item Description</th>
                         <th>In Stock</th>
-                        <th>Item Group</th>
+                        <th>Category</th>
                         <th>UOM</th>
                         <th>GST Rate</th>
                         <th>SKU Code</th>

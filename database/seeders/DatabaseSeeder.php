@@ -30,7 +30,7 @@ class DatabaseSeeder extends Seeder
             'branch_id' => 1,
             'name' => 'Kadavanthara',
             'prefix' => 'kdv',
-            'nav_loc_code' => '670502',
+            'location_code' => 'kdv',
             'location_type' => '1',
         ]);
 

@@ -28,7 +28,7 @@ class LocationController extends Controller
     public function getLocations(Request $request){
         if ($request->ajax()) {
 
-            $locations = Location::with('branch')->select(['id', 'name', 'prefix', 'nav_loc_code', 'location_type', 'description', 'branch_id']);
+            $locations = Location::with('branch')->select(['id', 'name', 'prefix', 'location_type', 'description', 'branch_id']);
 
             return DataTables::of($locations)
                 ->addIndexColumn()
@@ -87,9 +87,8 @@ class LocationController extends Controller
             'name' => 'required|string|unique:locations,name',
             'prefix' => 'required|string|unique:locations,prefix',
             'branch_id' => 'required|integer|exists:branches,id',
-            'nav_loc_code' => 'required|string',
             'location_type' => 'required|string',
-            'description' => 'required|string'
+            'description' => 'nullable|string'
         ]);
 
         try{
@@ -98,7 +97,7 @@ class LocationController extends Controller
                 'name' => $request->name,
                 'prefix' => $request->prefix,
                 'branch_id' => $request->branch_id,
-                'nav_loc_code' => $request->nav_loc_code,
+                'location_code' => $request->prefix,
                 'location_type' => $request->location_type,
                 'description' => $request->description
             ]);
@@ -148,9 +147,8 @@ class LocationController extends Controller
             'name' => 'required|string|unique:locations,name,'.$id,
             'prefix' => 'required|string|unique:locations,prefix,'.$id,
             'branch_id' => 'required|integer|exists:branches,id',
-            'nav_loc_code' => 'required|string',
             'location_type' => 'required|string',
-            'description' => 'required|string'
+            'description' => 'nullable|string'
         ]);
 
         try{
@@ -159,7 +157,6 @@ class LocationController extends Controller
                 'name' => $request->name,
                 'prefix' => $request->prefix,
                 'branch_id' => $request->branch_id,
-                'nav_loc_code' => $request->nav_loc_code,
                 'location_type' => $request->location_type,
                 'description' => $request->description
             ]);

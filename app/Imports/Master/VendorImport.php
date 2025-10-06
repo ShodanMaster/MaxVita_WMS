@@ -19,7 +19,7 @@ class VendorImport implements ToModel, WithValidation, WithHeadingRow
 
         return new Vendor([
             'name'    => $row['name'],
-            'vendor_code'=> $row['vendor_code'],
+            'vendor_code'=> Vendor::vendorCode(),
             'location'  => $row['location'],
             'address'  => $row['address'],
             'city' => $row['city'],
@@ -35,12 +35,11 @@ class VendorImport implements ToModel, WithValidation, WithHeadingRow
         return [
 
             '*.name' => 'required',
-            '*.vendor_code' => 'required|unique:vendors,vendor_code',
-            '*.location' => 'required',
-            '*.address' => 'required',
-            '*.city' => 'required',
-            '*.state' => 'required',
-            '*.zip_code' => 'required',
+            '*.location' => 'nullable',
+            '*.address' => 'nullable',
+            '*.city' => 'nullable',
+            '*.state' => 'nullable',
+            '*.zip_code' => 'nullable',
         ];
     }
 }

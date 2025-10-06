@@ -70,26 +70,6 @@
 
                             <div class="col-md-6 mb-3">
                                 <div class="form-group">
-                                    <label for="bin_code" class="col-sm-4 control-label">
-                                        Bin Code <font color="#FF0000">*</font>
-                                    </label>
-                                    <input
-                                        type="text"
-                                        name="bin_code"
-                                        id="bin_code"
-                                        maxlength="2"
-                                        required
-                                        class="form-control form-control-sm"
-                                        value="{{ old('bin_code', $bin->bin_code ?? '') }}"
-                                    >
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Bin Name & Address -->
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <div class="form-group">
                                     <label for="name" class="col-sm-4 control-label">
                                         Bin Name <font color="#FF0000">*</font>
                                     </label>
@@ -102,6 +82,10 @@
                                     >
                                 </div>
                             </div>
+                        </div>
+
+                        <!-- Bin Name & Address -->
+                        <div class="row">
                             <div class="col-md-6 mb-3">
                                 <div class="form-group">
                                     <label for="bin_type" class="col-sm-4 control-label">
@@ -119,17 +103,13 @@
                                     </select>
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="row">
                             <div class="col-md-6 mb-3">
                                 <div class="form-group">
                                     <label for="description" class="col-sm-4 control-label">
-                                        Description <font color="#FF0000">*</font>
+                                        Description
                                     </label>
                                     <textarea
                                         name="description"
-                                        required
                                         class="form-control form-control-sm"
                                         rows="4"
                                     >{{ old('description', $bin->description ?? '') }}</textarea>

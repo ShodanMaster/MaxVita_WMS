@@ -23,7 +23,7 @@ class LocationImport implements ToModel, WithValidation, WithHeadingRow
             'branch_id'    => $branch->id,
             'name'    => $row['name'],
             'prefix'    => $row['prefix'],
-            'nav_loc_code'    => $row['erp_code'],
+            'location_code'    => $row['prefix'],
             'location_type' => $location_type,
             'description'       => $row['description'],
         ]);
@@ -37,9 +37,8 @@ class LocationImport implements ToModel, WithValidation, WithHeadingRow
             '*.warehouse_name' => 'required|exists:branches,name',
             '*.name' => 'required|unique:locations,name',
             '*.prefix' => 'required|unique:locations,prefix',
-            '*.erp_code' => 'required|unique:locations,nav_loc_code',
             '*.location_type' => 'required',
-            '*.description' => 'required',
+            '*.description' => 'nullable',
         ];
 
     }

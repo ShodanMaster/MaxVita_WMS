@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('branch_code')->unique();
-            $table->string('address');
+            $table->string('address')->nullable();
             $table->string('gst_no')->nullable();
             $table->softDeletes();
             $table->timestamps();

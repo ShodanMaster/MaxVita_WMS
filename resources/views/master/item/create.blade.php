@@ -50,7 +50,7 @@
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="category" class="col-sm-4 control-label">
-                                    Item Group <font color="#FF0000">*</font>
+                                    Category <font color="#FF0000">*</font>
                                 </label>
                                 <select
                                     id="category"
