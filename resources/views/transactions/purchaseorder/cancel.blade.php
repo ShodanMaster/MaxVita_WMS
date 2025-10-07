@@ -106,7 +106,7 @@
 
         $.ajax({
             type: "post",
-            url: "{{ url('/ajax/getPurchaseOrder')}}",
+            url: "{{ route('ajax.getpurchaseorder')}}",
             data: {
                 purchase_number: purchaseNumber
             },
