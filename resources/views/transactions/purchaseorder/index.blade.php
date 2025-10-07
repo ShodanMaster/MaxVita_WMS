@@ -284,7 +284,7 @@
 
             $.ajax({
                 type: "POST",
-                url: "{{ url('ajax/getSpqQuantity') }}",
+                url: "{{ route('ajax.getspqquantity') }}",
                 data: {
                     item_id: itemId
                 },
