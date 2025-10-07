@@ -45,7 +45,6 @@
                     <tr>
                         <th align="center" style="width:80px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SI.No</th>
                         <th>Category Name</th>
-                        <th>ERP Code</th>
                         <th>Description</th>
                         <th>Action</th>
                     </tr>
@@ -131,10 +130,6 @@
             {
                 data: 'name',
                 name: 'name'
-            },
-            {
-                data: 'erp_code',
-                name: 'erp_code'
             },
             {
                 data: 'description',

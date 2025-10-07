@@ -63,24 +63,6 @@
 
                             <div class="col-md-6 mb-3">
                                 <div class="form-group">
-                                    <label for="erp_code" class="col-sm-4 control-label">
-                                        ERP Code <font color="#FF0000">*</font>
-                                    </label>
-                                    <input
-                                        type="text"
-                                        name="erp_code"
-                                        id="erp_code"
-                                        maxlength="3"
-                                        class="form-control form-control-sm"
-                                        required
-                                        value="{{ old('erp_code', $category->erp_code ?? '') }}">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <div class="form-group">
                                     <label for="description" class="col-sm-4 control-label">
                                         Description<font color="#FF0000">*</font>
                                     </label>
@@ -91,9 +73,8 @@
                                         required>{{ old('description', $category->description ?? '') }}</textarea>
                                 </div>
                             </div>
+
                         </div>
-
-
 
                         <div class="card-body">
                             <button type="submit" class="btn btn-primary">

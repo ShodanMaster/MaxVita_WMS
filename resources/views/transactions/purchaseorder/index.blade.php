@@ -37,16 +37,6 @@
                         </button>
 
                     </div>
-                    @if ($errors->any())
-                        <div class="alert alert-danger alert-dismissible">
-                            <ul>
-                                @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                            <button type="button" class="close" data-dismiss="alert">&times;</button>
-                        </div>
-                    @endif
                     <form id="purchaseOrder" action="{{ route('purchase-order.store')}}" method="POST">
                         @csrf
 

@@ -14,6 +14,7 @@ use App\Http\Controllers\Master\SubCategoryController;
 use App\Http\Controllers\Master\UomController;
 use App\Http\Controllers\Master\UserController;
 use App\Http\Controllers\Master\VendorController;
+use App\Http\Controllers\Transactions\GrnController;
 use App\Http\Controllers\Transactions\PurchaseOrderController;
 use App\Http\Controllers\Utility\PasswordChangeController;
 use App\Http\Controllers\Utility\PermissionController;
@@ -107,6 +108,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('purchase-order-cancel', [PurchaseOrderController::class, 'purchaseOrderCancel'])->name('purchase-order-cancel');
     Route::get('purchase-order-cancel', [PurchaseOrderController::class, 'purchaseOrderCancel'])->name('purchase-order-cancel');
     Route::post('cancel-purchase-order', [PurchaseOrderController::class, 'cancelPurchaseOrder'])->name('cancel-purchase-order');
+
+    //GRN
+    Route::resource('grn', GrnController::class);
 
     //Utitlity
 

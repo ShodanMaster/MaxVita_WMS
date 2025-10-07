@@ -25,7 +25,7 @@ class CategoryController extends Controller
     {
         if ($request->ajax()) {
 
-            $categories = Category::select(['id', 'name', 'erp_code', 'description']);
+            $categories = Category::select(['id', 'name', 'description']);
 
             return DataTables::of($categories)
                 ->addIndexColumn()
@@ -73,7 +73,6 @@ class CategoryController extends Controller
 
         $request->validate([
             'name' => 'required|string|unique:categories,name',
-            'erp_code' => 'required|string|unique:categories,erp_code',
             'description' => 'required|string'
         ]);
 
@@ -81,7 +80,6 @@ class CategoryController extends Controller
 
             Category::create([
                 'name' => $request->name,
-                'erp_code' => $request->erp_code,
                 'description' => $request->description
             ]);
 
@@ -113,7 +111,6 @@ class CategoryController extends Controller
     {
         $request->validate([
             'name' => 'required|string|unique:categories,name,' . $id,
-            'erp_code' => 'required|string|unique:categories,erp_code,' . $id,
             'description' => 'required|string'
         ]);
 
@@ -122,7 +119,6 @@ class CategoryController extends Controller
 
             Category::where('id', $id)->update([
                 'name' => $request->name,
-                'erp_code' => $request->erp_code,
                 'description' => $request->description
             ]);
             Alert::toast('Category modified successfully', 'success')->autoClose(3000);

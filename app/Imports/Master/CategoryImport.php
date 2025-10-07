@@ -18,7 +18,6 @@ class CategoryImport implements ToModel, WithValidation, WithHeadingRow
 
         return new Category([
             'name'    => $row['name'],
-            'erp_code'    => $row['erp_code'],
             'description'  => $row['description'],
         ]);
     }
@@ -30,7 +29,6 @@ class CategoryImport implements ToModel, WithValidation, WithHeadingRow
         return [
 
             '*.name' => 'required|unique:categories,name',
-            '*.erp_code' => 'required|unique:categories,erp_code',
             '*.description' => 'nullable',
         ];
     }

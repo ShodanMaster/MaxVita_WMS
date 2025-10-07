@@ -18,7 +18,7 @@ class CategoryExport implements FromCollection, WithHeadings, ShouldAutoSize, Wi
     */
     public function collection()
     {
-        return Category::select('name', 'erp_code', 'description')->get();
+        return Category::select('name', 'description')->get();
     }
 
     public function headings(): array
@@ -26,7 +26,6 @@ class CategoryExport implements FromCollection, WithHeadings, ShouldAutoSize, Wi
         return [
 
             'Category Name',
-            'ERP Code',
             'Description'
         ];
     }
@@ -35,7 +34,7 @@ class CategoryExport implements FromCollection, WithHeadings, ShouldAutoSize, Wi
     {
         return [
             AfterSheet::class    => function (AfterSheet $event) {
-                $cellRange = 'A1:C1';
+                $cellRange = 'A1:B1';
                 $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setSize(12);
                 $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setBold(true);
             },
@@ -46,12 +45,12 @@ class CategoryExport implements FromCollection, WithHeadings, ShouldAutoSize, Wi
     {
         $sheet->getStyle('1')->getFont()->setBold(true);
 
-        $sheet->getStyle('A1:C1')->applyFromArray([
+        $sheet->getStyle('A1:B1')->applyFromArray([
             'fill' => [
                 'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
                 'color' => ['argb' => "FFaeaaaa"]
             ]
         ]);
     }
-  
+
 }
