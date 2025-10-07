@@ -148,17 +148,6 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group row">
-                                        <label for="gate_no" class="col-sm-4 control-label">Gate Number</label>
-                                        <div class="input-group col-sm-8">
-                                            <select class="js-example-basic-single form-select mandatory" style="width:100%" id="gate_no" onchange="filtergate_wise_po();">
-                                                <option value="">--select--</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <div class="form-group row">
                                         <label for="po_number" class="col-sm-4 control-label">PO Number</label>
                                         <div class="input-group col-sm-8">
                                             <select class="js-example-basic-single form-select mandatory" style="width:100%" id="po_number" onchange="filterItem();">
@@ -168,9 +157,6 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-
-                            <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group row">
                                         <label for="category_id" class="col-sm-4 control-label">Category</label>
@@ -182,6 +168,9 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+
+                            <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group row">
                                         <label for="sub_category_id" class="col-sm-4 control-label">Sub Category</label>
@@ -193,9 +182,6 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-
-                            <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group row">
                                         <label for="sub_item_id" class="col-sm-4 control-label">Part No / Item Name <font color="#FF0000">*</font></label>
@@ -207,6 +193,9 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+
+                            <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group row">
                                         <label for="type_of_packing" class="col-sm-4 control-label">Type of packing</label>
@@ -215,9 +204,6 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-
-                            <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group row">
                                         <label for="uom" class="col-sm-4 control-label">UOM</label>
@@ -226,6 +212,9 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+
+                            <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group row">
                                         <label for="batch_no" class="col-sm-4 control-label">Batch Number <font color="#FF0000">*</font></label>
@@ -234,9 +223,6 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-
-                            <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group row">
                                         <label for="price" class="col-sm-4 control-label">Price</label>
@@ -245,6 +231,9 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+
+                            <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group row">
                                         <label for="dom" class="col-sm-4 control-label">DOM <font color="#FF0000">*</font></label>
@@ -253,9 +242,6 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-
-                            <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group row">
                                         <label for="best_before_value" class="col-sm-4 control-label">Best Before <font color="#FF0000">*</font></label>
@@ -264,6 +250,9 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+
+                            <div class="row">
 
                                 <div class="col-md-6">
                                     <div class="form-group row">
@@ -273,9 +262,6 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-
-                            <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group row">
                                         <label for="total_quantity" class="col-sm-4 control-label">Total Quantity <font color="#FF0000">*</font></label>
@@ -284,6 +270,9 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+
+                            <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group row">
                                         <label for="number_of_barcodes" class="col-sm-4 control-label">Number Of Barcodes <font color="#FF0000">*</font></label>
