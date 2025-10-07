@@ -14,6 +14,7 @@ class MenuSeeder extends Seeder
     public function run(): void
     {
         Menu::insert([
+            // 1
             [
                 'title' => 'Dashboard',
                 'link' => 'dashboard',
@@ -21,6 +22,7 @@ class MenuSeeder extends Seeder
                 'listing_order' => 0,
                 'created_at' => now(),
             ],
+            // 2
             [
                 'title' => 'Masters',
                 'link' => 'masters',
@@ -28,13 +30,23 @@ class MenuSeeder extends Seeder
                 'listing_order' => 1,
                 'created_at' => now(),
             ],
+            // 3
             [
-                'title' => 'Transactions',
-                'link' => 'transactions',
+                'title' => 'Purchase Entry',
+                'link' => 'purchase-entry',
                 'icon' => 'inbox',
                 'listing_order' => 2,
                 'created_at' => now(),
             ],
+            // 4
+            [
+                'title' => 'GRN',
+                'link' => 'grn',
+                'icon' => 'log-in',
+                'listing_order' => 3,
+                'created_at' => now(),
+            ],
+            // 5
             [
                 'title' => 'Reports',
                 'link' => 'reports',
@@ -42,6 +54,7 @@ class MenuSeeder extends Seeder
                 'listing_order' => 4,
                 'created_at' => now(),
             ],
+            // 6
             [
                 'title' => 'Utilities',
                 'link' => 'utilities',

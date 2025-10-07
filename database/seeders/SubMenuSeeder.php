@@ -15,6 +15,7 @@ class SubMenuSeeder extends Seeder
     {
         Submenu::insert([
             // Masters Submenus
+            // 1
             [
                 'menu_id' => 2,
                 'title' => 'Warehouses',
@@ -22,6 +23,7 @@ class SubMenuSeeder extends Seeder
                 'listing_order' => 0,
                 'created_at' => now(),
             ],
+            // 2
             [
                 'menu_id' => 2,
                 'title' => 'Location',
@@ -29,6 +31,7 @@ class SubMenuSeeder extends Seeder
                 'listing_order' => 1,
                 'created_at' => now(),
             ],
+            // 3
             [
                 'menu_id' => 2,
                 'title' => 'Bin',
@@ -36,6 +39,7 @@ class SubMenuSeeder extends Seeder
                 'listing_order' => 2,
                 'created_at' => now(),
             ],
+            // 4
             [
                 'menu_id' => 2,
                 'title' => 'Category',
@@ -43,6 +47,7 @@ class SubMenuSeeder extends Seeder
                 'listing_order' => 3,
                 'created_at' => now(),
             ],
+            // 5
             [
                 'menu_id' => 2,
                 'title' => 'Sub Category',
@@ -50,6 +55,7 @@ class SubMenuSeeder extends Seeder
                 'listing_order' => 4,
                 'created_at' => now(),
             ],
+            // 6
             [
                 'menu_id' => 2,
                 'title' => 'UOM',
@@ -57,6 +63,7 @@ class SubMenuSeeder extends Seeder
                 'listing_order' => 5,
                 'created_at' => now(),
             ],
+            // 7
             [
                 'menu_id' => 2,
                 'title' => 'Item',
@@ -64,6 +71,7 @@ class SubMenuSeeder extends Seeder
                 'listing_order' => 6,
                 'created_at' => now(),
             ],
+            // 8
             [
                 'menu_id' => 2,
                 'title' => 'Brand',
@@ -71,6 +79,7 @@ class SubMenuSeeder extends Seeder
                 'listing_order' => 7,
                 'created_at' => now(),
             ],
+            // 9
             [
                 'menu_id' => 2,
                 'title' => 'Customer',
@@ -78,6 +87,7 @@ class SubMenuSeeder extends Seeder
                 'listing_order' => 8,
                 'created_at' => now(),
             ],
+            // 10
             [
                 'menu_id' => 2,
                 'title' => 'Vendor',
@@ -85,6 +95,7 @@ class SubMenuSeeder extends Seeder
                 'listing_order' => 9,
                 'created_at' => now(),
             ],
+            // 11
             [
                 'menu_id' => 2,
                 'title' => 'User',
@@ -92,6 +103,7 @@ class SubMenuSeeder extends Seeder
                 'listing_order' => 10,
                 'created_at' => now(),
             ],
+            // 12
             [
                 'menu_id' => 2,
                 'title' => 'Reason',
@@ -100,7 +112,9 @@ class SubMenuSeeder extends Seeder
                 'created_at' => now(),
             ],
 
-            //Transaction Submenus
+            // Transaction
+            // Purchase Entry
+            // 13
             [
                 'menu_id' => 3,
                 'title' => 'Purchase Order',
@@ -108,6 +122,7 @@ class SubMenuSeeder extends Seeder
                 'listing_order' => 11,
                 'created_at' => now(),
             ],
+            // 14
             [
                 'menu_id' => 3,
                 'title' => 'Purchase Cancel',
@@ -115,17 +130,28 @@ class SubMenuSeeder extends Seeder
                 'listing_order' => 11,
                 'created_at' => now(),
             ],
-
-            //Utility Submenus
+            // GRN Entry
+            //15
             [
-                'menu_id' => 5,
+                'menu_id' => 4,
+                'title' => 'GRN Entry ',
+                'link' => 'grn',
+                'listing_order' => 11,
+                'created_at' => now(),
+            ],
+
+            // Utility Submenus
+            // 16
+            [
+                'menu_id' => 6,
                 'title' => 'Permission',
                 'link' => 'permission',
                 'listing_order' => 0,
                 'created_at' => now(),
             ],
+            // 17
             [
-                'menu_id' => 5,
+                'menu_id' => 6,
                 'title' => 'Change Password',
                 'link' => 'change-password',
                 'listing_order' => 0,

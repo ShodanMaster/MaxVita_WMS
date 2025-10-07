@@ -70,6 +70,18 @@ class PermissionSeeder extends Seeder
                 'user_id' => 1,
                 'submenu_id' => 14,
             ],
+            [
+                'user_id' => 1,
+                'submenu_id' => 15,
+            ],
+            [
+                'user_id' => 1,
+                'submenu_id' => 16,
+            ],
+            [
+                'user_id' => 1,
+                'submenu_id' => 17,
+            ],
         ]);
     }
 }
