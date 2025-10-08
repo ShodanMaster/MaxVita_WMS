@@ -31,7 +31,7 @@
 
                 </div>
                 <div class="card-body">
-                    <form id="purchaseOrder" action="{{ route('purchase-order.store')}}" method="POST">
+                    <form id="grnForm" action="{{ route('grn.store')}}" method="POST">
                         @csrf
 
                         <div class="row">
@@ -57,7 +57,7 @@
                                         GRN Type <font color="#FF0000">*</font>
                                     </label>
                                     <div class="col-sm-8">
-                                        <select name="grn_type" id="grn_type" class="js-example-basic-single form-control mandatory">
+                                        <select name="grn_type" id="grn_type" class="js-example-basic-single form-control mandatory" onchange="filterItem()">
                                             <option value="" disabled selected>--select grn type --</option>
                                             <option value="RM" {{ old('grn_type') == 'RM' ? 'selected' : '' }}>RM</option>
                                             <option value="FG" {{ old('grn_type') == 'FG' ? 'selected' : '' }}>FG</option>
@@ -74,9 +74,13 @@
                                         Vendor Name <font color="#FF0000">*</font>
                                     </label>
                                     <div class="col-sm-8">
-                                        <select name="vendor_id" id="vendor_id" class="js-example-basic-single form-control mandatory" onchange="filterPonumber();">
-                                            <option value="">--select--</option>
-                                            <!-- Vendor options dynamically populated -->
+                                        <select name="vendor_id" id="vendor_id" class="js-example-basic-single form-control mandatory" onchange="getPurchaseNumber();">
+                                            <option value="" disabled selected>--select--</option>
+                                            @forelse ($vendors as $vendor)
+                                                <option value="{{$vendor->id}}">{{$vendor->name}}</option>
+                                            @empty
+                                                <option value="" disabled>No Vendors Found</option>
+                                            @endforelse
                                         </select>
                                     </div>
                                 </div>
@@ -88,8 +92,12 @@
                                     </label>
                                     <div class="col-sm-8">
                                         <select name="location_id" id="location_id" class="js-example-basic-single form-select mandatory" required>
-                                            <option value="">--select--</option>
-                                            <!-- Location options dynamically populated -->
+                                            <option value="" disabled selected>--select--</option>
+                                            @forelse ($locations as $location)
+                                                <option value="{{$location->id}}">{{$location->name}}</option>
+                                            @empty
+                                                <option value="" disabled>No Locations Found</option>
+                                            @endforelse
                                         </select>
                                     </div>
                                 </div>
@@ -148,9 +156,9 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group row">
-                                        <label for="po_number" class="col-sm-4 control-label">PO Number</label>
+                                        <label for="purchase_number" class="col-sm-4 control-label">PO Number</label>
                                         <div class="input-group col-sm-8">
-                                            <select class="js-example-basic-single form-select mandatory" style="width:100%" id="po_number" onchange="filterItem();">
+                                            <select class="js-example-basic-single form-select mandatory" style="width:100%" id="purchase_number" onchange="filterItem();">
                                                 <option value="">--select--</option>
                                             </select>
                                             <input type="hidden" id="po_qty" />
@@ -161,9 +169,13 @@
                                     <div class="form-group row">
                                         <label for="category_id" class="col-sm-4 control-label">Category</label>
                                         <div class="col-sm-8">
-                                            <select class="js-example-basic-single form-select mandatory" style="width:100%" id="category_id" onchange="subcategory();filterItem();">
-                                                <option value="">--select--</option>
-                                                <!-- Add dynamically generated category options here -->
+                                            <select class="js-example-basic-single form-select mandatory" style="width:100%" id="category_id" onchange="filterItem();">
+                                                <option value="" disabled selected>--select--</option>
+                                                @forelse ($categories as $category)
+                                                    <option value="{{$category->id}}">{{$category->name}}</option>
+                                                @empty
+                                                    <option value="" disabled>No Categories Found</option>
+                                                @endforelse
                                             </select>
                                         </div>
                                     </div>
@@ -173,34 +185,11 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group row">
-                                        <label for="sub_category_id" class="col-sm-4 control-label">Sub Category</label>
+                                        <label for="item_id" class="col-sm-4 control-label">Part No / Item Name <font color="#FF0000">*</font></label>
                                         <div class="col-sm-8">
-                                            <select class="js-example-basic-single form-select" style="width:100%" id="sub_category_id" onchange="filterItem();">
+                                            <select class="js-example-basic-single form-control mandatory" style="width:100%" id="item_id" onchange="getItemUOM();">
                                                 <option value="">--select--</option>
-                                                <!-- Add dynamically generated sub-category options here -->
                                             </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group row">
-                                        <label for="sub_item_id" class="col-sm-4 control-label">Part No / Item Name <font color="#FF0000">*</font></label>
-                                        <div class="col-sm-8">
-                                            <select class="js-example-basic-single form-control mandatory" style="width:100%" id="sub_item_id" onchange="getUOM();">
-                                                <option value="">--select--</option>
-                                                <!-- Add dynamically generated item options here -->
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group row">
-                                        <label for="type_of_packing" class="col-sm-4 control-label">Type of packing</label>
-                                        <div class="col-sm-8">
-                                            <input type="text" id="type_of_packing" class="form-control form-control-sm" readonly />
                                         </div>
                                     </div>
                                 </div>
@@ -219,7 +208,7 @@
                                     <div class="form-group row">
                                         <label for="batch_no" class="col-sm-4 control-label">Batch Number <font color="#FF0000">*</font></label>
                                         <div class="col-sm-8">
-                                            <input type="text" id="batch_no" class="form-control form-control-sm mandatory" />
+                                            <input type="text" id="batch_no" value="{{ $batchNumber }}" class="form-control form-control-sm mandatory" readonly />
                                         </div>
                                     </div>
                                 </div>
@@ -253,7 +242,6 @@
                             </div>
 
                             <div class="row">
-
                                 <div class="col-md-6">
                                     <div class="form-group row">
                                         <label for="spq" class="col-sm-4 control-label">SPQ <font color="#FF0000">*</font></label>
@@ -266,7 +254,7 @@
                                     <div class="form-group row">
                                         <label for="total_quantity" class="col-sm-4 control-label">Total Quantity <font color="#FF0000">*</font></label>
                                         <div class="col-sm-8">
-                                            <input type="text" id="total_quantity" class="form-control form-control-sm mandatory" onkeyup="total_qty()" />
+                                            <input type="text" id="total_quantity" class="form-control form-control-sm mandatory" onkeyup="totalBarcode()" />
                                         </div>
                                     </div>
                                 </div>
@@ -277,14 +265,14 @@
                                     <div class="form-group row">
                                         <label for="number_of_barcodes" class="col-sm-4 control-label">Number Of Barcodes <font color="#FF0000">*</font></label>
                                         <div class="col-sm-8">
-                                            <input type="text" id="number_of_barcodes" class="form-control form-control-sm mandatory" onkeyup="total_qty1()" pattern="[1-9]+" value="1" />
+                                            <input type="text" id="number_of_barcodes" class="form-control form-control-sm mandatory" onkeyup="totalQuantity()" pattern="^[1-9][0-9]*$" value="1" />
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="card-body">
-                                <input type="button" value="ADD TO GRID" class="btn btn-primary" id="addtogrid" />
+                                <input type="button" value="ADD TO GRID" class="btn btn-primary" id="addtogrid" onclick="addToGrid()" />
                                 <input type="hidden" id="count" name="count" />
                                 &nbsp;
                                 <input type="button" name="reset" class="btn btn-default" value="Reset" onclick="rowreset()" />
@@ -297,6 +285,7 @@
                                     <tr>
                                         <th>Sl.no</th>
                                         <th>Part No/Item Name</th>
+                                        <th>price</th>
                                         <th>Batch No</th>
                                         <th>DOM</th>
                                         <th>BBF</th>
@@ -314,7 +303,7 @@
 
                         <!-- Action Buttons -->
                         <div class="card-body">
-                            <button type="button" class="btn btn-primary" id="submitButton">
+                            <button type="button" class="btn btn-primary" id="submitButton" onclick="checkData()">
                                 Save
                             </button>
                             <input type="reset" class="btn btn-default" value="Clear" />
@@ -378,4 +367,351 @@
 <script src="{{ asset('assets/js/dropzone.js') }}"></script>
 <script src="{{ asset('assets/js/dropify.js') }}"></script>
 <script src="{{ asset('assets/js/data-table.js') }}"></script>
+
+
+
 @endpush
+
+<script>
+
+    function filterItem(){
+        console.log("Filter Items");
+
+        var  grnType = $('#grn_type').val();
+        var  categoryId = $('#category_id').val();
+        var  purchaseNumber = $('#purchase_number').val();
+
+        $.ajax({
+            type: "POST",
+            url: "{{ route('ajax.getgrnitems') }}",
+            data: {
+                grn_type : grnType,
+                category_id : categoryId,
+                purchase_number : purchaseNumber,
+            },
+            dataType: "json",
+            success: function (response) {
+                if (response && response.length > 0) {
+                    $('#item_id').empty();
+                    $('#item_id').append('<option value="">--select--</option>');
+
+                    response.forEach(function(item){
+
+                        $('#item_id').append(
+                            `<option value="${item.id}">${item.item_code}/${item.name}</option>`
+                        );
+                    });
+
+                }
+            }
+        });
+    }
+
+    function getPurchaseNumber(){
+        var  vendorId = $('#vendor_id').val();
+
+        $.ajax({
+            type: "POST",
+            url: "{{ route('ajax.getpurchasenumber') }}",
+            data: {
+                vendor_id : vendorId
+            },
+            dataType: "json",
+            success: function (response) {
+                if (response && response.length > 0) {
+                    $('#purchase_number').empty()
+                    $('#purchase_number').append('<option value="">--select--</option>');
+
+                    response.forEach(function(purchaseNumber){
+                        $('#purchase_number').append(
+                            `<option value="${purchaseNumber.purchase_number}">${purchaseNumber.purchase_number}</option>`
+                        );
+                    });
+
+                }
+            }
+        });
+    }
+
+    function getItemUOM(){
+        var itemId = $('#item_id').val();
+
+        $.ajax({
+            type: "POST",
+            url: "{{route('ajax.getitemuom')}}",
+            data: {
+                item_id : itemId
+            },
+            dataType: "json",
+            success: function (response) {
+                console.log(response);
+
+                if (response) {
+
+                    $('#uom').val('');
+                    $('#spq').val('');
+
+                    $('#spq').val(response.spq_quantity);
+                    $('#uom').val(response.uom_name);
+
+                    $('#total_quantity').val('');
+                    $('#number_of_barcodes').val(1);
+
+                }
+            }
+        });
+    }
+
+    function ifItem() {
+        var item = $('#item_id').val();
+        console.log('Item ID value: ', item);
+
+        if (!item) {
+            $('#total_quantity').val('');
+            alert('Select item');
+            return false;
+        }
+
+        return true;
+    }
+
+    function totalBarcode() {
+        if (ifItem()) {
+            var spq = parseFloat($('#spq').val());
+            var total_qty = parseFloat($('#total_quantity').val());
+
+            if (total_qty <= 0) {
+                alert('Total Quantity must be greater than zero');
+                $('#total_quantity').val('');
+                return;
+            }
+
+            var no_barcode = total_qty / spq;
+            $('#number_of_barcodes').val(no_barcode.toFixed(0));
+        }
+    }
+
+    function totalQuantity() {
+        if (ifItem()) {
+            var spq = parseFloat($('#spq').val());
+            var barcode = parseFloat($('#number_of_barcodes').val());
+
+            if (barcode <= 0) {
+                alert('Number of Barcodes must be greater than zero');
+                $('#number_of_barcodes').val('');
+                return;
+            }
+
+            var totalQuantity = spq * barcode;
+            $('#total_quantity').val(totalQuantity.toFixed(0));
+        }
+    }
+
+    let itemCount = 0;
+    function addToGrid() {
+        console.log("add grid clicked");
+
+        // Retrieve form values
+        let dateom = $('#dom').val();
+        let bbv = $('#best_before_value').val();
+        let subItemId = $('#item_id').val();
+        let itemName = $('#item_id option:selected').text();
+        let price = $.trim($("#price").val());
+        let batchNo = $.trim($("#batch_no").val());
+        let spq = $.trim($("#spq").val());
+        let totalQuantity = $.trim($("#total_quantity").val());
+        let ponumber = $.trim($("#purchase_number").val());
+        let poQty = $.trim($("#po_qty").val());
+        let numberOfBarcodes = $.trim($("#number_of_barcodes").val());
+
+        // Validate if DOM is before Best Before date
+        if (dateom > bbv) {
+            alert("Date of Manufacture should be less than Best Before date");
+            return;
+        }
+
+        // Validate required fields
+        if (!subItemId) {
+            alert("Please select an item");
+            return;
+        } else if (!batchNo) {
+            alert("Please enter batch number");
+            return;
+        } else if (!dateom) {
+            alert("Please enter DOM");
+            return;
+        } else if (!bbv) {
+            alert("Please enter Best Before");
+            return;
+        } else if (!spq) {
+            alert("Please enter SPQ");
+            return;
+        } else if (!numberOfBarcodes) {
+            alert("Please enter the number of barcodes");
+            return;
+        } else if (!totalQuantity) {
+            alert("Please enter the number of Total Quantity");
+            return;
+        }
+
+        // Check if total quantity is divisible by SPQ
+        if (totalQuantity % spq != 0) {
+            alert("Total Quantity must be divisible by SPQ.");
+            return;
+        }
+
+        // Check for duplicates in grid
+        if ($('#grngridbody').find('tr').filter(function() {
+            return $(this).find('td').eq(1).text() === itemName && $(this).find('td').eq(3).text() === batchNo;
+        }).length > 0) {
+            alert("Item already added");
+            return;
+        }
+
+        // Check PO quantity exceeds limit logic
+        let totalPoQty = 0;
+        $('#grngridbody tr').each(function() {
+            let rowItemId = $(this).find('td').eq(1).text();
+            let rowQty = $(this).find('td').eq(3).text();
+
+            if (rowItemId === itemName) {
+                totalPoQty += parseInt(rowQty);
+            }
+        });
+
+        if (totalPoQty + parseInt(totalQuantity) > parseInt(poQty)) {
+            alert("PO Quantity exceeded");
+            return;
+        }
+
+        // Add the data to the grid
+        itemCount++;
+
+        $('#grngridbody').append(`
+            <tr data-item-id="${subItemId}">
+                <td>${itemCount}</td>
+                <td>${itemName}</td>
+                <td>${price}</td>
+                <td>${batchNo}</td>
+                <td>${dateom}</td>
+                <td>${bbv}</td>
+                <td>${spq}</td>
+                <td>${totalQuantity}</td>
+                <td>${numberOfBarcodes}</td>
+                <td><button type="button" class="btn btn-danger btn-sm remove-item">Remove</button></td>
+            </tr>
+        `);
+
+        // Add hidden inputs to form
+        $('<input>').attr({
+            type: 'hidden',
+            name: `items[${itemCount}][item_id]`,
+            value: subItemId
+        }).appendTo('form');
+        $('<input>').attr({
+            type: 'hidden',
+            name: `items[${itemCount}][price]`,
+            value: price
+        }).appendTo('form');
+        $('<input>').attr({
+            type: 'hidden',
+            name: `items[${itemCount}][batch_no]`,
+            value: batchNo
+        }).appendTo('form');
+        $('<input>').attr({
+            type: 'hidden',
+            name: `items[${itemCount}][dom]`,
+            value: dateom
+        }).appendTo('form');
+        $('<input>').attr({
+            type: 'hidden',
+            name: `items[${itemCount}][bbf]`,
+            value: bbv
+        }).appendTo('form');
+        $('<input>').attr({
+            type: 'hidden',
+            name: `items[${itemCount}][spq]`,
+            value: spq
+        }).appendTo('form');
+        $('<input>').attr({
+            type: 'hidden',
+            name: `items[${itemCount}][total_quantity]`,
+            value: totalQuantity
+        }).appendTo('form');
+        $('<input>').attr({
+            type: 'hidden',
+            name: `items[${itemCount}][number_of_barcodes]`,
+            value: numberOfBarcodes
+        }).appendTo('form');
+
+        // Reset the form fields for the next entry
+        $('#item_id').val('').trigger('change');
+        $('#price').val('');
+        $('#uom').val('');
+        $('#spq').val('');
+        $('#total_quantity').val('');
+        $('#purchase_number').val('');
+        $('#po_qty').val('');
+        $('#number_of_barcodes').val('');
+
+    }
+
+    // Remove item from grid
+    $(document).on('click', '.remove-item', function() {
+        console.log('clicked remove');
+
+        let itemId = $(this).closest('tr').data('item-id');
+        $(this).closest('tr').remove();
+
+        $(`input[name="items[][item_id]"][value="${itemId}"]`).remove();
+        $(`input[name="items[][price]"][value="${itemId}"]`).remove();
+        $(`input[name="items[][batch_no]"][value="${itemId}"]`).remove();
+        $(`input[name="items[][dom]"][value="${itemId}"]`).remove();
+        $(`input[name="items[][bbf]"][value="${itemId}"]`).remove();
+        $(`input[name="items[][spq]"][value="${itemId}"]`).remove();
+        $(`input[name="items[][total_quantity]"][value="${itemId}"]`).remove();
+        $(`input[name="items[][number_of_barcodes]"][value="${itemId}"]`).remove();
+
+        itemCount--;
+        updateRowNumbers();
+    });
+
+    function updateRowNumbers() {
+        $('#grngridbody tr').each(function(index) {
+            $(this).find('td').eq(0).text(index + 1);
+        });
+    }
+
+    // Reset grid
+    $('#reset').click(function() {
+        rowReset();
+    });
+
+    function rowReset() {
+        $('#grngridbody').empty();
+        $('form input[type="hidden"]').remove();
+        itemCount = 0;
+    }
+
+    $('#uploadModal form').on('submit', function() {
+        $('#uploadButton').prop('disabled', true).text('Uploading...');
+    });
+
+
+
+
+    function checkData() {
+        console.log('clicked');
+
+        var itemCount = document.getElementById('grngridbody').rows.length;
+        console.log(itemCount);
+
+        if (itemCount == 0) {
+            alert('Empty Grid: Please add items to the GRN.');
+            return false;
+        } else {
+            document.getElementById('grnForm').submit();
+        }
+    }
+
+</script>
