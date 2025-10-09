@@ -19,7 +19,7 @@ return new class extends Migration
             $table->date('invoice_date')->nullable();
             $table->foreignId('vendor_id')->constrained();
             $table->foreignId('location_id')->constrained();
-            $table->enum('grn_type', ['RM,FG']);
+            $table->enum('grn_type', ['RM','FG']);
             $table->text('remarks')->nullable();
             $table->foreignId('branch_id')->constrained();
             $table->integer('status')->default(0)->comment('0=>storage scan not completed; 1=>storage scan in progress; 2=>storage scan completed;');

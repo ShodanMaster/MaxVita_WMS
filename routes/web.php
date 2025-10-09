@@ -156,6 +156,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('purchase-order-cancel', [PurchaseOrderController::class, 'purchaseOrderCancel'])->name('purchase-order-cancel');
     Route::post('cancel-purchase-order', [PurchaseOrderController::class, 'cancelPurchaseOrder'])->name('cancel-purchase-order');
 
+    // Grn
+    Route::post('grn-excel-upload', [GrnController::class, 'grnExcelUpload'])->name('grn-excel-upload');
+
     // Utitlity
 
     // Permission
