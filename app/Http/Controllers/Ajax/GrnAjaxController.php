@@ -5,16 +5,27 @@ namespace App\Http\Controllers\Ajax;
 use App\Http\Controllers\Controller;
 use App\Models\Item;
 use App\Models\PurchaseOrder;
+use App\Models\PurchaseOrderSub;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 class GrnAjaxController extends Controller
 {
     public function getPurchaseNumber(Request $request){
         if($request->ajax()){
             $purchaseNumbers = PurchaseOrder::where('vendor_id', $request->vendor_id)
-                                            ->whereNot('status', 1)->get(['purchase_number']);
+                                            ->whereNot('status', 1)->get(['id', 'purchase_number']);
 
             return response()->json($purchaseNumbers);
+        }
+    }
+
+    public function itemPurchaseQuantity(Request $request){
+        if($request->ajax()){
+            $purchaseItem = PurchaseOrderSub::where('purchase_order_id', $request->purchase_id)->where('item_id', $request->item_id)->first(['quantity']);
+
+            return response()->json(round($purchaseItem->quantity));
+
         }
     }
 
@@ -23,15 +34,12 @@ class GrnAjaxController extends Controller
             $query = Item::query();
 
             if ($request->purchase_number) {
-                $purchaseOrder = PurchaseOrder::where('purchase_number', $request->purchase_number)
-                                        ->with('purchaseOrderSubs.item')
-                                        ->first();
+                $purchaseOrder = PurchaseOrder::with('purchaseOrderSubs.item')
+                                        ->find($request->purchase_number);
 
                 if ($purchaseOrder) {
                     $itemIds = $purchaseOrder->purchaseOrderSubs->pluck('item_id');
                     $query->whereIn('id', $itemIds);
-                } else {
-                    return response()->json([]);
                 }
             }
 

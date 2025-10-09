@@ -106,11 +106,11 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group row">
-                                    <label for="invoice_no" class="col-sm-4 control-label">
+                                    <label for="invoice_number" class="col-sm-4 control-label">
                                         Invoice Number
                                     </label>
                                     <div class="col-sm-8">
-                                        <input type="text" name="invoice_no" id="invoice_no" class="form-control form-control-sm">
+                                        <input type="text" name="invoice_number" id="invoice_number" class="form-control form-control-sm">
                                     </div>
                                 </div>
                             </div>
@@ -120,7 +120,7 @@
                                         Invoice Date
                                     </label>
                                     <div class="col-sm-8">
-                                        <input type="date" name="invoice_date" id="invoice_no" class="form-control form-control-sm">
+                                        <input type="date" name="invoice_date" id="invoice_date" class="form-control form-control-sm">
                                     </div>
                                 </div>
                             </div>
@@ -158,10 +158,10 @@
                                     <div class="form-group row">
                                         <label for="purchase_number" class="col-sm-4 control-label">PO Number</label>
                                         <div class="input-group col-sm-8">
-                                            <select class="js-example-basic-single form-select mandatory" style="width:100%" id="purchase_number" onchange="filterItem();">
+                                            <select class="js-example-basic-single form-select mandatory" style="width:100%" id="purchase_number" name="purchase_number" onchange="filterItem();">
                                                 <option value="">--select--</option>
                                             </select>
-                                            <input type="hidden" id="po_qty" />
+                                            <input type="hidden" id="is_purchase" name="is_purchase"/>
                                         </div>
                                     </div>
                                 </div>
@@ -170,7 +170,7 @@
                                         <label for="category_id" class="col-sm-4 control-label">Category</label>
                                         <div class="col-sm-8">
                                             <select class="js-example-basic-single form-select mandatory" style="width:100%" id="category_id" onchange="filterItem();">
-                                                <option value="" disabled selected>--select--</option>
+                                                <option value="" selected>--select--</option>
                                                 @forelse ($categories as $category)
                                                     <option value="{{$category->id}}">{{$category->name}}</option>
                                                 @empty
@@ -208,15 +208,15 @@
                                     <div class="form-group row">
                                         <label for="batch_no" class="col-sm-4 control-label">Batch Number <font color="#FF0000">*</font></label>
                                         <div class="col-sm-8">
-                                            <input type="text" id="batch_no" value="{{ $batchNumber }}" class="form-control form-control-sm mandatory" readonly />
+                                            <input type="text" id="batch_no" name="batch_number" value="{{ $batchNumber }}" class="form-control form-control-sm mandatory" readonly />
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group row">
-                                        <label for="price" class="col-sm-4 control-label">Price</label>
+                                        <label for="price" class="col-sm-4 control-label">Price <font color="#FF0000">*</font></label>
                                         <div class="col-sm-8">
-                                            <input type="text" id="price" class="form-control form-control-sm" />
+                                            <input type="text" id="price" class="form-control form-control-sm mandatory"" />
                                         </div>
                                     </div>
                                 </div>
@@ -375,7 +375,6 @@
 <script>
 
     function filterItem(){
-        console.log("Filter Items");
 
         var  grnType = $('#grn_type').val();
         var  categoryId = $('#category_id').val();
@@ -391,10 +390,9 @@
             },
             dataType: "json",
             success: function (response) {
+                $('#item_id').empty();
+                $('#item_id').append('<option value="">--select--</option>');
                 if (response && response.length > 0) {
-                    $('#item_id').empty();
-                    $('#item_id').append('<option value="">--select--</option>');
-
                     response.forEach(function(item){
 
                         $('#item_id').append(
@@ -424,13 +422,41 @@
 
                     response.forEach(function(purchaseNumber){
                         $('#purchase_number').append(
-                            `<option value="${purchaseNumber.purchase_number}">${purchaseNumber.purchase_number}</option>`
+                            `<option value="${purchaseNumber.id}">${purchaseNumber.purchase_number}</option>`
                         );
                     });
 
                 }
             }
         });
+    }
+
+    function getPurchaseItemQuantity(){
+        var purchaseId = document.getElementById('purchase_number').value;
+        if (purchaseId != '') {
+            var itemId = $('#item_id').val();
+
+            $.ajax({
+                type: "POST",
+                url: "{{ route('ajax.itempurchasequantity')}}",
+                data: {
+                    purchase_id : purchaseId,
+                    item_id : itemId,
+                },
+                dataType: "json",
+                success: function (response) {
+                    console.log(response);
+
+                    if(response != ""){
+                        $('#total_quantity').val(response);
+                        $('#is_purchase').val(1);
+
+                        totalBarcode();
+                    }
+
+                }
+            });
+        }
     }
 
     function getItemUOM(){
@@ -444,8 +470,6 @@
             },
             dataType: "json",
             success: function (response) {
-                console.log(response);
-
                 if (response) {
 
                     $('#uom').val('');
@@ -457,6 +481,8 @@
                     $('#total_quantity').val('');
                     $('#number_of_barcodes').val(1);
 
+                    getPurchaseItemQuantity();
+
                 }
             }
         });
@@ -464,7 +490,6 @@
 
     function ifItem() {
         var item = $('#item_id').val();
-        console.log('Item ID value: ', item);
 
         if (!item) {
             $('#total_quantity').val('');
@@ -536,6 +561,9 @@
             return;
         } else if (!batchNo) {
             alert("Please enter batch number");
+            return;
+        } else if (!price) {
+            alert("Please enter Price number");
             return;
         } else if (!dateom) {
             alert("Please enter DOM");
@@ -643,14 +671,21 @@
             name: `items[${itemCount}][number_of_barcodes]`,
             value: numberOfBarcodes
         }).appendTo('form');
+        $('<input>').attr({
+            type: 'hidden',
+            name: `items[${itemCount}][purchase_id]`,
+            value: ponumber
+        }).appendTo('form');
 
         // Reset the form fields for the next entry
         $('#item_id').val('').trigger('change');
+        $('#purchase_number').val('');
         $('#price').val('');
+        $('#dom').val('');
+        $('#best_before_value').val('');
         $('#uom').val('');
         $('#spq').val('');
         $('#total_quantity').val('');
-        $('#purchase_number').val('');
         $('#po_qty').val('');
         $('#number_of_barcodes').val('');
 
@@ -697,11 +732,7 @@
         $('#uploadButton').prop('disabled', true).text('Uploading...');
     });
 
-
-
-
     function checkData() {
-        console.log('clicked');
 
         var itemCount = document.getElementById('grngridbody').rows.length;
         console.log(itemCount);

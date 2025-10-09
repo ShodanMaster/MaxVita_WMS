@@ -20,5 +20,6 @@ Route::prefix('ajax')
         //Grn Ajax Functions
         Route::post('get-purchase-number', [GrnAjaxController::class, 'getPurchaseNumber'])->name('getpurchasenumber');
         Route::post('get-grn-items', [GrnAjaxController::class, 'getGrnItems'])->name('getgrnitems');
+        Route::post('item-purchase-quantity', [GrnAjaxController::class, 'itemPurchaseQuantity'])->name('itempurchasequantity');
 
     });

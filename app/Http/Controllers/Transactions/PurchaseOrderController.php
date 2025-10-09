@@ -178,7 +178,7 @@ class PurchaseOrderController extends Controller
 
     public function purchaseOrderCancel(){
 
-        $orders = PurchaseOrder::whereNot('status', 2)->get(['purchase_number']);
+        $orders = PurchaseOrder::whereNot('status', 2)->get(['id', 'purchase_number']);
         return view('transactions.purchaseorder.cancel', compact('orders'));
     }
 

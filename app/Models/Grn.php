@@ -10,6 +10,19 @@ class Grn extends Model
 {
     use SoftDeletes;
 
+    protected $fillable = [
+        'grn_number',
+        'purchase_number',
+        'invoice_number',
+        'invoice_date',
+        'vendor_id',
+        'location_id',
+        'grn_type',
+        'remarks',
+        'branch_id',
+        'status',
+    ];
+
     public static function grnNumber(){
         $yr = 'GRN' . date("y");
         $len = strlen($yr);

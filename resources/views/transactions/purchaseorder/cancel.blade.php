@@ -37,7 +37,7 @@
                                     <select id="purchase_order_id" name="purchaseOrderNumber" class="js-example-basic-single form-select mandatory" style="width:100%" required>
                                         <option value="">-- Select PurchaseOrder --</option>
                                         @foreach($orders as $order)
-                                        <option value="{{ $order->purchase_number }}">{{$order->purchase_number}}</option>
+                                        <option value="{{ $order->id }}">{{$order->purchase_number}}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -108,7 +108,7 @@
             type: "post",
             url: "{{ route('ajax.getpurchaseorder')}}",
             data: {
-                purchase_number: purchaseNumber
+                purchase_id: purchaseNumber
             },
             dataType: "json",
             success: function(response) {

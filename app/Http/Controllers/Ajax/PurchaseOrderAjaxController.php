@@ -11,7 +11,7 @@ class PurchaseOrderAjaxController extends Controller
     public function getPurchaseOrder(Request $request){
         // dd($request->all());
         if ($request->ajax()) {
-            $purchaseOrder = PurchaseOrder::with('purchaseOrderSubs.item')->where('purchase_number', $request->purchase_number)->first();
+            $purchaseOrder = PurchaseOrder::with('purchaseOrderSubs.item')->find($request->purchase_id);
 
             if (!$purchaseOrder) {
                 return response()->json(['error' => 'Purchase order not found'], 404);
