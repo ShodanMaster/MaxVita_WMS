@@ -59,4 +59,13 @@ class Barcode extends Model
 
         return $barcode[0]->serial_number;
     }
+
+    public function grn(){
+        return $this->belongsTo(Grn::class);
+    }
+
+    public function item()
+    {
+        return $this->belongsTo(Item::class);
+    }
 }

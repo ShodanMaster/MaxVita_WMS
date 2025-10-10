@@ -35,7 +35,7 @@ class GrnController extends Controller
     }
 
     public function store(Request $request){
-        dd($request->all());
+        // dd($request->all());
         try{
 
             DB::beginTransaction();
@@ -72,89 +72,95 @@ class GrnController extends Controller
 
             foreach($request->items as $item){
 
-                if($item["purchase_id"] != ""){
+                $purchaseOrderExists = PurchaseOrder::where('id', '=', $item["purchase_id"])->where('status', 0)->first();
 
-                    $purchaseOrderExists = PurchaseOrder::where('id', '=', $item["purchase_id"])->where('status', 0)->first();
+                if($purchaseOrderExists){
+                    $purchaseOrderSub = PurchaseOrderSub::where('purchase_order_id', $purchaseOrderExists->id)
+                    ->where('item_id', $item["item_id"])
+                    ->where('status', '0')
+                    ->first();
 
-                    if($purchaseOrderExists){
-                        $purchaseOrderSub = PurchaseOrderSub::where('purchase_order_id', $purchaseOrderExists->id)
-                        ->where('item_id', $item["item_id"])
-                        ->where('status', '0')
-                        ->first();
+                    $purchaseOrderSub->update([
+                        'picked_quantity' => $purchaseOrderSub->picked_quantity + $item["total_quantity"]
+                    ]);
+                }
 
-                        $purchaseOrderSub->update([
-                            'picked_quantity' => $purchaseOrderSub->picked_quantity + $item["total_quantity"]
-                        ]);
-                    }
+                $grnSub = GrnSub::create([
+                    'grn_id' => $grn->id,
+                    'item_id' => $item["item_id"],
+                    'batch_number' => $batchNumber,
+                    'quantity' => $item["total_quantity"],
+                    'date_of_manufacture' => $item["dom"],
+                    'best_before_date' => $item["bbf"],
+                    'total_quantity' => $item["total_quantity"],
+                    'number_of_barcodes' => $item["number_of_barcodes"],
+                ]);
 
-                    $grnSub = GrnSub::create([
+                if($purchaseOrderExists){
+                    $grnPurchaseOrderSub = GrnPurchaseOrderSub::create([
+                        'grn_purchase_order_id' => $grnPurchaseOrder->id,
+                        'purchase_number' => $purchaseOrderExists->purchase_number,
+                        'item_id' => $item["item_id"]
+                    ]);
+                }
+
+                $numberOfBarcodes = $item["number_of_barcodes"];
+                $totalPrice = (int)$item["spq"] * $item["price"];
+                // dd($item["price"]);
+                while($numberOfBarcodes--){
+
+                    $barcode = Barcode::nextNumber($request->location_id);
+
+                    Barcode::create([
+                        'serial_number' => $barcode,
                         'grn_id' => $grn->id,
+                        'branch_id' => $branchId,
+                        'location_id' => $request->location_id,
                         'item_id' => $item["item_id"],
-                        'batch_number' => $batchNumber,
-                        'quantity' => $item["total_quantity"],
                         'date_of_manufacture' => $item["dom"],
                         'best_before_date' => $item["bbf"],
-                        'total_quantity' => $item["total_quantity"],
-                        'number_of_barcodes' => $item["number_of_barcodes"],
+                        'batch_number' => $batchNumber,
+                        'price' => $item["price"],
+                        'total_price' => $totalPrice,
+                        'spq_quantity' => $item["spq"],
+                        'net_weight' => $item["total_quantity"],
+                        'grn_spq_quantity' => $item["spq"],
+                        'grn_net_weight' => $item["total_quantity"],
+                        'status' => '-1',
+                        'user_id' => $userid,
+                        'qc_approval_status' => '0',
                     ]);
 
                     if($purchaseOrderExists){
-                        $grnPurchaseOrderSub = GrnPurchaseOrderSub::create([
-                            'grn_purchase_order_id' => $grnPurchaseOrder->id,
-                            'purchase_number' => $purchaseOrderExists->purchase_number,
-                            'item_id' => $item["item_id"]
-                        ]);
-                    }
+                        PurchaseOrderSub::where('purchase_order_id', $purchaseOrderExists->id)
+                            ->where('item_id', $item["item_id"])
+                            ->where('status', '0')
+                            ->whereColumn('quantity', 'picked_quantity')
+                            ->update([
+                                'status' => '1'
+                            ]);
 
-                    $numberOfBarcodes = $item["number_of_barcodes"];
-                    $totalPrice = (int)$item["spq"] * $item["price"];
-                    // dd($item["price"]);
-                    while($numberOfBarcodes--){
-
-                        $barcode = Barcode::nextNumber($request->location_id);
-
-                        Barcode::create([
-                            'serial_number' => $barcode,
-                            'grn_id' => $grn->id,
-                            'branch_id' => $branchId,
-                            'location_id' => $request->location_id,
-                            'item_id' => $item["item_id"],
-                            'date_of_manufacture' => $item["dom"],
-                            'best_before_date' => $item["bbf"],
-                            'batch_number' => $batchNumber,
-                            'price' => $item["price"],
-                            'total_price' => $totalPrice,
-                            'spq_quantity' => $item["spq"],
-                            'net_weight' => $item["total_quantity"],
-                            'grn_spq_quantity' => $item["spq"],
-                            'grn_net_weight' => $item["total_quantity"],
-                            'status' => '-1',
-                            'user_id' => $userid,
-                            'qc_approval_status' => '0',
-                        ]);
-
-                        if($purchaseOrderExists){
-                            PurchaseOrderSub::where('purchase_order_id', $purchaseOrderExists->id)
-                                ->where('item_id', $item["item_id"])
-                                ->where('status', '0')
-                                ->whereColumn('quantity', 'picked_quantity')
+                        $dataCheck = PurchaseOrderSub::where('purchase_order_id', $purchaseOrderExists->id)->where('status', '0')->count();
+                        if ($dataCheck == 0) {
+                            PurchaseOrder::where('id', $purchaseOrderExists->id)
+                                ->where('status', "0")
                                 ->update([
                                     'status' => '1'
                                 ]);
-
-                            $dataCheck = PurchaseOrderSub::where('purchase_order_id', $purchaseOrderExists->id)->where('status', '0')->count();
-                            if ($dataCheck == 0) {
-                                PurchaseOrder::where('id', $purchaseOrderExists->id)
-                                    ->where('status', "0")
-                                    ->update([
-                                        'status' => '1'
-                                    ]);
-                            }
-
                         }
 
                     }
+
+                    $itemName = Item::find($item["item_id"])->name;
+
+                    $contents[] = [
+                        'grn_number' => $grn->grn_number,
+                        'barcode' => $barcode,
+                        'item_name' => $itemName,
+                        'spq_quantity' => $item["spq"]
+                    ];
                 }
+
             }
 
             // dd($purchaseOrderExists->purchase_number);
@@ -165,16 +171,23 @@ class GrnController extends Controller
                     ]);
             }
 
-            // if ($request->prn) {
-            //     $printable_content = $this->generateDPL($content);
-            //     Alert::toast('GRN saved with Number ' . $grnno, 'success')->autoClose(3000);
+            // if ($request->has('prn')) {
+            //     $grnPrintBarcode = $grn->id;
+            //     $printableContent = $this->generateDPL($content);
             // } else {
-                // $printable_content = $grn_id;
-
-                DB::commit();
-                Alert::toast('GRN saved with Number ' . $grn->grn_number, 'success')->autoClose(3000);
-                return redirect()->back();
             // }
+
+            DB::commit();
+
+            Alert::toast('GRN saved with Number ' . $grn->grn_number, 'success')->autoClose(3000);
+            if ($request->has('prn')) {
+                $grnPrintableContent = $grn->id;
+                return back()->with('print_barcode', $grnPrintableContent);
+            } else {
+                return redirect()->back();
+                // return back()->with('print_barcode', $print_barcode);
+            }
+            // return redirect()->back()->with('print_content', $printableContent);
 
         } catch(Exception $e){
             DB::rollBack();
@@ -327,7 +340,10 @@ class GrnController extends Controller
             $request->file('excel_file')->storeAs('excel_uploads/transaction_uploads/grn_uploads', $fileName, 'public');
             DB::commit();
             Alert::toast('Grn saved with Number ' . $grn->grn_number, 'success')->autoClose(3000);
-            return redirect()->back();
+
+            $grnPrintableContent = $grn->id;
+            return back()->with('print_barcode', $grnPrintableContent);
+            // return redirect()->back();
         } catch (Exception $e) {
             DB::rollBack();
             dd($e);
@@ -482,5 +498,57 @@ class GrnController extends Controller
 
     public function edit(){
 
+    }
+
+    public function printBarcode($id){
+        $grn = Grn::with(['barcodes.item'])
+                    ->where('id', $id)
+                    ->first();
+        // dd($grn);
+        return view('transactions.grn.printbarcode', compact('grn'));
+    }
+
+    protected function generateDPL($contents = [])
+    {
+
+        $dpl_data = $this->readDPL();
+
+        $printable_data1 = '';
+
+        foreach ($contents as $content) {
+            $patterns = array();
+            $replacements = array();
+            foreach ($content as $k => $v) {
+                $patterns[] = "[$k]";
+                $replacements[] = (string)$v;
+            }
+            $assigned = str_replace($patterns, $replacements, $dpl_data);
+
+            // remove unwanted tags
+            $assigned = preg_replace("/(\[\w+\])/", '', $assigned);
+            $printable_data1 .= $assigned;
+        }
+        // dd($printable_data1);
+        return $printable_data1;
+    }
+
+    protected function readDPL()
+    {
+
+        // $setting = Setting::select('label', 'type')->where('type', 1)->first();
+
+        // if ($setting && $setting->type == 1) {
+        //     if ($setting->label) {
+        //         $file = public_path() . '/prn_files/' . $setting->label;
+        //         $contents = fopen($file, 'r');
+        //         $contents1 = fread($contents, filesize($file));
+        //     } else {
+        //         $file = public_path() . '/_barcode_label_29x19.txt';
+        //         $contents = fopen($file, 'r');
+        //         $contents1 = fread($contents, filesize($file));
+        //     }
+        // }
+        // return $contents1;
+        return 123;
     }
 }

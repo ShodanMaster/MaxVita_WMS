@@ -33,4 +33,8 @@ class Item extends Model
         return $this->belongsTo(Uom::class);
     }
 
+    public function barcodes()
+    {
+        return $this->hasMany(Barcode::class);
+    }
 }

@@ -74,7 +74,7 @@
                                         Vendor Name <font color="#FF0000">*</font>
                                     </label>
                                     <div class="col-sm-8">
-                                        <select name="vendor_id" id="vendor_id" class="js-example-basic-single form-control mandatory" onchange="getPurchaseNumber();">
+                                        <select name="vendor_id" id="vendor_id" class="js-example-basic-single form-control mandatory" required onchange="getPurchaseNumber();">
                                             <option value="" disabled selected>--select--</option>
                                             @forelse ($vendors as $vendor)
                                                 <option value="{{$vendor->id}}">{{$vendor->name}}</option>
@@ -143,7 +143,7 @@
                                         PRN Print
                                     </label>
                                     <div class="col-sm-8">
-                                        <input type="checkbox" name="prn" id="prn" class="custom-class" value="1">
+                                        <input type="checkbox" name="prn" id="prn" class="custom-class">
                                     </div>
                                 </div>
                             </div>
@@ -373,6 +373,7 @@
 @endpush
 
 <script>
+    console.log("qwertyu: ", @json(session()->all()));
 
     function filterItem(){
 
@@ -729,15 +730,41 @@
 
     function checkData() {
 
+        var grnType = document.getElementById('grn_type').value;
+        var location = document.getElementById('location_id').value;
+        var vendor = document.getElementById('vendor_id').value;
         var itemCount = document.getElementById('grngridbody').rows.length;
         console.log(itemCount);
 
-        if (itemCount == 0) {
+
+        if(!grnType){
+            alert('Please Select Grn Type');
+            return false;
+        }
+        else if(!vendor){
+            alert('Please Select Vendor');
+            return false;
+        }
+        else if(!location){
+            alert('Please Select Location');
+            return false;
+        }
+        else if (itemCount == 0) {
             alert('Empty Grid: Please add items to the GRN.');
             return false;
-        } else {
+        }
+        else {
             document.getElementById('grnForm').submit();
         }
     }
 
 </script>
+
+{{-- @includeWhen(!is_null(session()->get('print_barcode')), 'print.barcodeprintpopup', ['print_barcode'=>session()->get('print_barcode')]) --}}
+@if (!is_null(session()->get('print_barcode')))
+    <script>
+        console.log('qwertyuiop');
+
+        window.open("{{ route('printbarcode',session()->get('print_barcode')) }}");
+    </script>
+@endif
