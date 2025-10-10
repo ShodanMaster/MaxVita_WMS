@@ -412,9 +412,10 @@ class GrnController extends Controller
         $purchaseOrder = PurchaseOrder::where('purchase_number', $grn['purchase_number'])->first();
         if($purchaseOrder){
             if($purchaseOrder->vendor_id != $data["vendor_id"]){
-                $data["error"] .= "This Purchase Number order does not belongs to Vendor.|"
+                $data["error"] .= "This Purchase Number order does not belongs to Vendor.|";
+            }else{
+                $data['purchase_id'] = $purchaseOrder->id;
             }
-            $data['purchase_id'] = $purchaseOrder->id;
         }
         // dd($data);
         if ($data['error'] !== '') return $data;
