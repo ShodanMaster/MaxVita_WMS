@@ -479,4 +479,8 @@ class GrnController extends Controller
 
         return $data;
     }
+
+    public function edit(){
+
+    }
 }
