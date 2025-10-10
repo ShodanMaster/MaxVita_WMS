@@ -134,14 +134,23 @@ class SubMenuSeeder extends Seeder
             //15
             [
                 'menu_id' => 4,
-                'title' => 'GRN Entry ',
+                'title' => 'GRN Entry',
                 'link' => 'grn',
+                'listing_order' => 11,
+                'created_at' => now(),
+            ],
+            // Sotage Scan
+            //16
+            [
+                'menu_id' => 4,
+                'title' => 'Storage Scan',
+                'link' => 'storage-scan',
                 'listing_order' => 11,
                 'created_at' => now(),
             ],
 
             // Utility Submenus
-            // 16
+            // 17
             [
                 'menu_id' => 6,
                 'title' => 'Permission',
@@ -149,7 +158,7 @@ class SubMenuSeeder extends Seeder
                 'listing_order' => 0,
                 'created_at' => now(),
             ],
-            // 17
+            // 18
             [
                 'menu_id' => 6,
                 'title' => 'Change Password',
