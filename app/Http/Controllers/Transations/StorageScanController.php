@@ -9,7 +9,16 @@ use Illuminate\Http\Request;
 class StorageScanController extends Controller
 {
     public function index(){
-        $grnNumbers = Grn::whereNot('status',2)->get(['id', 'grn_number']);
+        $grnNumbers = Grn::whereNot('status',2)->get(['grn_number']);
         return view('transactions.storagescan.index', compact('grnNumbers'));
+    }
+
+    public function store(Request $request){
+       return redirect()->route('storage-scan.show', $request->grn_number);
+    }
+
+    public function show($grnNumber){
+        $grn = Grn::with('grnSubs.items')->where('grn_number',$grnNumber)->first();
+        return view('transactions.storagescan.scan', compact('grn'));
     }
 }

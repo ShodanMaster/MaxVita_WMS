@@ -3,6 +3,7 @@
 use App\Http\Controllers\Ajax\CommonAjaxController;
 use App\Http\Controllers\Ajax\GrnAjaxController;
 use App\Http\Controllers\Ajax\PurchaseOrderAjaxController;
+use App\Http\Controllers\Ajax\StorageScanAjaxController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('ajax')
@@ -10,16 +11,19 @@ Route::prefix('ajax')
     ->name('ajax.')
     ->group(function () {
 
-        //Common Ajax Functions
+        // Common Ajax Functions
         Route::post('get-spq-quantity', [CommonAjaxController::class, 'getSpqQuantity'])->name('getspqquantity');
         Route::post('get-item-uom', [CommonAjaxController::class, 'getItemUom'])->name('getitemuom');
 
-        //PurchaseOrder Ajax Functions
+        // PurchaseOrder Ajax Functions
         Route::post('get-purchase-order', [PurchaseOrderAjaxController::class, 'getPurchaseOrder'])->name('getpurchaseorder');
 
-        //Grn Ajax Functions
+        // Grn Ajax Functions
         Route::post('get-purchase-number', [GrnAjaxController::class, 'getPurchaseNumber'])->name('getpurchasenumber');
         Route::post('get-grn-items', [GrnAjaxController::class, 'getGrnItems'])->name('getgrnitems');
         Route::post('item-purchase-quantity', [GrnAjaxController::class, 'itemPurchaseQuantity'])->name('itempurchasequantity');
+
+        // Storage Scan Ajax Functions
+        Route::post('get-grn-details', [StorageScanAjaxController::class, 'getGrnDetails'])->name('getgrndetails');
 
     });

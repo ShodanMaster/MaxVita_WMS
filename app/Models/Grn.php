@@ -33,6 +33,10 @@ class Grn extends Model
         return $grnNumber[0]->grn_number;
     }
 
+    public function vendor(){
+        return $this->belongsTo(Vendor::class);
+    }
+
     public function barcodes()
     {
         return $this->hasMany(Barcode::class);
