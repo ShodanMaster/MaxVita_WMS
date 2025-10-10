@@ -275,7 +275,7 @@
                                 <input type="button" value="ADD TO GRID" class="btn btn-primary" id="addtogrid" onclick="addToGrid()" />
                                 <input type="hidden" id="count" name="count" />
                                 &nbsp;
-                                <input type="button" name="reset" class="btn btn-default" value="Reset" onclick="rowreset()" />
+                                <input type="button" name="reset" class="btn btn-default" value="Reset" onclick="rowReset()" />
                             </div>
                         </div>
 
@@ -534,12 +534,11 @@
 
     let itemCount = 0;
     function addToGrid() {
-        console.log("add grid clicked");
 
         // Retrieve form values
         let dateom = $('#dom').val();
         let bbv = $('#best_before_value').val();
-        let subItemId = $('#item_id').val();
+        let itemId = $('#item_id').val();
         let itemName = $('#item_id option:selected').text();
         let price = $.trim($("#price").val());
         let batchNo = $.trim($("#batch_no").val());
@@ -556,7 +555,7 @@
         }
 
         // Validate required fields
-        if (!subItemId) {
+        if (!itemId) {
             alert("Please select an item");
             return;
         } else if (!batchNo) {
@@ -616,7 +615,7 @@
         itemCount++;
 
         $('#grngridbody').append(`
-            <tr data-item-id="${subItemId}">
+            <tr data-item-id="${itemId}">
                 <td>${itemCount}</td>
                 <td>${itemName}</td>
                 <td>${price}</td>
@@ -626,7 +625,7 @@
                 <td>${spq}</td>
                 <td>${totalQuantity}</td>
                 <td>${numberOfBarcodes}</td>
-                <td><button type="button" class="btn btn-danger btn-sm remove-item">Remove</button></td>
+                <td><button type="button" class="btn btn-danger btn-sm" onclick="removeItem(${itemId})">Remove</button></td>
             </tr>
         `);
 
@@ -634,17 +633,12 @@
         $('<input>').attr({
             type: 'hidden',
             name: `items[${itemCount}][item_id]`,
-            value: subItemId
+            value: itemId
         }).appendTo('form');
         $('<input>').attr({
             type: 'hidden',
             name: `items[${itemCount}][price]`,
             value: price
-        }).appendTo('form');
-        $('<input>').attr({
-            type: 'hidden',
-            name: `items[${itemCount}][batch_no]`,
-            value: batchNo
         }).appendTo('form');
         $('<input>').attr({
             type: 'hidden',
@@ -691,25 +685,26 @@
 
     }
 
-    // Remove item from grid
-    $(document).on('click', '.remove-item', function() {
-        console.log('clicked remove');
+    function removeItem(itemId) {
 
-        let itemId = $(this).closest('tr').data('item-id');
-        $(this).closest('tr').remove();
+        let $row = $(`tr[data-item-id="${itemId}"]`);
+        let itemCount = $row.data('item-count');
 
-        $(`input[name="items[][item_id]"][value="${itemId}"]`).remove();
-        $(`input[name="items[][price]"][value="${itemId}"]`).remove();
-        $(`input[name="items[][batch_no]"][value="${itemId}"]`).remove();
-        $(`input[name="items[][dom]"][value="${itemId}"]`).remove();
-        $(`input[name="items[][bbf]"][value="${itemId}"]`).remove();
-        $(`input[name="items[][spq]"][value="${itemId}"]`).remove();
-        $(`input[name="items[][total_quantity]"][value="${itemId}"]`).remove();
-        $(`input[name="items[][number_of_barcodes]"][value="${itemId}"]`).remove();
+        $row.remove();
+
+        $(`input[name="items[${itemCount}][item_id]"]`).remove();
+        $(`input[name="items[${itemCount}][price]"]`).remove();
+        $(`input[name="items[${itemCount}][dom]"]`).remove();
+        $(`input[name="items[${itemCount}][bbf]"]`).remove();
+        $(`input[name="items[${itemCount}][spq]"]`).remove();
+        $(`input[name="items[${itemCount}][total_quantity]"]`).remove();
+        $(`input[name="items[${itemCount}][number_of_barcodes]"]`).remove();
+        $(`input[name="items[${itemCount}][purchase_id]"]`).remove();
 
         itemCount--;
+
         updateRowNumbers();
-    });
+    }
 
     function updateRowNumbers() {
         $('#grngridbody tr').each(function(index) {
