@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Transations;
+namespace App\Http\Controllers\Transactions;
 
 use App\Http\Controllers\Controller;
 use App\Models\Grn;

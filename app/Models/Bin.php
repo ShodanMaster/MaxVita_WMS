@@ -37,11 +37,11 @@ class Bin extends Model
 
         $binCode = DB::select("
             SELECT CONCAT(
-                '$binType',
+                '$prefix',
                 LPAD(CAST(IFNULL(MAX(SUBSTRING(bin_code, $len + 1)), '0') + 1 AS UNSIGNED), 5, '0')
             ) AS bin_code
             FROM bins
-            WHERE bin_code LIKE '$binType%'
+            WHERE bin_code LIKE '$prefix%'
         ");
 
         return $binCode[0]->bin_code;

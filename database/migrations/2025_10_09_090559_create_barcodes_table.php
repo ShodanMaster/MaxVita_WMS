@@ -26,14 +26,12 @@ return new class extends Migration
             $table->decimal('price', 11,3);
             $table->decimal('total_price', 11, 3);
             $table->integer('shelf_life')->default(0);
-            $table->integer('spq_quantity');
             $table->integer('net_weight')->default(0);
-            $table->integer('grn_spq_quantity')->default(0);
             $table->integer('grn_net_weight')->default(0);
             $table->dateTime('barcode_time')->useCurrent();
             $table->enum('status', ['-1', '0', '1', '2', '3', '4', '5', '6', '8'])->comment('-1=>NIS; 0=>purchase return; 1=>stock; 2=>Dispatch; 4=>Transit; 5=>production 6=>Rejection; 8=>stock_out; 9=>repacked;');
             $table->foreignId('user_id')->constrained();
-            $table->enum('qc_approval_status', ['0', '1', '2'])->comment('0=>QC not Done; 1=>QC Done; 2=>QC rejected');
+            $table->enum('qc_approval_status', ['0', '1', '2'])->default('0')->comment('0=>QC not Done; 1=>QC Done; 2=>QC rejected');
             $table->softDeletes();
             $table->timestamps();
         });

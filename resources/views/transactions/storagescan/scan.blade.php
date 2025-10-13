@@ -38,7 +38,7 @@
                         <div class="col-sm-8">
                             <div class="input-group">
                                 <input type="text" id="bin" name="bin" class="form-control form-control-sm" required oninput="binExists()" value="{{ isset($bin) ? $bin : '' }}">
-                                <button type="button" class="btn btn-sm" id="reset-button" style="display: none" onclick="resetButton()">
+                                <button type="button" class="btn btn-sm" id="reset-button" title="Reset Bin" style="display: none" onclick="resetButton()">
 					                <i class="link-icon" data-feather="refresh-ccw"></i>
                                 </button>
                             </div>
@@ -105,9 +105,8 @@
                         @foreach($grn->grnSubs as $grnSub)
                             <tr>
                                 <td>{{$grnSub->item->name}}</td>
-                                <td>{{$grnSub->total_quantity - ($grnSub->scanned_quantity + $grnSub->rejected_quantity)}}</td>
+                                <td>{{$grnSub->total_quantity - $grnSub->scanned_quantity}}</td>
                                 <td>{{$grnSub->scanned_quantity}}</td>
-                                <td>{{$grnSub->rejected_quantity}}</td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -150,6 +149,7 @@
         const bin = document.getElementById('bin');
         const binValue = bin.value.trim();
         const resetButton = document.getElementById('reset-button');
+        const barcode = document.getElementById('barcode');
 
         $.ajax({
             type: "POST",
@@ -164,6 +164,7 @@
                 if (response.status === 200) {
                     bin.readOnly = true;
                     resetButton.style.display = 'block';
+                    barcode.focus();
                 } else {
                     alert('Bin Not Found!');
                     bin.value = '';
@@ -207,6 +208,7 @@
             type: "POST",
             url: "{{ route('ajax.storagescan') }}",
             data: {
+                bin: bin.value,
                 barcode : barcode.value
             },
             dataType: "json",

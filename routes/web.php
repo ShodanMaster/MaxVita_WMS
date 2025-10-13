@@ -16,7 +16,7 @@ use App\Http\Controllers\Master\UserController;
 use App\Http\Controllers\Master\VendorController;
 use App\Http\Controllers\Transactions\GrnController;
 use App\Http\Controllers\Transactions\PurchaseOrderController;
-use App\Http\Controllers\Transations\StorageScanController;
+use App\Http\Controllers\Transactions\StorageScanController;
 use App\Http\Controllers\Utility\PasswordChangeController;
 use App\Http\Controllers\Utility\PermissionController;
 use Illuminate\Support\Facades\App;

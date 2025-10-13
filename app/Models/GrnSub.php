@@ -18,7 +18,6 @@ class GrnSub extends Model
         'total_quantity',
         'number_of_barcodes',
         'scanned_quantity',
-        'rejected_quantity',
         'grn_status',
         'status',
     ];

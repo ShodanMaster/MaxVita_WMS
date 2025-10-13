@@ -22,14 +22,14 @@ class DatabaseSeeder extends Seeder
 
         Branch::create([
             'name' => 'Ernakulam',
-            'branch_code' => 'ekm',
+            'branch_code' => 'EKM',
             'address' => 'Ernakulam, Kerala, India',
         ]);
 
         Location::create([
             'branch_id' => 1,
             'name' => 'Kadavanthara',
-            'prefix' => 'kdv',
+            'prefix' => 'KDV',
             'location_code' => 'kdv',
             'location_type' => '1',
         ]);
