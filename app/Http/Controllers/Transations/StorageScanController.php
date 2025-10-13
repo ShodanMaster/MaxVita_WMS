@@ -18,7 +18,7 @@ class StorageScanController extends Controller
     }
 
     public function show($grnNumber){
-        $grn = Grn::with('grnSubs.items')->where('grn_number',$grnNumber)->first();
-        return view('transactions.storagescan.scan', compact('grn'));
+        $grn = Grn::with('grnSubs.item')->where('grn_number',$grnNumber)->first();
+        return view('transactions.storagescan.scan', compact('grnNumber', 'grn'));
     }
 }

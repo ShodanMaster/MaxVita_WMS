@@ -14,7 +14,6 @@
 
 @section('content')
 @include('sweetalert::alert')
-@include('messages')
 <div class="content-header">
     @include('messages')
     <section class="content">

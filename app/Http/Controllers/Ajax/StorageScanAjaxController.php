@@ -25,4 +25,10 @@ class StorageScanAjaxController extends Controller
             return response()->json($data);
         }
     }
+
+    public function storageScan(Request $request){
+        if($request->ajax()){
+            dd($request->all());
+        }
+    }
 }

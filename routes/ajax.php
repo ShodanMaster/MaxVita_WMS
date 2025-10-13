@@ -14,6 +14,7 @@ Route::prefix('ajax')
         // Common Ajax Functions
         Route::post('get-spq-quantity', [CommonAjaxController::class, 'getSpqQuantity'])->name('getspqquantity');
         Route::post('get-item-uom', [CommonAjaxController::class, 'getItemUom'])->name('getitemuom');
+        Route::post('bin-exists', [CommonAjaxController::class, 'binExists'])->name('bin-exists');
 
         // PurchaseOrder Ajax Functions
         Route::post('get-purchase-order', [PurchaseOrderAjaxController::class, 'getPurchaseOrder'])->name('getpurchaseorder');
@@ -25,5 +26,6 @@ Route::prefix('ajax')
 
         // Storage Scan Ajax Functions
         Route::post('get-grn-details', [StorageScanAjaxController::class, 'getGrnDetails'])->name('getgrndetails');
+        Route::post('storage-scan', [StorageScanAjaxController::class, 'storageScan'])->name('storagescan');
 
     });

@@ -41,4 +41,8 @@ class Grn extends Model
     {
         return $this->hasMany(Barcode::class);
     }
+
+    public function grnSubs(){
+        return $this->hasMany(GrnSub::class);
+    }
 }

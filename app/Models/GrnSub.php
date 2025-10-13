@@ -22,4 +22,8 @@ class GrnSub extends Model
         'grn_status',
         'status',
     ];
+
+    public function item(){
+        return $this->belongsTo(Item::class);
+    }
 }
