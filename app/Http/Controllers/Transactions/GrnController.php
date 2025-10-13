@@ -105,11 +105,17 @@ class GrnController extends Controller
                 }
 
                 $numberOfBarcodes = $item["number_of_barcodes"];
-                $totalPrice = (int)$item["spq"] * $item["price"];
+                $totalQty = $item["total_quantity"];
+                $spq = $item["spq"];
+                $fullBarcodes = floor($totalQty / $spq);
+                $remainder = $totalQty % $spq;
                 // dd($item["price"]);
-                while($numberOfBarcodes--){
+                for ($i = 0; $i < $numberOfBarcodes; $i++) {
 
                     $barcode = Barcode::nextNumber($request->location_id);
+
+                    $netWeight = ($i == $numberOfBarcodes - 1 && $remainder > 0) ? $remainder : $spq;
+                    $totalPrice = $netWeight * $item["price"];
 
                     Barcode::create([
                         'serial_number' => $barcode,
@@ -122,7 +128,7 @@ class GrnController extends Controller
                         'batch_number' => $batchNumber,
                         'price' => $item["price"],
                         'total_price' => $totalPrice,
-                        'net_weight' => $item["spq"],
+                        'net_weight' => $netWeight,
                         'grn_net_weight' => $item["total_quantity"],
                         'status' => '-1',
                         'user_id' => $userid,
@@ -155,7 +161,7 @@ class GrnController extends Controller
                         'grn_number' => $grn->grn_number,
                         'barcode' => $barcode,
                         'item_name' => $itemName,
-                        'spq_quantity' => $item["spq"]
+                        'spq_quantity' => $netWeight
                     ];
                 }
 

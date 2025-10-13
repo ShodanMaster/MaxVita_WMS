@@ -254,7 +254,7 @@
                                     <div class="form-group row">
                                         <label for="total_quantity" class="col-sm-4 control-label">Total Quantity <font color="#FF0000">*</font></label>
                                         <div class="col-sm-8">
-                                            <input type="text" id="total_quantity" class="form-control form-control-sm mandatory" onkeyup="totalBarcode()" />
+                                            <input type="number" step="1" id="total_quantity" class="form-control form-control-sm mandatory" onchange="totalBarcode()" />
                                         </div>
                                     </div>
                                 </div>
@@ -265,7 +265,7 @@
                                     <div class="form-group row">
                                         <label for="number_of_barcodes" class="col-sm-4 control-label">Number Of Barcodes <font color="#FF0000">*</font></label>
                                         <div class="col-sm-8">
-                                            <input type="text" id="number_of_barcodes" class="form-control form-control-sm mandatory" onkeyup="totalQuantity()" pattern="^[1-9][0-9]*$" value="1" />
+                                            <input type="number" step="1" id="number_of_barcodes" class="form-control form-control-sm mandatory" onkeyup="totalQuantity()" pattern="^[1-9][0-9]*$" value="1" />
                                         </div>
                                     </div>
                                 </div>
@@ -506,14 +506,21 @@
             var spq = parseFloat($('#spq').val());
             var total_qty = parseFloat($('#total_quantity').val());
 
-            if (total_qty <= 0) {
-                alert('Total Quantity must be greater than zero');
-                $('#total_quantity').val('');
+            if (isNaN(spq) || isNaN(total_qty)) {
+                alert('Please enter valid numbers for SPQ and Total Quantity');
                 return;
             }
 
-            var no_barcode = total_qty / spq;
-            $('#number_of_barcodes').val(no_barcode.toFixed(0));
+            if (total_qty <= 0) {
+                alert('Total Quantity must be greater than zero');
+                return;
+            }
+            
+            var fullPacks = Math.floor(total_qty / spq);
+            var remainder = total_qty % spq;
+            var totalBarcodes = remainder > 0 ? fullPacks + 1 : fullPacks;
+
+            $('#number_of_barcodes').val(totalBarcodes);
         }
     }
 
@@ -579,12 +586,6 @@
             return;
         } else if (!totalQuantity) {
             alert("Please enter the number of Total Quantity");
-            return;
-        }
-
-        // Check if total quantity is divisible by SPQ
-        if (totalQuantity % spq != 0) {
-            alert("Total Quantity must be divisible by SPQ.");
             return;
         }
 
