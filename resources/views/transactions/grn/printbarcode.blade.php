@@ -65,6 +65,6 @@
 <script>
     window.print();
     window.onafterprint = function(){
-        document.location.href="{!! route('grn.index'); !!}";
+        document.location.href="{!! route('grn.index') !!}";
     }
 </script>
