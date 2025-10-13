@@ -25,7 +25,15 @@ class Bin extends Model
 
     public static function binCode($binType){
 
-        $len = strlen($binType);
+        $prefix = null;
+
+        if($binType === 'FG'){
+            $prefix = 'G';
+        }else{
+            $prefix = 'M';
+        }
+
+        $len = strlen($prefix);
 
         $binCode = DB::select("
             SELECT CONCAT(
