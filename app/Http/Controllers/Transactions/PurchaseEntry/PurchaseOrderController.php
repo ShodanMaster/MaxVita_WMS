@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Transactions;
+namespace App\Http\Controllers\Transactions\PurchaseEntry;
 
 use App\Http\Controllers\Controller;
 use App\Models\Item;
@@ -31,7 +31,7 @@ class PurchaseOrderController extends Controller
             DB::beginTransaction();
             $purchaseNumber = PurchaseOrder::nextNumber();
             $purchaseOrder = PurchaseOrder::create([
-                'branch_id' => auth()->user()->branch_id,
+                'branch_id' => Auth::user()->branch_id,
                 'purchase_number' => $purchaseNumber,
                 'purchase_date' => $request->purchase_date,
                 'vendor_id' => $request->vendor
@@ -81,7 +81,7 @@ class PurchaseOrderController extends Controller
 
             $purchaseNumber = PurchaseOrder::nextNumber();
             $purchaseOrder = PurchaseOrder::create([
-                'branch_id' => auth()->user()->branch_id,
+                'branch_id' => Auth::user()->branch_id,
                 'purchase_number' => $purchaseNumber,
                 'purchase_date' => today(),
                 'vendor_id' => $data['vendor_id'],
