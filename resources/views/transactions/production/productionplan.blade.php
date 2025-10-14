@@ -54,16 +54,16 @@
 
                             <div class="col-md-6 mb-3">
                                 <div class="form-group">
-                                    <label for="production_date" class="control-label">
+                                    <label for="plan_date" class="control-label">
                                         Production Date <font color="#FF0000">*</font>
                                     </label>
                                     <input
                                         type="date"
-                                        name="production_date"
-                                        id="production_date"
+                                        name="plan_date"
+                                        id="plan_date"
                                         required
                                         class="form-control form-control-sm"
-                                        value="{{ old('production_date') }}"
+                                        value="{{ old('plan_date') }}"
                                     >
                                 </div>
                             </div>
@@ -292,7 +292,7 @@
 
         // Define the checkData function for form validation
         function checkData() {
-            var productionDate = document.getElementById('production_date').value;
+            var productionDate = document.getElementById('plan_date').value;
             var fgItem = document.getElementById('fg-item').value;
             var quantity = document.getElementById('quantity').value;
             var itemCount = document.getElementById('grngridbody').rows.length;

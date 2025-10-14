@@ -11,7 +11,14 @@ class ProductionPlan extends Model
     use SoftDeletes;
 
     protected $fillable = [
-
+        'plan_number',
+        'plan_date',
+        'total_quantity',
+        'picked_quantity',
+        'item_id',
+        'user_id',
+        'branch_id',
+        'status',
     ];
 
     public static function nextNumber()

@@ -15,7 +15,10 @@ return new class extends Migration
             $table->id();
             $table->foreignId('production_plan_id')->constrained();
             $table->foreignId('item_id')->constrained();
-            $table->integer('quantity');
+            $table->integer('total_quantity');
+            $table->integer('picked_quantity')->default(0);
+            $table->integer('status')->default(0);
+            $table->softDeletes();
             $table->timestamps();
         });
     }
