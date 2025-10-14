@@ -33,32 +33,38 @@ class Barcode extends Model
         'qc_approval_status',
     ];
 
-    public static function nextNumber($location){
+    public static function nextNumber($locationId){
 
-        $locationPrefix = Location::find($location)->prefix;
-
+        $locationPrefix = Location::find($locationId)->prefix;
         $prefix = $locationPrefix . date('ymd');
 
-        $start = '0000001';
+        $row = DB::transaction(function () use ($locationId) {
+            $today = date('Y-m-d');
+            $sequence = DB::table('barcode_sequences')
+                ->where('location_id', $locationId)
+                ->where('sequence_date', $today)
+                ->lockForUpdate()
+                ->first();
 
-        $len = strlen($prefix);
+            if (!$sequence) {
+                DB::table('barcode_sequences')->insert([
+                    'location_id' => $locationId,
+                    'current_number' => 1,
+                ]);
+                $current = 1;
+            } else {
+                $current = $sequence->current_number + 1;
+                DB::table('barcode_sequences')
+                    ->where('location_id', $locationId)
+                    ->update(['current_number' => $current]);
+            }
 
-        $barcode = DB::select("SELECT
+            return $current;
+        });
 
-            CONCAT( '$prefix',
-
-            LPAD(max_serial_number+1,GREATEST(6,LENGTH(max_serial_number+1)),'0')
-
-            ) serial_number
-
-            FROM
-
-            (SELECT IFNULL(MAX(SUBSTRING(serial_number,$len+1)),'0') max_serial_number
-
-                FROM barcodes WHERE  serial_number LIKE '$prefix%') P2");
-
-        return $barcode[0]->serial_number;
+        return $prefix . str_pad($row, 6, '0', STR_PAD_LEFT);
     }
+
 
     public function grn(){
         return $this->belongsTo(Grn::class);

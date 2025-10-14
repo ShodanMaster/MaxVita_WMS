@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Transactions\Grn;
 
+use App\Helpers\BarcodeGenerator;
 use App\Http\Controllers\Controller;
 use App\Models\Barcode;
 use App\Models\Category;
@@ -49,7 +50,9 @@ class GrnController extends Controller
                 $purchaseNumber = $purchaseOrder->purchase_number;
             }
 
-            $branchId = Location::find($request->location_id)->branch->id;
+            $location = Location::find($request->location_id);
+            $branchId = $location->branch->id;
+            $prefix = $location->prefix;
             // dd($branchId);
             $grn = Grn::create([
                 'grn_number' => Grn::grnNumber(),
@@ -70,6 +73,10 @@ class GrnController extends Controller
 
             }
 
+            $grnSubData = [];
+            $grnPurchaseOrderSubData = [];
+            $barcodeData = [];
+            $purchaseOrderSubUpdates = [];
             foreach($request->items as $item){
 
                 $purchaseOrderExists = PurchaseOrder::where('id', '=', $item["purchase_id"])->where('status', 0)->first();
@@ -80,28 +87,28 @@ class GrnController extends Controller
                     ->where('status', '0')
                     ->first();
 
-                    $purchaseOrderSub->update([
+                    $purchaseOrderSubUpdates[] = [
+                        'id' => $purchaseOrderSub->id,
                         'picked_quantity' => $purchaseOrderSub->picked_quantity + $item["total_quantity"]
-                    ]);
+                    ];
                 }
 
-                $grnSub = GrnSub::create([
+                $grnSubData[] = [
                     'grn_id' => $grn->id,
                     'item_id' => $item["item_id"],
                     'batch_number' => $batchNumber,
-                    'quantity' => $item["total_quantity"],
                     'date_of_manufacture' => $item["dom"],
                     'best_before_date' => $item["bbf"],
                     'total_quantity' => $item["total_quantity"],
                     'number_of_barcodes' => $item["number_of_barcodes"],
-                ]);
+                ];
 
                 if($purchaseOrderExists){
-                    $grnPurchaseOrderSub = GrnPurchaseOrderSub::create([
+                    $grnPurchaseOrderSubData[] = [
                         'grn_purchase_order_id' => $grnPurchaseOrder->id,
                         'purchase_number' => $purchaseOrderExists->purchase_number,
                         'item_id' => $item["item_id"]
-                    ]);
+                    ];
                 }
 
 
@@ -113,12 +120,12 @@ class GrnController extends Controller
 
                 for ($i = 0; $i < $numberOfBarcodes; $i++) {
 
-                    $barcode = Barcode::nextNumber($request->location_id);
+                    $barcode = BarcodeGenerator::nextNumber($prefix);
 
                     $netWeight = ($i == $numberOfBarcodes - 1 && $remainder > 0) ? $remainder : $spq;
                     $totalPrice = $netWeight * $item["price"];
 
-                    Barcode::create([
+                    $barcodeData[] = [
                         'serial_number' => $barcode,
                         'grn_id' => $grn->id,
                         'branch_id' => $branchId,
@@ -134,27 +141,7 @@ class GrnController extends Controller
                         'status' => '-1',
                         'user_id' => $userid,
                         'qc_approval_status' => '0',
-                    ]);
-
-                    if($purchaseOrderExists){
-                        PurchaseOrderSub::where('purchase_order_id', $purchaseOrderExists->id)
-                            ->where('item_id', $item["item_id"])
-                            ->where('status', '0')
-                            ->whereColumn('quantity', 'picked_quantity')
-                            ->update([
-                                'status' => '1'
-                            ]);
-
-                        $dataCheck = PurchaseOrderSub::where('purchase_order_id', $purchaseOrderExists->id)->where('status', '0')->count();
-                        if ($dataCheck == 0) {
-                            PurchaseOrder::where('id', $purchaseOrderExists->id)
-                                ->where('status', "0")
-                                ->update([
-                                    'status' => '1'
-                                ]);
-                        }
-
-                    }
+                    ];
 
                     $itemName = Item::find($item["item_id"])->name;
 
@@ -166,6 +153,42 @@ class GrnController extends Controller
                     ];
                 }
 
+                if($purchaseOrderExists){
+                    $purchaseOrderSubUpdates[] = [
+                        'id' => $purchaseOrderSub->id,
+                        'status' => '1'
+                    ];
+
+                    $dataCheck = PurchaseOrderSub::where('purchase_order_id', $purchaseOrderExists->id)->where('status', '0')->count();
+                    if ($dataCheck == 0) {
+
+                        PurchaseOrder::where('id', $purchaseOrderExists->id)
+                            ->where('status', "0")
+                            ->update(['status' => '1']);
+                    }
+
+                }
+            }
+            // dd($grnSubData, $grnPurchaseOrderSubData, $barcodeData);
+            if (!empty($grnSubData)) {
+                GrnSub::insert($grnSubData);
+            }
+
+            // Bulk insert GrnPurchaseOrderSub records
+            if (!empty($grnPurchaseOrderSubData)) {
+                GrnPurchaseOrderSub::insert($grnPurchaseOrderSubData);
+            }
+
+            // Bulk insert Barcode records
+            if (!empty($barcodeData)) {
+                Barcode::insert($barcodeData);
+            }
+
+            foreach ($purchaseOrderSubUpdates as $updateData) {
+                PurchaseOrderSub::where('id', $updateData['id'])->update([
+                    'picked_quantity' => $updateData['picked_quantity'],
+                    'status' => $updateData['status']
+                ]);
             }
 
             // dd($purchaseOrderExists->purchase_number);
