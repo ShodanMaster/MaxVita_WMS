@@ -14,13 +14,12 @@ use App\Http\Controllers\Master\SubCategoryController;
 use App\Http\Controllers\Master\UomController;
 use App\Http\Controllers\Master\UserController;
 use App\Http\Controllers\Master\VendorController;
-use App\Http\Controllers\Transaction\Production\ProductionPlanController;
 use App\Http\Controllers\Transactions\Grn\GrnController;
 use App\Http\Controllers\Transactions\PurchaseEntry\PurchaseOrderController;
 use App\Http\Controllers\Transactions\Grn\StorageScanController;
+use App\Http\Controllers\Transactions\Production\ProductionPlanController;
 use App\Http\Controllers\Utility\PasswordChangeController;
 use App\Http\Controllers\Utility\PermissionController;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => ['auth']], function () {
