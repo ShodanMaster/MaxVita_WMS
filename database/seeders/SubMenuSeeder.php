@@ -139,7 +139,7 @@ class SubMenuSeeder extends Seeder
                 'listing_order' => 11,
                 'created_at' => now(),
             ],
-            // Sotage Scan
+            // Storage Scan
             //16
             [
                 'menu_id' => 4,
@@ -149,18 +149,32 @@ class SubMenuSeeder extends Seeder
                 'created_at' => now(),
             ],
 
-            // Utility Submenus
+            //Production
+            //Production Plan
             // 17
             [
-                'menu_id' => 6,
+                'menu_id' => 5,
+                'title' => 'Production Plan',
+                'link' => 'production-plan',
+                'listing_order' => 11,
+                'created_at' => now(),
+            ],
+
+            // Utility Submenus
+            // Permission
+            // 18
+            [
+                'menu_id' => 7,
                 'title' => 'Permission',
                 'link' => 'permission',
                 'listing_order' => 0,
                 'created_at' => now(),
             ],
-            // 18
+
+            // Change Password
+            // 19
             [
-                'menu_id' => 6,
+                'menu_id' => 7,
                 'title' => 'Change Password',
                 'link' => 'change-password',
                 'listing_order' => 0,

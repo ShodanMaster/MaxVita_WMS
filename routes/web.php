@@ -15,6 +15,7 @@ use App\Http\Controllers\Master\UomController;
 use App\Http\Controllers\Master\UserController;
 use App\Http\Controllers\Master\VendorController;
 use App\Http\Controllers\Transactions\GrnController;
+use App\Http\Controllers\Transactions\ProductionIssueController;
 use App\Http\Controllers\Transactions\PurchaseOrderController;
 use App\Http\Controllers\Transactions\StorageScanController;
 use App\Http\Controllers\Utility\PasswordChangeController;
@@ -77,6 +78,9 @@ Route::group(['middleware' => ['auth']], function () {
 
         // StorageScan
         Route::resource('storage-scan', StorageScanController::class);
+
+        // ProductionIssue
+        Route::resource('production-issue', ProductionIssueController::class);
 
         // Utitlity
 

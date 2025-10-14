@@ -42,12 +42,12 @@
 			<li class="nav-item nav-category">Transactions</li>
 			@endif
 
-			@if ($menu['id']==5)
+			@if ($menu['id']==6)
 			<li class="nav-item nav-category">Report</li>
 			@endif
 
 
-			@if ($menu['id']==6)
+			@if ($menu['id']==7)
 			<li class="nav-item nav-category">Settings</li>
 			@endif
 			@if(count($menu['submenus']))
