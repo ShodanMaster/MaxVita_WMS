@@ -266,7 +266,7 @@
                                     <div class="form-group row">
                                         <label for="number_of_barcodes" class="col-sm-4 control-label">Number Of Barcodes <font color="#FF0000">*</font></label>
                                         <div class="col-sm-8">
-                                            <input type="number" step="1" id="number_of_barcodes" class="form-control form-control-sm mandatory" onkeyup="totalQuantity()" pattern="^[1-9][0-9]*$" value="1" />
+                                            <input type="number" step="1" id="number_of_barcodes" class="form-control form-control-sm mandatory" onchange="totalQuantity()" pattern="^[1-9][0-9]*$" value="1" />
                                         </div>
                                     </div>
                                 </div>
@@ -521,6 +521,12 @@
                 return;
             }
 
+            if(totalQuantity < spq){
+                alert('Total Quantity must be greater than or equal to spq');
+                $('#total_quantity').val(spq);
+                return;
+            }
+
             if (purchaseQuantity && !isNaN(purchaseQuantity) && totalQuantity > parseFloat(purchaseQuantity)) {
                 alert('Total Quantity cannot be greater than purchase quantity');
                 $('#total_quantity').val(purchaseQuantity);
@@ -535,7 +541,7 @@
         }
     }
 
-    function totalQuantity() {
+    function itemTotalQuantity() {
         if (ifItem()) {
             var spq = parseFloat($('#spq').val());
             var barcode = parseFloat($('#number_of_barcodes').val());
@@ -559,7 +565,6 @@
         }
     }
 
-
     let itemCount = 0;
     function addToGrid() {
 
@@ -575,6 +580,9 @@
         let ponumber = $.trim($("#purchase_number").val());
         let poQty = $.trim($("#po_qty").val());
         let numberOfBarcodes = $.trim($("#number_of_barcodes").val());
+
+        itemTotalQuantity();
+        // totalBarcode();
 
         // Validate if DOM is before Best Before date
         if (dateom > bbv) {

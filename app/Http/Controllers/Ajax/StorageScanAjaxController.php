@@ -44,23 +44,23 @@ class StorageScanAjaxController extends Controller
                     'message' => 'Barcode not found.'
                 ]);
             }
-            elseif($barcode->status == 1){
-                return response()->json([
-                    'status' => 500,
-                    'message' => 'Already Scanned!'
-                ]);
-            }
-            elseif($barcode->status == 2){
-                return response()->json([
-                    'status' => 500,
-                    'message' => 'Already Despatched!'
-                ]);
-            }
-            elseif($barcode->status == 8){
-                return response()->json([
-                    'status' => 500,
-                    'message' => 'Does not Exist!'
-                ]);
+
+            switch ($barcode->status) {
+                case 1:
+                    return response()->json([
+                        'status' => 409,
+                        'message' => 'Already Scanned!'
+                    ]);
+                case 2:
+                    return response()->json([
+                        'status' => 409,
+                        'message' => 'Already Despatched!'
+                    ]);
+                case 8:
+                    return response()->json([
+                        'status' => 404,
+                        'message' => 'Does not Exist!'
+                    ]);
             }
 
             $grnSub = GrnSub::where('grn_id', $barcode->grn_id)
@@ -85,7 +85,7 @@ class StorageScanAjaxController extends Controller
             // dd($grnSub->total_quantity, $grnSub->scanned_quantity);
             if($grnSub->total_quantity < $grnSub->scanned_quantity){
                 return response()->json([
-                    'status' => 500,
+                    'status' => 422,
                     'message' => 'Storage Quantity Exceeded!'
                 ]);
             }
@@ -124,28 +124,37 @@ class StorageScanAjaxController extends Controller
                 'scanned_quantity' => $grnSub->scanned_quantity + $barcode->net_weight,
             ]);
 
-            if($grnSub->scanned_quantity == $grnSub->total_quantity){
-                GrnSub::where('grn_id', $barcode->grn_id)->update(['grn_status' => 1]);
+            $grnSubUpdated = GrnSub::where('grn_id', $barcode->grn_id)
+                                ->where('batch_number', $barcode->batch_number)
+                                ->where('item_id', $barcode->item_id)
+                                ->whereNot('grn_status', 1)
+                                ->first();
+            if($grnSubUpdated->scanned_quantity == $grnSubUpdated->total_quantity){
+                $grnSubUpdated->update(['grn_status' => 1]);
             }
 
-            $grnSubStatus = GrnSub::where('grn_id', $grnSub->grn_id)->where('status', 0)->exists();
+            $grnSubStatus = GrnSub::where('grn_id', $grnSub->grn_id)->where('grn_status', 0)->exists();
 
             $grn = Grn::find($grnSub->grn_id);
 
+            $scanComplete = false;
             if($grnSubStatus){
-                $grn->update([
-                    'status' => 2
-                ]);
-            }else{
                 $grn->update([
                     'status' => 1
                 ]);
+            }else{
+                $grn->update([
+                    'status' => 2
+                ]);
+                $scanComplete = true;
+
             }
 
             DB::commit();
 
             return response()->json([
                 'status' => 200,
+                'scan_complete' => $scanComplete,
                 'message' => 'Storage Scan Successful',
             ]);
         }

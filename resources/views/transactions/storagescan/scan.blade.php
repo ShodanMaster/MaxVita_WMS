@@ -61,20 +61,17 @@
                     </button>
                 </div>
             </div>
-            <div class="card">
-                <div class="card-header mt-2" style="overflow-x: auto;overflow-y:auto;">
+            <div class="card mt-2" id="barcode-card" style="display: none">
+                <div class="card-body" style="overflow-x: auto;overflow-y:auto;">
                     <table class="table">
-
                         <thead>
                             <tr>
                                 <th>Barcode</th>
                                 <th>Message</th>
                             </tr>
-
                         </thead>
                         <tbody id="dataTable">
                         </tbody>
-
                     </table>
                 </div>
             </div>
@@ -98,7 +95,6 @@
                             <th>Item Name</th>
                             <th>B.Qty</th>
                             <th>S.Qty</th>
-                            <th>R.Qty</th>
                         </tr>
                     </thead>
                     <tbody id="balancegrid">
@@ -213,8 +209,29 @@
             },
             dataType: "json",
             success: function (response) {
-                console.log(response);
+                document.getElementById('barcode-card').style.display = 'block';
+                if(response){
+                    var row = $('<tr>');
 
+                    row.append('<td>' + barcode.value + '</td>');
+
+                    var messageCell = $('<td>').text(response.message);
+
+                    if (response.status === 200) {
+                        messageCell.css('color', 'green');
+                    } else {
+                        messageCell.css('color', 'red');
+                    }
+
+                    row.append(messageCell);
+                    $('#dataTable').prepend(row);
+
+                    if(response.scan_complete){
+                        alert('Storage Scan Completed');
+                        window.location.href = "{{ route('storage-scan.index') }}";
+                    }
+                }
+                barcode.value = '';
             }
         });
     }
