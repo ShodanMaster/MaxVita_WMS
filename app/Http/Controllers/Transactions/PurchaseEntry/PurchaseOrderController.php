@@ -37,12 +37,17 @@ class PurchaseOrderController extends Controller
                 'vendor_id' => $request->vendor
             ]);
 
-            foreach($request->items as $item){
-                PurchaseOrderSub::create([
+            $purchaseOrderSubData = [];
+            foreach ($request->items as $item) {
+                $purchaseOrderSubData[] = [
                     'purchase_order_id' => $purchaseOrder->id,
                     'item_id' => $item['item_id'],
                     'quantity' => $item['total_quantity'],
-                ]);
+                ];
+            }
+
+            if (!empty($purchaseOrderSubData)) {
+                PurchaseOrderSub::insert($purchaseOrderSubData);
             }
             DB::commit();
             Alert::toast('Purchase Order saved with Number ' . $purchaseNumber, 'success')->autoClose(3000);
