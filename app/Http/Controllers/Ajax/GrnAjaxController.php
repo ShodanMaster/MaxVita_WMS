@@ -22,9 +22,11 @@ class GrnAjaxController extends Controller
 
     public function itemPurchaseQuantity(Request $request){
         if($request->ajax()){
-            $purchaseItem = PurchaseOrderSub::where('purchase_order_id', $request->purchase_id)->where('item_id', $request->item_id)->first(['quantity']);
+            $purchaseItem = PurchaseOrderSub::where('purchase_order_id', $request->purchase_id)
+                                ->where('item_id', $request->item_id)
+                                ->first(['quantity', 'picked_quantity']);
 
-            return response()->json(round($purchaseItem->quantity));
+            return response()->json(round($purchaseItem->quantity - $purchaseItem->picked_quantity));
 
         }
     }
@@ -34,8 +36,10 @@ class GrnAjaxController extends Controller
             $query = Item::query();
 
             if ($request->purchase_number) {
-                $purchaseOrder = PurchaseOrder::with('purchaseOrderSubs.item')
-                                        ->find($request->purchase_number);
+                $purchaseOrder = PurchaseOrder::with(['purchaseOrderSubs' => function ($query) {
+                    $query->where('status', 0);
+                }, 'purchaseOrderSubs.item'])
+                ->find($request->purchase_number);
 
                 if ($purchaseOrder) {
                     $itemIds = $purchaseOrder->purchaseOrderSubs->pluck('item_id');

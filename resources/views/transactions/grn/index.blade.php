@@ -162,6 +162,7 @@
                                                 <option value="">--select--</option>
                                             </select>
                                             <input type="hidden" id="is_purchase" name="is_purchase"/>
+                                            <input type="hidden" id="purchase_item_quantity" name="purchase_item_quantity"/>
                                         </div>
                                     </div>
                                 </div>
@@ -450,9 +451,12 @@
 
                     if(response != ""){
                         $('#total_quantity').val(response);
+                        $('#purchase_item_quantity').val(response);
                         $('#is_purchase').val(1);
 
                         totalBarcode();
+                    }else{
+                        $('purchase_item_quantity').val('');
                     }
 
                 }
@@ -504,20 +508,27 @@
     function totalBarcode() {
         if (ifItem()) {
             var spq = parseFloat($('#spq').val());
-            var total_qty = parseFloat($('#total_quantity').val());
+            var totalQuantity = parseFloat($('#total_quantity').val());
+            var purchaseQuantity = $('#purchase_item_quantity').val();
 
-            if (isNaN(spq) || isNaN(total_qty)) {
+            if (isNaN(spq) || isNaN(totalQuantity)) {
                 alert('Please enter valid numbers for SPQ and Total Quantity');
                 return;
             }
 
-            if (total_qty <= 0) {
+            if (totalQuantity <= 0) {
                 alert('Total Quantity must be greater than zero');
                 return;
             }
-            
-            var fullPacks = Math.floor(total_qty / spq);
-            var remainder = total_qty % spq;
+
+            if (purchaseQuantity && !isNaN(purchaseQuantity) && totalQuantity > parseFloat(purchaseQuantity)) {
+                alert('Total Quantity cannot be greater than purchase quantity');
+                $('#total_quantity').val(purchaseQuantity);
+                return;
+            }
+
+            var fullPacks = Math.floor(totalQuantity / spq);
+            var remainder = totalQuantity % spq;
             var totalBarcodes = remainder > 0 ? fullPacks + 1 : fullPacks;
 
             $('#number_of_barcodes').val(totalBarcodes);
@@ -528,6 +539,7 @@
         if (ifItem()) {
             var spq = parseFloat($('#spq').val());
             var barcode = parseFloat($('#number_of_barcodes').val());
+            var purchaseQuantity = $('#purchase_item_quantity').val();
 
             if (barcode <= 0) {
                 alert('Number of Barcodes must be greater than zero');
@@ -536,9 +548,17 @@
             }
 
             var totalQuantity = spq * barcode;
+
+            if (purchaseQuantity && !isNaN(purchaseQuantity) && totalQuantity > parseFloat(purchaseQuantity)) {
+                alert('Total Quantity cannot be greater than purchase quantity');
+                $('#total_quantity').val(purchaseQuantity);
+                return;
+            }
+
             $('#total_quantity').val(totalQuantity.toFixed(0));
         }
     }
+
 
     let itemCount = 0;
     function addToGrid() {
