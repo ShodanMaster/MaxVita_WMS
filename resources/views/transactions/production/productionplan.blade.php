@@ -327,6 +327,17 @@
         $('#addtogrid').click(function() {
             addToGrid();
         });
+
+        $(document).on('click', '.remove-item', function() {
+
+            let itemId = $(this).closest('tr').data('item-id');
+            $(this).closest('tr').remove();
+
+            $(`input[name="items[][item_id]"][value="${itemId}"]`).remove();
+            $(`input[name="items[][total_quantity]"][value="${itemId}"]`).remove();
+
+            itemCount--;
+        });
     });
 
     $('#uploadModal form').on('submit', function() {

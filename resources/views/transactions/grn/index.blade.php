@@ -375,6 +375,7 @@
 
 <script>
     console.log("qwertyu: ", @json(session()->all()));
+    $('.select2').select2();
 
     function filterItem(){
 

@@ -49,4 +49,8 @@ class ProductionPlan extends Model
 
         return $planNumber[0]->plan_number;
     }
+
+    public function item(){
+        return $this->belongsTo(Item::class);
+    }
 }

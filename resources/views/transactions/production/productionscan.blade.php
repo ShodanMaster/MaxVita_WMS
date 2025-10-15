@@ -20,22 +20,22 @@
         <div class="container-fluid">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Storage Scan</h3>
+                    <h3 class="card-title">Production Scan</h3>
                 </div>
                 <div class="card-body">
                     <form method="POST" action="{{ route('storage-scan.store') }}" enctype="multipart/form-data">
                         @csrf
                         <div class="form-group row">
-                            <label for="grn_number" class="col-md-4 control-label">
-                                GRN No
+                            <label for="plan_number" class="col-md-4 control-label">
+                                Production Plan No
                             </label>
                             <div class="col-sm-8">
-                                <select name="grn_number" id="grn_number" class="form-control form-control-sm select2" required onchange="fetchGrnDetails()">
-                                    <option value="" disabled selected>--Select Grn Number--</option>
-                                    @forelse ($grnNumbers as $grnNumber)
-                                        <option value="{{ $grnNumber->grn_number }}">{{ $grnNumber->grn_number }}</option>
+                                <select name="plan_number" id="plan_number" class="form-control form-control-sm select2" required onchange="fetchProductionDetails()">
+                                    <option value="" disabled selected>--Select Plan Number--</option>
+                                    @forelse ($planNumbers as $planNumber)
+                                        <option value="{{ $planNumber->plan_number }}">{{ $planNumber->plan_number }}</option>
                                     @empty
-                                        <option value="" disabled >No Grn Numbers Found</option>
+                                        <option value="" disabled >No Plan Numbers Found</option>
                                     @endforelse
                                 </select>
                             </div>
@@ -45,15 +45,13 @@
 
                     </form>
                 </div>
-                <div class="card-footer table-responsive" style="display: none" id="grnDetails">
+                <div class="card-footer table-responsive" style="display: none" id="productionDetails">
                     <table class="table" id="grngrid">
                         <thead>
                             <tr>
-                                <th>GRN No</th>
-                                <th>Vendor Name</th>
-                                <th>Invoice No</th>
-                                <th>Invoice Date</th>
-                                <th>Remark</th>
+                                <th>Plan No</th>
+                                <th>Item</th>
+                                <th>Quantity</th>
                             </tr>
                         </thead>
                         <tbody id="grid-container">
@@ -92,38 +90,36 @@
 
 <script>
     $('.select2').select2();
-    function fetchGrnDetails(){
-        var grnNumber = document.getElementById("grn_number").value;
-        console.log(grnNumber);
+
+    function fetchProductionDetails(){
+        var planNumber = document.getElementById("plan_number").value;
+        console.log(planNumber);
 
         $.ajax({
             type: "POST",
-            url: "{{ route('ajax.getgrndetails') }}",
+            url: "{{ route('ajax.getproductiondetails') }}",
             data: {
-                grn_number : grnNumber
+                plan_number : planNumber
             },
             dataType: "json",
             success: function (response) {
-                console.log(response);
                 const tbody = document.getElementById("grid-container");
                 tbody.innerHTML = "";
-                if(response && Object.keys(response).length > 0){
-                    // Display the table footer
-                    document.getElementById("grnDetails").style.display = "block";
 
-                    // Create and insert new row
-                    const tr = document.createElement("tr");
-                    tr.innerHTML = `
-                        <td>${response.grn_number ?? ''}</td>
-                        <td>${response.vendor_name ?? ''}</td>
-                        <td>${response.invoice_number ?? ''}</td>
-                        <td>${response.invoice_date ?? ''}</td>
-                        <td>${response.remark ?? ''}</td>
-                    `;
-                    tbody.appendChild(tr);
+                if (Array.isArray(response) && response.length > 0) {
+                    document.getElementById("productionDetails").style.display = "block";
+
+                    response.forEach(item => {
+                        const tr = document.createElement("tr");
+                        tr.innerHTML = `
+                            <td>${item.plan_number ?? ''}</td>
+                            <td>${item.item ?? ''}</td>
+                            <td>${item.total_quantity ?? ''}</td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
                 } else {
-                    // Hide if no valid response
-                    document.getElementById("grnDetails").style.display = "none";
+                    document.getElementById("productionDetails").style.display = "none";
                 }
             }
         });

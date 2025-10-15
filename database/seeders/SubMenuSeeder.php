@@ -159,10 +159,19 @@ class SubMenuSeeder extends Seeder
                 'listing_order' => 11,
                 'created_at' => now(),
             ],
+            //Production Scan
+            // 18
+            [
+                'menu_id' => 5,
+                'title' => 'Production Scan',
+                'link' => 'production-scan',
+                'listing_order' => 11,
+                'created_at' => now(),
+            ],
 
             // Utility Submenus
             // Permission
-            // 18
+            // 19
             [
                 'menu_id' => 7,
                 'title' => 'Permission',
@@ -172,7 +181,7 @@ class SubMenuSeeder extends Seeder
             ],
 
             // Change Password
-            // 19
+            // 20
             [
                 'menu_id' => 7,
                 'title' => 'Change Password',

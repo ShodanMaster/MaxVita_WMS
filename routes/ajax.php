@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Ajax\CommonAjaxController;
 use App\Http\Controllers\Ajax\GrnAjaxController;
+use App\Http\Controllers\Ajax\ProductionScanAjaxController;
 use App\Http\Controllers\Ajax\PurchaseOrderAjaxController;
 use App\Http\Controllers\Ajax\StorageScanAjaxController;
 use Illuminate\Support\Facades\Route;
@@ -28,4 +29,6 @@ Route::prefix('ajax')
         Route::post('get-grn-details', [StorageScanAjaxController::class, 'getGrnDetails'])->name('getgrndetails');
         Route::post('storage-scan', [StorageScanAjaxController::class, 'storageScan'])->name('storagescan');
 
+        // Production Scan Ajax Functions
+        Route::post('get-production-details', [ProductionScanAjaxController::class, 'getProductionDetails'])->name('getproductiondetails');
     });
