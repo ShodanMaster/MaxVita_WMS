@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class ProductionPlan extends Model
@@ -20,6 +21,17 @@ class ProductionPlan extends Model
         'branch_id',
         'status',
     ];
+
+    protected static function booted()
+    {
+        static::creating(function ($plan) {
+            $user = Auth::user();
+            if ($user) {
+                $plan->user_id = $user->id;
+                $plan->branch_id = $user->branch_id;
+            }
+        });
+    }
 
     public static function nextNumber()
     {

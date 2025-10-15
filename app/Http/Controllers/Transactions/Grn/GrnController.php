@@ -53,9 +53,10 @@ class GrnController extends Controller
             $location = Location::find($request->location_id);
             $branchId = $location->branch->id;
             $prefix = $location->prefix;
+            $grnNumber = Grn::grnNumber();
             // dd($branchId);
             $grn = Grn::create([
-                'grn_number' => Grn::grnNumber(),
+                'grn_number' => $grnNumber,
                 'purchase_number' => $purchaseNumber,
                 'invoice_number' => $request->invoice_number,
                 'invoice_date' => $request->invoice_date,
