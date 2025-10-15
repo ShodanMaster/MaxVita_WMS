@@ -27,7 +27,7 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
                     <h5 class="card-title">
-                        Production Order Entry
+                        Production Plan Entry
                     </h5>
                     <button type="button" class="btn" data-toggle="modal" data-target="#uploadModal">
                         <i data-feather="upload" class="text-primary" style="font-size: 24px;"></i><b> Upload </b>
