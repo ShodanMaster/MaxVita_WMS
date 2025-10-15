@@ -16,4 +16,8 @@ class ProductionPlanSub extends Model
         'picked_quantity',
         'status',
     ];
+
+    public function item(){
+        return $this->belongsTo(Item::class);
+    }
 }

@@ -23,7 +23,7 @@
                     <h3 class="card-title">Production Scan</h3>
                 </div>
                 <div class="card-body">
-                    <form method="POST" action="{{ route('storage-scan.store') }}" enctype="multipart/form-data">
+                    <form method="POST" action="{{ route('production-scan.store') }}" enctype="multipart/form-data">
                         @csrf
                         <div class="form-group row">
                             <label for="plan_number" class="col-md-4 control-label">

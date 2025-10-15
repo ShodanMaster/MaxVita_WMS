@@ -12,4 +12,13 @@ class ProductionScanController extends Controller
         $planNumbers = ProductionPlan::whereNot('status',2)->get(['plan_number']);
         return view('transactions.production.productionscan', compact('planNumbers'));
     }
+
+    public function store(Request $request){
+       return redirect()->route('production-scan.show', $request->plan_number);
+    }
+
+    public function show($planNumber){
+        $productionPlan = ProductionPlan::with('productionPlanSubs.item')->where('plan_number',$planNumber)->first();
+        return view('transactions.production.scan', compact('planNumber', 'productionPlan'));
+    }
 }

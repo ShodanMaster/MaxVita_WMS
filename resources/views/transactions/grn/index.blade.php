@@ -376,6 +376,7 @@
 <script>
     console.log("qwertyu: ", @json(session()->all()));
     $('.select2').select2();
+    let itemCount = 0;
 
     function filterItem(){
 
@@ -566,182 +567,180 @@
         }
     }
 
-    let itemCount = 0;
-    function addToGrid() {
+    // Function to add item to the grid
+function addToGrid() {
 
-        // Retrieve form values
-        let dateom = $('#dom').val();
-        let bbv = $('#best_before_value').val();
-        let itemId = $('#item_id').val();
-        let itemName = $('#item_id option:selected').text();
-        let price = $.trim($("#price").val());
-        let batchNo = $.trim($("#batch_no").val());
-        let spq = $.trim($("#spq").val());
-        let totalQuantity = $.trim($("#total_quantity").val());
-        let ponumber = $.trim($("#purchase_number").val());
-        let poQty = $.trim($("#po_qty").val());
-        let numberOfBarcodes = $.trim($("#number_of_barcodes").val());
+    // Retrieve form values
+    let dateom = $('#dom').val();
+    let bbv = $('#best_before_value').val();
+    let itemId = $('#item_id').val();
+    let itemName = $('#item_id option:selected').text();
+    let price = $.trim($("#price").val());
+    let batchNo = $.trim($("#batch_no").val());
+    let spq = $.trim($("#spq").val());
+    let totalQuantity = $.trim($("#total_quantity").val());
+    let ponumber = $.trim($("#purchase_number").val());
+    let poQty = $.trim($("#po_qty").val());
+    let numberOfBarcodes = $.trim($("#number_of_barcodes").val());
 
-        itemTotalQuantity();
-        // totalBarcode();
+    itemTotalQuantity();
 
-        // Validate if DOM is before Best Before date
-        if (dateom > bbv) {
-            alert("Date of Manufacture should be less than Best Before date");
-            return;
-        }
-
-        // Validate required fields
-        if (!itemId) {
-            alert("Please select an item");
-            return;
-        } else if (!batchNo) {
-            alert("Please enter batch number");
-            return;
-        } else if (!price) {
-            alert("Please enter Price number");
-            return;
-        } else if (!dateom) {
-            alert("Please enter DOM");
-            return;
-        } else if (!bbv) {
-            alert("Please enter Best Before");
-            return;
-        } else if (!spq) {
-            alert("Please enter SPQ");
-            return;
-        } else if (!numberOfBarcodes) {
-            alert("Please enter the number of barcodes");
-            return;
-        } else if (!totalQuantity) {
-            alert("Please enter the number of Total Quantity");
-            return;
-        }
-
-        // Check for duplicates in grid
-        if ($('#grngridbody').find('tr').filter(function() {
-            return $(this).find('td').eq(1).text() === itemName && $(this).find('td').eq(3).text() === batchNo;
-        }).length > 0) {
-            alert("Item already added");
-            return;
-        }
-
-        // Check PO quantity exceeds limit logic
-        let totalPoQty = 0;
-        $('#grngridbody tr').each(function() {
-            let rowItemId = $(this).find('td').eq(1).text();
-            let rowQty = $(this).find('td').eq(3).text();
-
-            if (rowItemId === itemName) {
-                totalPoQty += parseInt(rowQty);
-            }
-        });
-
-        if (totalPoQty + parseInt(totalQuantity) > parseInt(poQty)) {
-            alert("PO Quantity exceeded");
-            return;
-        }
-
-        // Add the data to the grid
-        itemCount++;
-
-        $('#grngridbody').append(`
-            <tr data-item-id="${itemId}">
-                <td>${itemCount}</td>
-                <td>${itemName}</td>
-                <td>${price}</td>
-                <td>${batchNo}</td>
-                <td>${dateom}</td>
-                <td>${bbv}</td>
-                <td>${spq}</td>
-                <td>${totalQuantity}</td>
-                <td>${numberOfBarcodes}</td>
-                <td><button type="button" class="btn btn-danger btn-sm" onclick="removeItem(${itemId})">Remove</button></td>
-            </tr>
-        `);
-
-        // Add hidden inputs to form
-        $('<input>').attr({
-            type: 'hidden',
-            name: `items[${itemCount}][item_id]`,
-            value: itemId
-        }).appendTo('form');
-        $('<input>').attr({
-            type: 'hidden',
-            name: `items[${itemCount}][price]`,
-            value: price
-        }).appendTo('form');
-        $('<input>').attr({
-            type: 'hidden',
-            name: `items[${itemCount}][dom]`,
-            value: dateom
-        }).appendTo('form');
-        $('<input>').attr({
-            type: 'hidden',
-            name: `items[${itemCount}][bbf]`,
-            value: bbv
-        }).appendTo('form');
-        $('<input>').attr({
-            type: 'hidden',
-            name: `items[${itemCount}][spq]`,
-            value: spq
-        }).appendTo('form');
-        $('<input>').attr({
-            type: 'hidden',
-            name: `items[${itemCount}][total_quantity]`,
-            value: totalQuantity
-        }).appendTo('form');
-        $('<input>').attr({
-            type: 'hidden',
-            name: `items[${itemCount}][number_of_barcodes]`,
-            value: numberOfBarcodes
-        }).appendTo('form');
-        $('<input>').attr({
-            type: 'hidden',
-            name: `items[${itemCount}][purchase_id]`,
-            value: ponumber
-        }).appendTo('form');
-
-        // Reset the form fields for the next entry
-        $('#item_id').val('').trigger('change');
-        $('#purchase_number').val('');
-        $('#price').val('');
-        $('#dom').val('');
-        $('#best_before_value').val('');
-        $('#uom').val('');
-        $('#spq').val('');
-        $('#total_quantity').val('');
-        $('#po_qty').val('');
-        $('#number_of_barcodes').val('');
-
+    // Validate if DOM is before Best Before date
+    if (dateom > bbv) {
+        alert("Date of Manufacture should be less than Best Before date");
+        return;
     }
 
-    function removeItem(itemId) {
-
-        let $row = $(`tr[data-item-id="${itemId}"]`);
-        let itemCount = $row.data('item-count');
-
-        $row.remove();
-
-        $(`input[name="items[${itemCount}][item_id]"]`).remove();
-        $(`input[name="items[${itemCount}][price]"]`).remove();
-        $(`input[name="items[${itemCount}][dom]"]`).remove();
-        $(`input[name="items[${itemCount}][bbf]"]`).remove();
-        $(`input[name="items[${itemCount}][spq]"]`).remove();
-        $(`input[name="items[${itemCount}][total_quantity]"]`).remove();
-        $(`input[name="items[${itemCount}][number_of_barcodes]"]`).remove();
-        $(`input[name="items[${itemCount}][purchase_id]"]`).remove();
-
-        itemCount--;
-
-        updateRowNumbers();
+    // Validate required fields
+    if (!itemId) {
+        alert("Please select an item");
+        return;
+    } else if (!batchNo) {
+        alert("Please enter batch number");
+        return;
+    } else if (!price) {
+        alert("Please enter Price number");
+        return;
+    } else if (!dateom) {
+        alert("Please enter DOM");
+        return;
+    } else if (!bbv) {
+        alert("Please enter Best Before");
+        return;
+    } else if (!spq) {
+        alert("Please enter SPQ");
+        return;
+    } else if (!numberOfBarcodes) {
+        alert("Please enter the number of barcodes");
+        return;
+    } else if (!totalQuantity) {
+        alert("Please enter the number of Total Quantity");
+        return;
     }
 
-    function updateRowNumbers() {
-        $('#grngridbody tr').each(function(index) {
-            $(this).find('td').eq(0).text(index + 1);
-        });
+    // Check for duplicates in grid
+    if ($('#grngridbody').find('tr').filter(function() {
+        return $(this).find('td').eq(1).text() === itemName && $(this).find('td').eq(3).text() === batchNo;
+    }).length > 0) {
+        alert("Item already added");
+        return;
     }
+
+    // Check PO quantity exceeds limit logic
+    let totalPoQty = 0;
+    $('#grngridbody tr').each(function() {
+        let rowItemId = $(this).find('td').eq(1).text();
+        let rowQty = $(this).find('td').eq(3).text();
+
+        if (rowItemId === itemName) {
+            totalPoQty += parseInt(rowQty);
+        }
+    });
+
+    if (totalPoQty + parseInt(totalQuantity) > parseInt(poQty)) {
+        alert("PO Quantity exceeded");
+        return;
+    }
+
+    // Add the data to the grid
+    let rowIndex = $('#grngridbody tr').length + 1; // Use row count as index
+
+    $('#grngridbody').append(`
+        <tr data-item-id="${itemId}">
+            <td>${rowIndex}</td> <!-- Dynamic row number -->
+            <td>${itemName}</td>
+            <td>${price}</td>
+            <td>${batchNo}</td>
+            <td>${dateom}</td>
+            <td>${bbv}</td>
+            <td>${spq}</td>
+            <td>${totalQuantity}</td>
+            <td>${numberOfBarcodes}</td>
+            <td><button type="button" class="btn btn-danger btn-sm" onclick="removeItem(${itemId}, ${rowIndex})">Remove</button></td>
+        </tr>
+    `);
+
+    // Add hidden inputs to form
+    $('<input>').attr({
+        type: 'hidden',
+        name: `items[${rowIndex}][item_id]`,
+        value: itemId
+    }).appendTo('form');
+    $('<input>').attr({
+        type: 'hidden',
+        name: `items[${rowIndex}][price]`,
+        value: price
+    }).appendTo('form');
+    $('<input>').attr({
+        type: 'hidden',
+        name: `items[${rowIndex}][dom]`,
+        value: dateom
+    }).appendTo('form');
+    $('<input>').attr({
+        type: 'hidden',
+        name: `items[${rowIndex}][bbf]`,
+        value: bbv
+    }).appendTo('form');
+    $('<input>').attr({
+        type: 'hidden',
+        name: `items[${rowIndex}][spq]`,
+        value: spq
+    }).appendTo('form');
+    $('<input>').attr({
+        type: 'hidden',
+        name: `items[${rowIndex}][total_quantity]`,
+        value: totalQuantity
+    }).appendTo('form');
+    $('<input>').attr({
+        type: 'hidden',
+        name: `items[${rowIndex}][number_of_barcodes]`,
+        value: numberOfBarcodes
+    }).appendTo('form');
+    $('<input>').attr({
+        type: 'hidden',
+        name: `items[${rowIndex}][purchase_id]`,
+        value: ponumber
+    }).appendTo('form');
+
+    // Reset the form fields for the next entry
+    $('#item_id').val('').trigger('change');
+    $('#purchase_number').val('');
+    $('#price').val('');
+    $('#dom').val('');
+    $('#best_before_value').val('');
+    $('#uom').val('');
+    $('#spq').val('');
+    $('#total_quantity').val('');
+    $('#po_qty').val('');
+    $('#number_of_barcodes').val('');
+}
+
+// Function to remove item from the grid
+function removeItem(itemId, rowIndex) {
+    // Remove row from the grid
+    $(`tr[data-item-id="${itemId}"]`).remove();
+
+    // Remove hidden inputs associated with this item
+    $(`input[name="items[${rowIndex}][item_id]"]`).remove();
+    $(`input[name="items[${rowIndex}][price]"]`).remove();
+    $(`input[name="items[${rowIndex}][dom]"]`).remove();
+    $(`input[name="items[${rowIndex}][bbf]"]`).remove();
+    $(`input[name="items[${rowIndex}][spq]"]`).remove();
+    $(`input[name="items[${rowIndex}][total_quantity]"]`).remove();
+    $(`input[name="items[${rowIndex}][number_of_barcodes]"]`).remove();
+    $(`input[name="items[${rowIndex}][purchase_id]"]`).remove();
+
+    // Update the row numbers
+    updateRowNumbers();
+}
+
+// Update the row numbers after removing an item
+function updateRowNumbers() {
+    $('#grngridbody tr').each(function(index) {
+        $(this).find('td').eq(0).text(index + 1);  // Update row number
+    });
+}
+
 
     // Reset grid
     $('#reset').click(function() {

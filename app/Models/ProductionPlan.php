@@ -50,7 +50,15 @@ class ProductionPlan extends Model
         return $planNumber[0]->plan_number;
     }
 
+    public function productionPlanSubs(){
+        return $this->hasMany(ProductionPlanSub::class);
+    }
+
     public function item(){
         return $this->belongsTo(Item::class);
+    }
+
+    public function productionScans(){
+        return $this->hasMany(ProductionScan::class);
     }
 }
