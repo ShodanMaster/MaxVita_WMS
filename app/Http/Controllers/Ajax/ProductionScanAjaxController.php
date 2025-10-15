@@ -65,7 +65,7 @@ class ProductionScanAjaxController extends Controller
             }
 
             $productionPlanSub = ProductionPlanSub::where('production_plan_id', $productionPlan->id)
-                                // ->where('item_id', $barcode->item_id)
+                                ->where('item_id', $barcode->item_id)
                                 ->first();
 
             if (!$productionPlanSub) {
