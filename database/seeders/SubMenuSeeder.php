@@ -168,10 +168,19 @@ class SubMenuSeeder extends Seeder
                 'listing_order' => 11,
                 'created_at' => now(),
             ],
+            //Fg Barcode Generation
+            // 19
+            [
+                'menu_id' => 5,
+                'title' => 'Fg Barcode Generation',
+                'link' => 'fg-barcode-generation',
+                'listing_order' => 11,
+                'created_at' => now(),
+            ],
 
             // Utility Submenus
             // Permission
-            // 19
+            //20
             [
                 'menu_id' => 7,
                 'title' => 'Permission',
@@ -181,7 +190,7 @@ class SubMenuSeeder extends Seeder
             ],
 
             // Change Password
-            // 20
+            // 21
             [
                 'menu_id' => 7,
                 'title' => 'Change Password',

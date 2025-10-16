@@ -10,7 +10,7 @@
 
 			<img src='{{ asset("dist/img/$anotherArray->front_logo") }}' alt="AdminLTE Docs Logo Large" class="brand-image-xs logo-xl" style="width: 200px">
 			@else
-			Stallion<span> WMS</span>
+			Maxvita<span> WMS</span>
 			@endif
 		</a>
 

@@ -32,4 +32,7 @@ Route::prefix('ajax')
         // Production Scan Ajax Functions
         Route::post('get-production-details', [ProductionScanAjaxController::class, 'getProductionDetails'])->name('getproductiondetails');
         Route::post('production-scan', [ProductionScanAjaxController::class, 'productionScan'])->name('productionscan');
+
+        // Fg Barcode Generation Ajax Functions
+        Route::post('get-plan-details', [ProductionScanAjaxController::class, 'getPlanDetails'])->name('getplandetails');
     });
