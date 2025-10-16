@@ -66,7 +66,7 @@
                                         name="purchase_date"
                                         id="purchase_date"
                                         required
-                                        class="form-control form-control-sm"
+                                        class="form-control form-control-sm date-field"
                                         value="{{ old('purchase_date') }}"
                                     >
                                 </div>

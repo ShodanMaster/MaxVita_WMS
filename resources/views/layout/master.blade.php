@@ -76,27 +76,32 @@
 
     <script>
       $(document).ready(function() {
-  $.ajax({
-    headers: {
-                'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
-            },
-    url: "{{url('/ajax/favicon')}}",
-    type: 'POST',
-    dataType: 'json',
-    success: function(response) {
+        $.ajax({
+            headers: {
+                        'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+                    },
+            url: "{{url('/ajax/favicon')}}",
+            type: 'POST',
+            dataType: 'json',
+            success: function(response) {
 
-      var favicon = response;
+            var favicon = response;
 
-      $('#favicon').attr('href', '{{ asset('dist/img/') }}' + '/' + favicon);
-    }
-  });
-});
+            $('#favicon').attr('href', '{{ asset('dist/img/') }}' + '/' + favicon);
+            }
+        });
+        
+        const today = new Date().toISOString().split('T')[0];
+        document.querySelectorAll('.date-field').forEach(function(input) {
+            input.setAttribute('min', today);
+        });
+    });
 
-$.ajaxSetup({
-    headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    }
-});
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
     </script>
 
     <!-- custom-scripts js -->

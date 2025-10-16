@@ -62,7 +62,7 @@
                                         name="plan_date"
                                         id="plan_date"
                                         required
-                                        class="form-control form-control-sm"
+                                        class="form-control form-control-sm date-field"
                                         value="{{ old('plan_date') }}"
                                     >
                                 </div>
