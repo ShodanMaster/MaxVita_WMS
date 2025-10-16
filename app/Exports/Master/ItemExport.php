@@ -25,6 +25,8 @@ class ItemExport implements FromCollection, WithHeadings, ShouldAutoSize, WithEv
             'Item Group',
             'UOM',
             'GST Rate',
+            'Price',
+            'Single Packet Weight',
             'SKU Code',
             'SPQ Quantity',
             'Item Type',
@@ -46,7 +48,7 @@ class ItemExport implements FromCollection, WithHeadings, ShouldAutoSize, WithEv
     {
         $sheet->getStyle('1')->getFont()->setBold(true);
 
-        $sheet->getStyle('A1:I1')->applyFromArray([
+        $sheet->getStyle('A1:K1')->applyFromArray([
             'fill' => [
                 'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
                 'color' => ['argb' => "FFaeaaaa"]
@@ -57,7 +59,7 @@ class ItemExport implements FromCollection, WithHeadings, ShouldAutoSize, WithEv
     public function collection()
     {
         return Item::with('category', 'uom')
-            ->get(['id', 'category_id', 'uom_id', 'item_code', 'name', 'in_stock', 'gst_rate', 'sku_code', 'item_type', 'spq_quantity'])
+            ->get(['id', 'category_id', 'uom_id', 'item_code', 'name', 'in_stock', 'gst_rate', 'price', 'single_packet_weight', 'sku_code', 'item_type', 'spq_quantity'])
             ->map(function($item){
                 return [
                     'Item Code' => $item->item_code,
@@ -66,6 +68,8 @@ class ItemExport implements FromCollection, WithHeadings, ShouldAutoSize, WithEv
                     'Item Group' => $item->category->name,
                     'UOM' => $item->uom->name,
                     'GST Rate' => $item->gst_rate,
+                    'Price' => $item->price,
+                    'Single Packet Weight' => $item->single_packet_weight,
                     'SKU Code' => $item->sku_code,
                     'SPQ Quantity' => $item->spq_quantity,
                     'Item Type' => $item->item_type,

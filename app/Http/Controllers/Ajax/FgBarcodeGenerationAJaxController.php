@@ -25,33 +25,37 @@ class FgBarcodeGenerationAJaxController extends Controller
         }
     }
 
-    public function fgBarcodeGenerate(Request $request){
-        if($request->ajax()){
-            dd($request->all());
-            $productionPlan = ProductionPlan::where('plan_number', $request->plan_number)->first();
-            $user = Auth::user();
-            $location = Location::find($user->location_id);
-            $branchId = $location->branch_id;
+    // public function fgBarcodeGenerate(Request $request){
+    //     if($request->ajax()){
+    //         dd($request->all());
 
-            $barcodeNumber = BarcodeGenerator::nextNumber($location->prefix);
-            $barcode = Barcode::create([
-                            'serial_number' => $barcodeNumber,
-                            'transaction_id' => $productionPlan->id,
-                            'transaction_type' => '2',
-                            'branch_id' => $branchId,
-                            'location_id' => $location->id,
-                            'item_id' => $productionPlan->item_id,
-                            'date_of_manufacture' => $item["date_of_manufacture"],
-                            'best_before_date' => $item["best_before_date"],
-                            'batch_number' => $batchNumber,
-                            'price' => $item["price"],
-                            'total_price' => $totalPrice,
-                            'net_weight' => $netWeight,
-                            'grn_net_weight' => $item["total_quantity"],
-                            'status' => '-1',
-                            'user_id' => $userid,
-                            'qc_approval_status' => '0',
-                        ]);
-        }
-    }
+    //         $productionPlan = ProductionPlan::where('plan_number', $request->plan_number)->first();
+    //         $user = Auth::user();
+    //         $batchNumber = 'F' . date('ymd');
+    //         $batchNumber = 'F';
+    //         $location = Location::find($user->location_id);
+    //         $branchId = $location->branch_id;
+
+    //         $barcodeNumber = BarcodeGenerator::nextNumber($location->prefix);
+    //         $barcode = Barcode::create([
+    //                         'serial_number' => $barcodeNumber,
+    //                         'transaction_id' => $productionPlan->id,
+    //                         'transaction_type' => '2',
+    //                         'branch_id' => $branchId,
+    //                         'location_id' => $location->id,
+    //                         'item_id' => $productionPlan->item_id,
+    //                         'date_of_manufacture' => $request->date_of_manufacture,
+    //                         'best_before_date' => $request->best_before_date,
+    //                         'batch_number' => $batchNumber,
+    //                         'price' => $productionPlan->item->price,
+    //                         'total_price' => $totalPrice,
+    //                         'net_weight' => $netWeight,
+    //                         'grn_net_weight' => $item["total_quantity"],
+    //                         'status' => '-1',
+    //                         'user_id' => $userid,
+    //                         'qc_approval_status' => '0',
+    //                     ]);
+    //     }
+    //     }
+    // }
 }

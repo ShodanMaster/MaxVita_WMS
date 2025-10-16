@@ -51,6 +51,8 @@
                         <th>Category</th>
                         <th>UOM</th>
                         <th>GST Rate</th>
+                        <th>Price</th>
+                        <th>Single Packet Weight</th>
                         <th>SKU Code</th>
                         <th>SPQ Quantity</th>
                         <th>Item Type</th>
@@ -158,6 +160,14 @@
             {
                 data: 'gst_rate',
                 name: 'gst_rate'
+            },
+            {
+                data: 'price',
+                name: 'price'
+            },
+            {
+                data: 'single_packet_weight',
+                name: 'single_packet_weight'
             },
             {
                 data: 'sku_code',

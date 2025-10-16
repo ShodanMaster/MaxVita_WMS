@@ -16,6 +16,8 @@ class Item extends Model
         'item_code',
         'in_stock',
         'item_type',
+        'price',
+        'single_packet_weight',
         'sku_code',
         'spq_quantity',
         'gst_rate',

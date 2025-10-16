@@ -37,6 +37,8 @@ class ItemImport implements ToModel, WithValidation, WithHeadingRow
 
         if(strtolower($row['item_type']) === 'fg'){
             $fgData = [
+                'price' => $row['price'],
+                'single_packet_weight' => $row['single_packet_weight'],
                 'sku_code' => $row['sku_code'],
                 'gst_rate' => $row['gst_rate'],
             ];

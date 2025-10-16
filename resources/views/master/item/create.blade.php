@@ -163,6 +163,39 @@
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <div class="form-group">
+                                        <label for="price" class="col-sm-4 control-label">
+                                            Price <font color="#FF0000">*</font>
+                                        </label>
+                                        <input
+                                            type="text"
+                                            name="price"
+                                            id="price"
+                                            class="form-control form-control-sm"
+                                            value="{{ old('price', $item->price ?? '') }}"
+                                        >
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-group">
+                                        <label for="single_packet_weight" class="col-sm-4 control-label">
+                                            Single Packet Weight <font color="#FF0000">*</font>
+                                        </label>
+                                        <input
+                                            type="integer"
+                                            min="1"
+                                            name="single_packet_weight"
+                                            id="single_packet_weight"
+                                            class="form-control form-control-sm"
+                                            value="{{ old('single_packet_weight', $item->single_packet_weight ?? '') }}"
+                                        >
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-group">
                                         <label for="sku_code" class="col-sm-4 control-label">
                                             SKU Code <font color="#FF0000">*</font>
                                         </label>

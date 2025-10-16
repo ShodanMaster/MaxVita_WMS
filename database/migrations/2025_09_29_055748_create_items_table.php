@@ -25,6 +25,7 @@ return new class extends Migration
             $table->decimal('spq_quantity', 10, 3)->nullable();
             $table->decimal('net_weight', 10, 3)->nullable();
             $table->decimal('gross_weight', 10, 3)->nullable();
+            $table->decimal('price', 10, 3)->nullable();
             $table->integer('primary_shelf_life')->nullable();
             $table->integer('secondary_shelf_life')->nullable();
             $table->integer('best_before_type')->nullable()->comment("1 => Days, 2 => Months, 3 => Years");

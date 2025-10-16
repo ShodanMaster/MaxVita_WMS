@@ -23,7 +23,7 @@ class ItemController extends Controller
 
     public function getItems(Request $request){
         if($request->ajax()){
-            $items = Item::with('category', 'uom')->select(['id', 'category_id', 'uom_id', 'item_code', 'name', 'in_stock', 'gst_rate', 'sku_code', 'item_type', 'spq_quantity']);
+            $items = Item::with('category', 'uom')->select(['id', 'category_id', 'uom_id', 'item_code', 'name', 'in_stock', 'gst_rate', 'price', 'single_packet_weight', 'sku_code', 'item_type', 'spq_quantity']);
 
             return DataTables::of($items)
                 ->addIndexColumn()
@@ -101,6 +101,8 @@ class ItemController extends Controller
 
             if ($request->item_type === 'FG') {
                 $data = array_merge($data, [
+                    'price' => $request->price,
+                    'single_packet_weight' => $request->single_packet_weight,
                     'sku_code' => $request->sku_code,
                     'gst_rate' => $request->gst_rate,
                 ]);
