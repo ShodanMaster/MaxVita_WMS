@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('barcodes', function (Blueprint $table) {
             $table->id();
             $table->string('serial_number')->unique();
-            $table->foreignId('grn_id')->constrained();
+            $table->unsignedBigInteger('transaction_id');
+            $table->enum('transaction_type', ['1', '2', '3', '4'])->comment('1=>GRN,2=>Production,3=>opening,4=>rejection');
             $table->foreignId('branch_id')->constrained();
             $table->foreignId('location_id')->constrained();
             $table->foreignId('bin_id')->nullable()->constrained();
@@ -34,6 +35,8 @@ return new class extends Migration
             $table->enum('qc_approval_status', ['0', '1', '2'])->default('0')->comment('0=>QC not Done; 1=>QC Done; 2=>QC rejected');
             $table->softDeletes();
             $table->timestamps();
+
+            $table->index(['transaction_type', 'transaction_id']);
         });
     }
 
