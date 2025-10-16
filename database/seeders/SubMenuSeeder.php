@@ -163,8 +163,8 @@ class SubMenuSeeder extends Seeder
             // 18
             [
                 'menu_id' => 5,
-                'title' => 'Production Scan',
-                'link' => 'production-scan',
+                'title' => 'Production Issue',
+                'link' => 'production-issue',
                 'listing_order' => 11,
                 'created_at' => now(),
             ],

@@ -3,7 +3,7 @@
 use App\Http\Controllers\Ajax\CommonAjaxController;
 use App\Http\Controllers\Ajax\FgBarcodeGenerationAJaxController;
 use App\Http\Controllers\Ajax\GrnAjaxController;
-use App\Http\Controllers\Ajax\ProductionScanAjaxController;
+use App\Http\Controllers\Ajax\ProductionIssueAjaxController;
 use App\Http\Controllers\Ajax\PurchaseOrderAjaxController;
 use App\Http\Controllers\Ajax\StorageScanAjaxController;
 use Illuminate\Support\Facades\Route;
@@ -31,8 +31,8 @@ Route::prefix('ajax')
         Route::post('storage-scan', [StorageScanAjaxController::class, 'storageScan'])->name('storagescan');
 
         // Production Scan Ajax Functions
-        Route::post('get-production-details', [ProductionScanAjaxController::class, 'getProductionDetails'])->name('getproductiondetails');
-        Route::post('production-scan', [ProductionScanAjaxController::class, 'productionScan'])->name('productionscan');
+        Route::post('get-production-details', [ProductionIssueAjaxController::class, 'getProductionDetails'])->name('getproductiondetails');
+        Route::post('production-issue-scan', [ProductionIssueAjaxController::class, 'productionIssueScan'])->name('productionissuescan');
 
         // Fg Barcode Generation Ajax Functions
         Route::post('get-plan-details', [FgBarcodeGenerationAJaxController::class, 'getPlanDetails'])->name('getplandetails');

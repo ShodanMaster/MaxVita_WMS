@@ -51,7 +51,7 @@
                         </label>
                         <div class="col-sm-8">
                             <input type="hidden" id="scanned_barcodes" name="scanned_barcodes">
-                            <input type="text" id="barcode" name="barcode" class="form-control form-control-sm" oninput="productionScan()" required>
+                            <input type="text" id="barcode" name="barcode" class="form-control form-control-sm" oninput="productionIssue()" required>
                         </div>
                     </div>
                 </div>
@@ -180,7 +180,7 @@
         resetButton.style.display = 'none';
     }
 
-    function productionScan(){
+    function productionIssue(){
         const planNumber = document.getElementById('plan_number').value;
         const bin = document.getElementById('bin').value;
         const barcode = document.getElementById('barcode').value;
@@ -189,7 +189,7 @@
 
         if(planNumber ==''){
             alert('Enter Not Found!');
-            window.location.href = "{{ route('production-scan.index') }}";
+            window.location.href = "{{ route('production-issue.index') }}";
             return false;
         }
 
@@ -207,7 +207,7 @@
 
         $.ajax({
             type: "POST",
-            url: "{{ route('ajax.productionscan') }}",
+            url: "{{ route('ajax.productionissuescan') }}",
             data: {
                 plan_number : planNumber,
                 bin : bin,
@@ -234,7 +234,7 @@
 
                     if(response.scan_complete){
                         alert('Production Scan Completed');
-                        window.location.href = "{{ route('production-scan.index') }}";
+                        window.location.href = "{{ route('production-issue.index') }}";
                     }
                 }
                 document.getElementById('barcode').value = '';

@@ -7,12 +7,12 @@ use App\Models\Barcode;
 use App\Models\Bin;
 use App\Models\ProductionPlan;
 use App\Models\ProductionPlanSub;
-use App\Models\ProductionScan;
+use App\Models\ProductionIssue;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
-class ProductionScanAjaxController extends Controller
+class ProductionIssueAjaxController extends Controller
 {
     public function getProductionDetails(Request $request){
         if($request->ajax()){
@@ -28,7 +28,7 @@ class ProductionScanAjaxController extends Controller
         }
     }
 
-    public function productionScan(Request $request){
+    public function productionIssue(Request $request){
         if($request->ajax()){
             // dd($request->all());
             $user = Auth::user();
@@ -93,7 +93,7 @@ class ProductionScanAjaxController extends Controller
 
             DB::beginTransaction();
 
-            $productionScan = ProductionScan::create([
+            $productionIssue = ProductionIssue::create([
                 'barcode' => $barcode->serial_number,
                 'item_id' => $barcode->item_id,
                 'production_plan_id' => $productionPlan->id,

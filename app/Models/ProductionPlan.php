@@ -58,7 +58,7 @@ class ProductionPlan extends Model
         return $this->belongsTo(Item::class);
     }
 
-    public function productionScans(){
-        return $this->hasMany(ProductionScan::class);
+    public function productionIssues(){
+        return $this->hasMany(ProductionIssue::class);
     }
 }

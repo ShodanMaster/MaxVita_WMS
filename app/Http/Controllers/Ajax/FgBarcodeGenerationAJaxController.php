@@ -34,23 +34,24 @@ class FgBarcodeGenerationAJaxController extends Controller
             $branchId = $location->branch_id;
 
             $barcodeNumber = BarcodeGenerator::nextNumber($location->prefix);
-            // $barcode = Barcode::create([
-            //                 'serial_number' => $barcodeNumber,
-            //                 'grn_id' => $grn->id,
-            //                 'branch_id' => $branchId,
-            //                 'location_id' => $data["location_id"],
-            //                 'item_id' => $item["item_id"],
-            //                 'date_of_manufacture' => $item["date_of_manufacture"],
-            //                 'best_before_date' => $item["best_before_date"],
-            //                 'batch_number' => $batchNumber,
-            //                 'price' => $item["price"],
-            //                 'total_price' => $totalPrice,
-            //                 'net_weight' => $netWeight,
-            //                 'grn_net_weight' => $item["total_quantity"],
-            //                 'status' => '-1',
-            //                 'user_id' => $userid,
-            //                 'qc_approval_status' => '0',
-            //             ]);
+            $barcode = Barcode::create([
+                            'serial_number' => $barcodeNumber,
+                            'transaction_id' => $productionPlan->id,
+                            'transaction_type' => '2',
+                            'branch_id' => $branchId,
+                            'location_id' => $location->id,
+                            'item_id' => $productionPlan->item_id,
+                            'date_of_manufacture' => $item["date_of_manufacture"],
+                            'best_before_date' => $item["best_before_date"],
+                            'batch_number' => $batchNumber,
+                            'price' => $item["price"],
+                            'total_price' => $totalPrice,
+                            'net_weight' => $netWeight,
+                            'grn_net_weight' => $item["total_quantity"],
+                            'status' => '-1',
+                            'user_id' => $userid,
+                            'qc_approval_status' => '0',
+                        ]);
         }
     }
 }

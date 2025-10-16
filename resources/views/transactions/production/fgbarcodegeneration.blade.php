@@ -80,11 +80,35 @@
                 </div>
                 <div class="card-footer">
                     <div class="form-group row">
-                        <label for="weight" class="col-md-4 control-label">
-                            Weight
+                        <label for="batch" class="col-md-4 control-label">
+                            Batch
                         </label>
                         <div class="col-sm-8">
-                            <input type="number" name="weight" id="weight" step="0.001" class="form-control form-control-sm">
+                            <input
+                                    type="text"
+                                    readonly
+                                    class="form-control form-control-sm"
+                                    value="{{ $batch }}"
+                                    id="batch"
+                                >
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label for="dom" class="col-sm-4 control-label">DOM <font color="#FF0000">*</font></label>
+                                <div class="col-sm-8">
+                                    <input type="date" id="dom" class="form-control form-control-sm mandatory" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label for="best_before_value" class="col-sm-4 control-label">Best Before <font color="#FF0000">*</font></label>
+                                <div class="col-sm-8">
+                                    <input type="date" id="best_before_value" class="form-control form-control-sm mandatory date-field" />
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="d-flex justify-content-end">
@@ -157,7 +181,7 @@
     function submitWeight(){
         var planNumber = document.getElementById("plan_number").value;
         const weight = document.getElementById('weight').value;
-        
+
         if(weight == ""){
             alert("Enter Weight!");
             return false;

@@ -15,7 +15,7 @@ use App\Http\Controllers\Master\UomController;
 use App\Http\Controllers\Master\UserController;
 use App\Http\Controllers\Master\VendorController;
 use App\Http\Controllers\Transactions\Grn\GrnController;
-use App\Http\Controllers\Transactions\Production\ProductionScanController;
+use App\Http\Controllers\Transactions\Production\ProductionIssueController;
 use App\Http\Controllers\Transactions\PurchaseEntry\PurchaseOrderController;
 use App\Http\Controllers\Transactions\Grn\StorageScanController;
 use App\Http\Controllers\Transactions\Production\FgBarcodeGenerationController;
@@ -85,7 +85,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::resource('production-plan', ProductionPlanController::class);
 
         //Production Scan
-        Route::resource('production-scan', ProductionScanController::class);
+        Route::resource('production-issue', ProductionIssueController::class);
 
         //Fg Barcode Generation
         Route::resource('fg-barcode-generation', FgBarcodeGenerationController::class);
