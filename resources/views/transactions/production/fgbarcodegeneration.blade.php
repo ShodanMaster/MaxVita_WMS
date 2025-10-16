@@ -22,6 +22,8 @@
                 <div class="card-header">
                     <h3 class="card-title">Fg Barcode Generation</h3>
                 </div>
+                <form action="{{ route('fg-barcode-generation.store') }}", method="POST">
+                    @csrf
                 <div class="card-body">
                     <div class="form-group row">
                         <label for="plan_number" class="col-md-4 control-label">
@@ -31,7 +33,7 @@
                             <select name="plan_number" id="plan_number" class="form-control form-control-sm select2" required onchange="fetchPlanDetails()">
                                 <option value="" disabled selected>--Select Plan Number--</option>
                                 @forelse ($planNumbers as $planNumber)
-                                    <option value="{{ $planNumber->plan_number }}">{{ $planNumber->plan_number }}</option>
+                                    <option value="{{ $planNumber->id }}">{{ $planNumber->plan_number }}</option>
                                 @empty
                                     <option value="" disabled >No Plan Numbers Found</option>
                                 @endforelse
@@ -98,7 +100,7 @@
                             <div class="form-group row">
                                 <label for="dom" class="col-sm-4 control-label">DOM <font color="#FF0000">*</font></label>
                                 <div class="col-sm-8">
-                                    <input type="date" id="dom" class="form-control form-control-sm mandatory" />
+                                    <input type="date" id="dom" name="date_of_manufacture" class="form-control form-control-sm mandatory" required />
                                 </div>
                             </div>
                         </div>
@@ -106,14 +108,15 @@
                             <div class="form-group row">
                                 <label for="best_before_value" class="col-sm-4 control-label">Best Before <font color="#FF0000">*</font></label>
                                 <div class="col-sm-8">
-                                    <input type="date" id="best_before_value" class="form-control form-control-sm mandatory date-field" />
+                                    <input type="date" name="best_before_date" id="best_before_value" class="form-control form-control-sm mandatory date-field" required/>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="d-flex justify-content-end">
-                        <button type="button" class="btn btn-primary" onclick="submitWeight()">Submit</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
                     </div>
+                    </form>
                 </div>
             </div>
         </div>

@@ -33,7 +33,7 @@
                                 <select name="plan_number" id="plan_number" class="form-control form-control-sm select2" required onchange="fetchProductionDetails()">
                                     <option value="" disabled selected>--Select Plan Number--</option>
                                     @forelse ($planNumbers as $planNumber)
-                                        <option value="{{ $planNumber->plan_number }}">{{ $planNumber->plan_number }}</option>
+                                        <option value="{{ $planNumber->id }}">{{ $planNumber->plan_number }}</option>
                                     @empty
                                         <option value="" disabled >No Plan Numbers Found</option>
                                     @endforelse
@@ -92,14 +92,14 @@
     $('.select2').select2();
 
     function fetchProductionDetails(){
-        var planNumber = document.getElementById("plan_number").value;
-        console.log(planNumber);
+        var productionPlanId = document.getElementById("plan_number").value;
+        console.log(productionPlanId);
 
         $.ajax({
             type: "POST",
             url: "{{ route('ajax.getproductiondetails') }}",
             data: {
-                plan_number : planNumber
+                production_plan_id : productionPlanId
             },
             dataType: "json",
             success: function (response) {

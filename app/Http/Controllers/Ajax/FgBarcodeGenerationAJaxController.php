@@ -14,8 +14,8 @@ class FgBarcodeGenerationAJaxController extends Controller
 {
     public function getPlanDetails(Request $request){
         if($request->ajax()){
-            $productionPlan = ProductionPlan::where('plan_number', $request->plan_number)->first();
-
+            $productionPlan = ProductionPlan::find($request->plan_number);
+            
             $data = [
                 'fg_item' => $productionPlan->item->item_code.'/'. $productionPlan->item->name,
                 'total_quantity' => $productionPlan->total_quantity

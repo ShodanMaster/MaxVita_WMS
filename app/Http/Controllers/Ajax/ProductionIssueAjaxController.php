@@ -16,7 +16,7 @@ class ProductionIssueAjaxController extends Controller
 {
     public function getProductionDetails(Request $request){
         if($request->ajax()){
-            $productionPlan = ProductionPlan::where('plan_number', $request->plan_number)->first();
+            $productionPlan = ProductionPlan::find($request->production_plan_id);
 
             $data = [
                 'plan_number' => $productionPlan->plan_number,
@@ -32,7 +32,7 @@ class ProductionIssueAjaxController extends Controller
         if($request->ajax()){
             // dd($request->all());
             $user = Auth::user();
-            $productionPlan = ProductionPlan::where('plan_number', $request->plan_number)->first();
+            $productionPlan = ProductionPlan::find($request->production_plan_id);
             $barcode = Barcode::where('serial_number', $request->barcode)->first();
             // dd($barcode);
             if(!$barcode){

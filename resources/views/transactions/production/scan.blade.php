@@ -27,7 +27,7 @@
                     <div class="form-group row">
                         <label for="plan_number" class="col-md-4 control-label">Plan No</label>
                         <div class="col-sm-8">
-                            <input type="text" id="plan_number" name="plan_number" class="form-control form-control-sm" required readonly value="{{ $planNumber }}">
+                            <input type="text" id="plan_number" name="plan_number" class="form-control form-control-sm" required readonly value="{{ $productionPlan->plan_number }}">
                         </div>
                     </div>
 
@@ -209,7 +209,7 @@
             type: "POST",
             url: "{{ route('ajax.productionissuescan') }}",
             data: {
-                plan_number : planNumber,
+                production_plan_id : {{ $id }},
                 bin : bin,
                 barcode : barcode
             },
