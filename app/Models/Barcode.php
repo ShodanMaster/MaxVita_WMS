@@ -12,7 +12,8 @@ class Barcode extends Model
 
     protected $fillable = [
         'serial_number',
-        'grn_id',
+        'transaction_id',
+        'transaction_type',
         'branch_id',
         'location_id',
         'bin_id',

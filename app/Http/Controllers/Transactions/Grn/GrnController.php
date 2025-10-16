@@ -36,7 +36,7 @@ class GrnController extends Controller
     }
 
     public function store(Request $request){
-        // dd($request->all());
+
         try{
 
             DB::beginTransaction();
@@ -117,8 +117,8 @@ class GrnController extends Controller
                 $spq = $item["spq"];
                 $fullBarcodes = floor($totalQty / $spq);
                 $remainder = $totalQty % $spq;
-                $numberOfBarcodes = $remainder > 0 ? $item["number_of_barcodes"] : $item["number_of_barcodes"] + 1;
-
+                $numberOfBarcodes = $remainder > 0 ? $item["number_of_barcodes"] + 1 : $item["number_of_barcodes"];
+                
                 for ($i = 0; $i < $numberOfBarcodes; $i++) {
 
                     $barcode = BarcodeGenerator::nextNumber($prefix);
@@ -128,7 +128,8 @@ class GrnController extends Controller
 
                     $barcodeData[] = [
                         'serial_number' => $barcode,
-                        'grn_id' => $grn->id,
+                        'transaction_id' => $grn->id,
+                        'transaction_type' => '1',
                         'branch_id' => $branchId,
                         'location_id' => $request->location_id,
                         'item_id' => $item["item_id"],
@@ -330,7 +331,8 @@ class GrnController extends Controller
 
                     Barcode::create([
                         'serial_number' => $barcode,
-                        'grn_id' => $grn->id,
+                        'transaction_id' => $grn->id,
+                        'transaction_type' => '1',
                         'branch_id' => $branchId,
                         'location_id' => $data["location_id"],
                         'item_id' => $item["item_id"],

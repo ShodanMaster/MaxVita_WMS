@@ -17,7 +17,7 @@ class StorageScanAjaxController extends Controller
     public function getGrnDetails(Request $request){
         // dd($request->all());
         if($request->ajax()){
-            $grn = Grn::where('grn_number', $request->grn_number)->first();
+            $grn = Grn::find($request->id);
 
             $data = [
 
@@ -63,7 +63,7 @@ class StorageScanAjaxController extends Controller
                     ]);
             }
 
-            $grnSub = GrnSub::where('grn_id', $barcode->grn_id)
+            $grnSub = GrnSub::where('grn_id', $request->grn_id)
                                 ->where('batch_number', $barcode->batch_number)
                                 ->where('item_id', $barcode->item_id)
                                 ->first();
@@ -74,11 +74,11 @@ class StorageScanAjaxController extends Controller
                     'message' => 'GRN data not found.'
                 ]);
             }
-
-            if($barcode->grn_id != $grnSub->grn_id){
+            // dd($barcode->transaction_id, $grnSub->grn_id);
+            if($barcode->transaction_id != $grnSub->grn_id){
                 return response()->json([
                     'status' => 404,
-                    'message' => 'Barcode does not belong to this GRN.'
+                    'message' => 'Item does not belongs to this GRN.'
                 ]);
             }
 
@@ -124,11 +124,12 @@ class StorageScanAjaxController extends Controller
                 'scanned_quantity' => $grnSub->scanned_quantity + $barcode->net_weight,
             ]);
 
-            $grnSubUpdated = GrnSub::where('grn_id', $barcode->grn_id)
+            $grnSubUpdated = GrnSub::where('grn_id', $request->grn_id)
                                 ->where('batch_number', $barcode->batch_number)
                                 ->where('item_id', $barcode->item_id)
                                 ->whereNot('grn_status', 1)
                                 ->first();
+                                
             if($grnSubUpdated->scanned_quantity == $grnSubUpdated->total_quantity){
                 $grnSubUpdated->update(['grn_status' => 1]);
             }

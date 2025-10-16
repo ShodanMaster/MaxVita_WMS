@@ -27,7 +27,7 @@
                     <div class="form-group row">
                         <label for="grn_no" class="col-md-4 control-label">GRN No</label>
                         <div class="col-sm-8">
-                            <input type="text" id="grn_no" name="grn_no" class="form-control form-control-sm" required readonly value="{{ $grnNumber }}">
+                            <input type="text" id="grn_no" name="grn_no" class="form-control form-control-sm" required readonly value="{{ $grn->grn_number }}">
                         </div>
                     </div>
 
@@ -204,6 +204,7 @@
             type: "POST",
             url: "{{ route('ajax.storagescan') }}",
             data: {
+                grn_id: {{$id}},
                 bin: bin.value,
                 barcode : barcode.value
             },

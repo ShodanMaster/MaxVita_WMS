@@ -33,7 +33,7 @@
                                 <select name="grn_number" id="grn_number" class="form-control form-control-sm select2" required onchange="fetchGrnDetails()">
                                     <option value="" disabled selected>--Select Grn Number--</option>
                                     @forelse ($grnNumbers as $grnNumber)
-                                        <option value="{{ $grnNumber->grn_number }}">{{ $grnNumber->grn_number }}</option>
+                                        <option value="{{ $grnNumber->id }}">{{ $grnNumber->grn_number }}</option>
                                     @empty
                                         <option value="" disabled >No Grn Numbers Found</option>
                                     @endforelse
@@ -100,7 +100,7 @@
             type: "POST",
             url: "{{ route('ajax.getgrndetails') }}",
             data: {
-                grn_number : grnNumber
+                id : grnNumber
             },
             dataType: "json",
             success: function (response) {
