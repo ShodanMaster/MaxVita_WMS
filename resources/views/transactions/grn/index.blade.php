@@ -213,17 +213,14 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                {{-- <div class="col-md-6">
                                     <div class="form-group row">
                                         <label for="price" class="col-sm-4 control-label">Price <font color="#FF0000">*</font></label>
                                         <div class="col-sm-8">
                                             <input type="text" id="price" class="form-control form-control-sm mandatory"" />
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-
-                            <div class="row">
+                                </div> --}}
                                 <div class="col-md-6">
                                     <div class="form-group row">
                                         <label for="dom" class="col-sm-4 control-label">DOM <font color="#FF0000">*</font></label>
@@ -232,6 +229,9 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+
+                            <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group row">
                                         <label for="best_before_value" class="col-sm-4 control-label">Best Before <font color="#FF0000">*</font></label>
@@ -240,9 +240,6 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-
-                            <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group row">
                                         <label for="spq" class="col-sm-4 control-label">SPQ <font color="#FF0000">*</font></label>
@@ -251,6 +248,9 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+
+                            <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group row">
                                         <label for="total_quantity" class="col-sm-4 control-label">Total Quantity <font color="#FF0000">*</font></label>
@@ -259,9 +259,6 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-
-                            <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group row">
                                         <label for="number_of_barcodes" class="col-sm-4 control-label">Number Of Barcodes <font color="#FF0000">*</font></label>
@@ -271,6 +268,9 @@
                                     </div>
                                 </div>
                             </div>
+
+                            {{-- <div class="row">
+                            </div> --}}
 
                             <div class="card-body">
                                 <input type="button" value="ADD TO GRID" class="btn btn-primary" id="addtogrid" onclick="addToGrid()" />
@@ -286,7 +286,7 @@
                                     <tr>
                                         <th>Sl.no</th>
                                         <th>Part No/Item Name</th>
-                                        <th>price</th>
+                                        {{-- <th>price</th> --}}
                                         <th>Batch No</th>
                                         <th>DOM</th>
                                         <th>BBF</th>
@@ -575,7 +575,7 @@ function addToGrid() {
     let bbv = $('#best_before_value').val();
     let itemId = $('#item_id').val();
     let itemName = $('#item_id option:selected').text();
-    let price = $.trim($("#price").val());
+    // let price = $.trim($("#price").val());
     let batchNo = $.trim($("#batch_no").val());
     let spq = $.trim($("#spq").val());
     let totalQuantity = $.trim($("#total_quantity").val());
@@ -598,10 +598,12 @@ function addToGrid() {
     } else if (!batchNo) {
         alert("Please enter batch number");
         return;
-    } else if (!price) {
-        alert("Please enter Price number");
-        return;
-    } else if (!dateom) {
+    }
+    // else if (!price) {
+    //     alert("Please enter Price number");
+    //     return;
+    // }
+    else if (!dateom) {
         alert("Please enter DOM");
         return;
     } else if (!bbv) {
@@ -649,7 +651,6 @@ function addToGrid() {
         <tr data-item-id="${itemId}">
             <td>${rowIndex}</td> <!-- Dynamic row number -->
             <td>${itemName}</td>
-            <td>${price}</td>
             <td>${batchNo}</td>
             <td>${dateom}</td>
             <td>${bbv}</td>
@@ -666,11 +667,13 @@ function addToGrid() {
         name: `items[${rowIndex}][item_id]`,
         value: itemId
     }).appendTo('form');
-    $('<input>').attr({
-        type: 'hidden',
-        name: `items[${rowIndex}][price]`,
-        value: price
-    }).appendTo('form');
+
+    // $('<input>').attr({
+    //     type: 'hidden',
+    //     name: `items[${rowIndex}][price]`,
+    //     value: price
+    // }).appendTo('form');
+
     $('<input>').attr({
         type: 'hidden',
         name: `items[${rowIndex}][dom]`,
@@ -705,7 +708,7 @@ function addToGrid() {
     // Reset the form fields for the next entry
     $('#item_id').val('').trigger('change');
     $('#purchase_number').val('');
-    $('#price').val('');
+    // $('#price').val('');
     $('#dom').val('');
     $('#best_before_value').val('');
     $('#uom').val('');
@@ -722,7 +725,7 @@ function removeItem(itemId, rowIndex) {
 
     // Remove hidden inputs associated with this item
     $(`input[name="items[${rowIndex}][item_id]"]`).remove();
-    $(`input[name="items[${rowIndex}][price]"]`).remove();
+    // $(`input[name="items[${rowIndex}][price]"]`).remove();
     $(`input[name="items[${rowIndex}][dom]"]`).remove();
     $(`input[name="items[${rowIndex}][bbf]"]`).remove();
     $(`input[name="items[${rowIndex}][spq]"]`).remove();

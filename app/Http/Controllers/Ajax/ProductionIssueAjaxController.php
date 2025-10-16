@@ -28,7 +28,7 @@ class ProductionIssueAjaxController extends Controller
         }
     }
 
-    public function productionIssue(Request $request){
+    public function productionIssueScan(Request $request){
         if($request->ajax()){
             // dd($request->all());
             $user = Auth::user();

@@ -118,13 +118,14 @@ class GrnController extends Controller
                 $fullBarcodes = floor($totalQty / $spq);
                 $remainder = $totalQty % $spq;
                 $numberOfBarcodes = $remainder > 0 ? $item["number_of_barcodes"] + 1 : $item["number_of_barcodes"];
-                
+                $itemPrice = Item::find('$item["item_id"]', ['price']);
+
                 for ($i = 0; $i < $numberOfBarcodes; $i++) {
 
                     $barcode = BarcodeGenerator::nextNumber($prefix);
 
                     $netWeight = ($i == $numberOfBarcodes - 1 && $remainder > 0) ? $remainder : $spq;
-                    $totalPrice = $netWeight * $item["price"];
+                    // $totalPrice = $netWeight * $item["price"];
 
                     $barcodeData[] = [
                         'serial_number' => $barcode,
@@ -136,8 +137,8 @@ class GrnController extends Controller
                         'date_of_manufacture' => $item["dom"],
                         'best_before_date' => $item["bbf"],
                         'batch_number' => $batchNumber,
-                        'price' => $item["price"],
-                        'total_price' => $totalPrice,
+                        'price' => $itemPrice,
+                        // 'total_price' => $totalPrice,
                         'net_weight' => $netWeight,
                         'grn_net_weight' => $item["total_quantity"],
                         'status' => '-1',
@@ -321,14 +322,14 @@ class GrnController extends Controller
                 $spq = $item["spq_quantity"];
                 $fullBarcodes = floor($totalQty / $spq);
                 $remainder = $totalQty % $spq;
+                $itemPrice = Item::find('$item["item_id"]', ['price']);
 
                 for ($i = 0; $i < $numberOfBarcodes; $i++) {
 
                     $barcode = BarcodeGenerator::nextNumber($prefix);
 
                     $netWeight = ($i == $numberOfBarcodes - 1 && $remainder > 0) ? $remainder : $spq;
-                    $totalPrice = $netWeight * $item["price"];
-
+                    // $totalPrice = $netWeight * $item["price"];
                     Barcode::create([
                         'serial_number' => $barcode,
                         'transaction_id' => $grn->id,
@@ -339,8 +340,8 @@ class GrnController extends Controller
                         'date_of_manufacture' => $item["date_of_manufacture"],
                         'best_before_date' => $item["best_before_date"],
                         'batch_number' => $batchNumber,
-                        'price' => $item["price"],
-                        'total_price' => $totalPrice,
+                        'price' => $itemPrice,
+                        // 'total_price' => $totalPrice,
                         'net_weight' => $netWeight,
                         'grn_net_weight' => $item["total_quantity"],
                         'status' => '-1',

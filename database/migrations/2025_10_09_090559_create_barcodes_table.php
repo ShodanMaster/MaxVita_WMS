@@ -24,8 +24,8 @@ return new class extends Migration
             $table->date('date_of_manufacture');
             $table->date('best_before_date');
             $table->string('batch_number');
-            $table->decimal('price', 11,3);
-            $table->decimal('total_price', 11, 3);
+            $table->decimal('price', 11,3)->nullable();
+            $table->decimal('total_price', 11, 3)->nullable();
             $table->integer('shelf_life')->default(0);
             $table->integer('net_weight')->default(0);
             $table->integer('grn_net_weight')->default(0);
