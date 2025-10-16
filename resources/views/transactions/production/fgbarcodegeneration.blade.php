@@ -23,40 +23,73 @@
                     <h3 class="card-title">Fg Barcode Generation</h3>
                 </div>
                 <div class="card-body">
-                    <form method="POST" action="{{ route('fg-barcode-generation.store') }}" enctype="multipart/form-data">
-                        @csrf
-                        <div class="form-group row">
-                            <label for="plan_number" class="col-md-4 control-label">
-                                Production Plan No
-                            </label>
-                            <div class="col-sm-8">
-                                <select name="plan_number" id="plan_number" class="form-control form-control-sm select2" required onchange="fetchProductionDetails()">
-                                    <option value="" disabled selected>--Select Plan Number--</option>
-                                    @forelse ($planNumbers as $planNumber)
-                                        <option value="{{ $planNumber->plan_number }}">{{ $planNumber->plan_number }}</option>
-                                    @empty
-                                        <option value="" disabled >No Plan Numbers Found</option>
-                                    @endforelse
-                                </select>
+                    <div class="form-group row">
+                        <label for="plan_number" class="col-md-4 control-label">
+                            Production Plan No
+                        </label>
+                        <div class="col-sm-8">
+                            <select name="plan_number" id="plan_number" class="form-control form-control-sm select2" required onchange="fetchPlanDetails()">
+                                <option value="" disabled selected>--Select Plan Number--</option>
+                                @forelse ($planNumbers as $planNumber)
+                                    <option value="{{ $planNumber->plan_number }}">{{ $planNumber->plan_number }}</option>
+                                @empty
+                                    <option value="" disabled >No Plan Numbers Found</option>
+                                @endforelse
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card" style="display: none" id="planDetails">
+                <div class="card-header">
+                    <h3 class="card-title">Product Details</h3>
+                </div>
+                <div class="card-body">
+
+                    <div class="form-group row">
+                        <div class="col-md-6 mb-3">
+                            <div class="form-group">
+                                <label for="name" class="col-sm-4 control-label">
+                                    FG Item
+                                </label>
+                                <input
+                                    type="text"
+                                    readonly
+                                    class="form-control form-control-sm"
+                                    value=""
+                                    id="fg_item"
+                                >
                             </div>
                         </div>
 
-                        <button type="submit" class="btn btn-primary">Start</button>
-
-                    </form>
+                        <div class="col-md-6 mb-3">
+                            <div class="form-group">
+                                <label for="purchase_date" class="col-sm-4 control-label">
+                                    Total Quantity <font color="#FF0000">*</font>
+                                </label>
+                                <input
+                                    type="text"
+                                    readonly
+                                    class="form-control form-control-sm"
+                                    value=""
+                                    id="total_quantity"
+                                >
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-footer table-responsive" style="display: none" id="productionDetails">
-                    <table class="table" id="grngrid">
-                        <thead>
-                            <tr>
-                                <th>Plan No</th>
-                                <th>Item</th>
-                                <th>Quantity</th>
-                            </tr>
-                        </thead>
-                        <tbody id="grid-container">
-                        </tbody>
-                    </table>
+                <div class="card-footer">
+                    <div class="form-group row">
+                        <label for="weight" class="col-md-4 control-label">
+                            Weight
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="number" name="weight" id="weight" step="0.001" class="form-control form-control-sm">
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end">
+                        <button type="button" class="btn btn-primary" onclick="submitWeight()">Submit</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -91,38 +124,60 @@
 <script>
     $('.select2').select2();
 
-    function fetchProductionDetails(){
+    function fetchPlanDetails(){
         var planNumber = document.getElementById("plan_number").value;
         console.log(planNumber);
 
         $.ajax({
             type: "POST",
-            url: "{{ route('ajax.getproductiondetails') }}",
+            url: "{{ route('ajax.getplandetails') }}",
             data: {
                 plan_number : planNumber
             },
             dataType: "json",
             success: function (response) {
-                const tbody = document.getElementById("grid-container");
-                tbody.innerHTML = "";
+                const fgItem = document.getElementById("fg_item");
+                const totalQuanity = document.getElementById("total_quantity");
+                fgItem.value= "";
+                totalQuanity.value= "";
 
-                if (Array.isArray(response) && response.length > 0) {
-                    document.getElementById("productionDetails").style.display = "block";
+                if (response) {
+                    document.getElementById("planDetails").style.display = "block";
 
-                    response.forEach(item => {
-                        const tr = document.createElement("tr");
-                        tr.innerHTML = `
-                            <td>${item.plan_number ?? ''}</td>
-                            <td>${item.item ?? ''}</td>
-                            <td>${item.total_quantity ?? ''}</td>
-                        `;
-                        tbody.appendChild(tr);
-                    });
+                    fgItem.value = response.fg_item;
+                    totalQuanity.value = response.total_quantity;
+
                 } else {
-                    document.getElementById("productionDetails").style.display = "none";
+                    document.getElementById("planDetails").style.display = "none";
                 }
             }
         });
+    }
+
+    function submitWeight(){
+        var planNumber = document.getElementById("plan_number").value;
+        const weight = document.getElementById('weight').value;
+        
+        if(weight == ""){
+            alert("Enter Weight!");
+            return false;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "{{ route('ajax.fgbarcodegenerate') }}",
+            data: {
+                plan_number : planNumber,
+                weight : weight
+            },
+            dataType: "json",
+            success: function (response) {
+                if(response){
+
+                }
+            }
+        });
+
     }
 </script>
 @endpush

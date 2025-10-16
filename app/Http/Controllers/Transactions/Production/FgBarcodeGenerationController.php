@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class FgBarcodeGenerationController extends Controller
 {
     public function index(){
-        $planNumbers = ProductionPlan::where('status', 2)->get(['id', 'plan_number']);
+        $planNumbers = ProductionPlan::where('status', 2)->get(['plan_number']);
         return view('transactions.production.fgbarcodegeneration', compact('planNumbers'));
     }
 }

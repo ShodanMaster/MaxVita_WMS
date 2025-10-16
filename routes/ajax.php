@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Ajax\CommonAjaxController;
+use App\Http\Controllers\Ajax\FgBarcodeGenerationAJaxController;
 use App\Http\Controllers\Ajax\GrnAjaxController;
 use App\Http\Controllers\Ajax\ProductionScanAjaxController;
 use App\Http\Controllers\Ajax\PurchaseOrderAjaxController;
@@ -34,5 +35,6 @@ Route::prefix('ajax')
         Route::post('production-scan', [ProductionScanAjaxController::class, 'productionScan'])->name('productionscan');
 
         // Fg Barcode Generation Ajax Functions
-        Route::post('get-plan-details', [ProductionScanAjaxController::class, 'getPlanDetails'])->name('getplandetails');
+        Route::post('get-plan-details', [FgBarcodeGenerationAJaxController::class, 'getPlanDetails'])->name('getplandetails');
+        Route::post('fg-barcode-generate', [FgBarcodeGenerationAJaxController::class, 'fgBarcodeGenerate'])->name('fgbarcodegenerate');
     });

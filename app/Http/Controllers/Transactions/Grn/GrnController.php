@@ -51,7 +51,7 @@ class GrnController extends Controller
             }
 
             $location = Location::find($request->location_id);
-            $branchId = $location->branch->id;
+            $branchId = $location->branch_id;
             $prefix = $location->prefix;
             $grnNumber = Grn::grnNumber();
             // dd($branchId);
@@ -256,7 +256,9 @@ class GrnController extends Controller
                 $purchaseNumber = $purchaseOrder->purchase_number;
             }
 
-            $branchId = Location::find($data["location_id"])->branch->id;
+            $location = Location::find($data["location_id"]);
+            $branchId = $location->branch_id;
+            $prefix = $location->prefix;
             // dd($data["remarks"]);
             $grn = Grn::create([
                 'grn_number' => Grn::grnNumber(),
@@ -321,7 +323,7 @@ class GrnController extends Controller
 
                 for ($i = 0; $i < $numberOfBarcodes; $i++) {
 
-                    $barcode = Barcode::nextNumber($data["location_id"]);
+                    $barcode = BarcodeGenerator::nextNumber($prefix);
 
                     $netWeight = ($i == $numberOfBarcodes - 1 && $remainder > 0) ? $remainder : $spq;
                     $totalPrice = $netWeight * $item["price"];
