@@ -46,12 +46,19 @@
                     </div>
 
                     <div class="form-group row">
+                        <label for="weight" class="col-sm-4 control-label">
+                            Weight <font color="#FF0000">*</font>
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="text" id="weight" name="weight" class="form-control form-control-sm" required>
+                        </div>
+                    </div>
+                    <div class="form-group row">
                         <label for="barcode" class="col-sm-4 control-label">
                             Barcode <font color="#FF0000">*</font>
                         </label>
                         <div class="col-sm-8">
-                            <input type="hidden" id="scanned_barcodes" name="scanned_barcodes">
-                            <input type="text" id="barcode" name="barcode" class="form-control form-control-sm" oninput="productionIssue()" required>
+                            <input type="text" id="barcode" name="barcode" class="form-control form-control-sm" oninput="productionStorageScan()" required>
                         </div>
                     </div>
                 </div>
@@ -67,6 +74,7 @@
                         <thead>
                             <tr>
                                 <th>Barcode</th>
+                                <th>Weight</th>
                                 <th>Message</th>
                             </tr>
                         </thead>
@@ -97,12 +105,10 @@
                         </tr>
                     </thead>
                     <tbody id="balancegrid">
-                        @foreach($productionPlan->productionPlanSubs as $productionPlanSub)
-                            <tr>
-                                <td>{{$productionPlanSub->item->name}}</td>
-                                <td>{{$productionPlanSub->total_quantity}}</td>
-                            </tr>
-                        @endforeach
+                        <tr>
+                            <td>{{$productionPlan->item->name}}</td>
+                            <td>{{$productionPlan->total_quantity}}</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -180,26 +186,33 @@
         resetButton.style.display = 'none';
     }
 
-    function productionIssue(){
-        const planNumber = document.getElementById('plan_number').value;
-        const bin = document.getElementById('bin').value;
-        const barcode = document.getElementById('barcode').value;
+    function productionStorageScan(){
+        const planNumber = document.getElementById('plan_number');
+        const bin = document.getElementById('bin');
+        const weight = document.getElementById('weight');
+        const barcode = document.getElementById('barcode');
 
-        console.log(barcode);
-
-        if(planNumber ==''){
-            alert('Enter Not Found!');
-            window.location.href = "{{ route('production-issue.index') }}";
+        if(weight.value ==''){
+            alert('Enter Weight!');
+            weight.focus();
+            barcode.value = '';
             return false;
         }
 
-        if(bin ==''){
+        if(planNumber.value == ''){
+            alert('Plan Number Not Found!');
+            window.location.href = "{{ route('production-storage-scan.index') }}";
+            return false;
+        }
+
+
+        if(bin.value ==''){
             alert('Enter Bin!');
             bin.focus();
             return false;
         }
 
-        if(barcode ==''){
+        if(barcode.value ==''){
             alert('Enter Barcode!');
             barcode.focus();
             return false;
@@ -207,11 +220,12 @@
 
         $.ajax({
             type: "POST",
-            url: "{{ route('ajax.productionissuescan') }}",
+            url: "{{ route('ajax.productionstoragescan') }}",
             data: {
                 production_plan_id : {{ $id }},
-                bin : bin,
-                barcode : barcode
+                bin : bin.value,
+                weight : weight.value,
+                barcode : barcode.value,
             },
             dataType: "json",
             success: function (response) {
@@ -219,7 +233,8 @@
                 if(response){
                     var row = $('<tr>');
 
-                    row.append('<td>' + barcode + '</td>');
+                    row.append('<td>' + barcode.value + '</td>');
+                    row.append('<td>' + weight.value + '</td>');
 
                     var messageCell = $('<td>').text(response.message);
 
@@ -233,11 +248,12 @@
                     $('#dataTable').prepend(row);
 
                     if(response.scan_complete){
-                        alert('Production Scan Completed');
-                        window.location.href = "{{ route('production-issue.index') }}";
+                        alert('Production Storage Scan Completed');
+                        window.location.href = "{{ route('production-storage-scan.index') }}";
                     }
                 }
-                document.getElementById('barcode').value = '';
+                weight.value = '';
+                barcode.value = '';
             }
         });
     }

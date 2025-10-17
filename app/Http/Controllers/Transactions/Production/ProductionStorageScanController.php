@@ -14,6 +14,13 @@ class ProductionStorageScanController extends Controller
     }
 
     public function store(Request $request){
-        dd($request);
+        // dd($request->all());
+        return redirect()->route('production-storage-scan.show', $request->plan_number);
+    }
+
+    public function show($id){
+        $productionPlan = ProductionPlan::with('productionPlanSubs.item')->where('id',$id)->first();
+        // dd($productionPlan);
+        return view('transactions.production.productionscan', compact('id', 'productionPlan'));
     }
 }

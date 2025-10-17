@@ -36,7 +36,7 @@ class StorageScanAjaxController extends Controller
         if($request->ajax()){
 
             $user = Auth::user();
-            $barcode = Barcode::where('serial_number', $request->barcode)->first();
+            $barcode = Barcode::where('serial_number', $request->barcode)->where('transaction_type', 1)->first();
 
             if(!$barcode){
                 return response()->json([
@@ -129,7 +129,7 @@ class StorageScanAjaxController extends Controller
                                 ->where('item_id', $barcode->item_id)
                                 ->whereNot('grn_status', 1)
                                 ->first();
-                                
+
             if($grnSubUpdated->scanned_quantity == $grnSubUpdated->total_quantity){
                 $grnSubUpdated->update(['grn_status' => 1]);
             }

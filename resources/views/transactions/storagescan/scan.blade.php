@@ -50,7 +50,6 @@
                             Barcode <font color="#FF0000">*</font>
                         </label>
                         <div class="col-sm-8">
-                            <input type="hidden" id="scanned_barcodes" name="scanned_barcodes">
                             <input type="text" id="barcode" name="barcode" class="form-control form-control-sm" oninput="storageScan()" required>
                         </div>
                     </div>

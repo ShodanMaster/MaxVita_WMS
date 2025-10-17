@@ -4,6 +4,7 @@ use App\Http\Controllers\Ajax\CommonAjaxController;
 use App\Http\Controllers\Ajax\ProductionBarcodeGenerationAJaxController;
 use App\Http\Controllers\Ajax\GrnAjaxController;
 use App\Http\Controllers\Ajax\ProductionIssueAjaxController;
+use App\Http\Controllers\Ajax\ProductionStorageScanAjaxController;
 use App\Http\Controllers\Ajax\PurchaseOrderAjaxController;
 use App\Http\Controllers\Ajax\StorageScanAjaxController;
 use Illuminate\Support\Facades\Route;
@@ -34,7 +35,9 @@ Route::prefix('ajax')
         Route::post('get-production-details', [ProductionIssueAjaxController::class, 'getProductionDetails'])->name('getproductiondetails');
         Route::post('production-issue-scan', [ProductionIssueAjaxController::class, 'productionIssueScan'])->name('productionissuescan');
 
-        // Fg Barcode Generation Ajax Functions
+        // Production Barcode Generation Ajax Functions
         Route::post('get-plan-details', [ProductionBarcodeGenerationAJaxController::class, 'getPlanDetails'])->name('getplandetails');
-        Route::post('production-barcode-generate', [ProductionBarcodeGenerationAJaxController::class, 'productionBarcodeGenerate'])->name('productionbarcodegenerate');
+
+        // Production Storage Scan Ajax Functions
+        Route::post('production-storage-scan', [ProductionStorageScanAjaxController::class, 'productionStorageScan'])->name('productionstoragescan');
     });

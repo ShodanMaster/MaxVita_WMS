@@ -166,31 +166,5 @@
             }
         });
     }
-
-    function submitWeight(){
-        var planNumber = document.getElementById("plan_number").value;
-        const weight = document.getElementById('weight').value;
-
-        if(weight == ""){
-            alert("Enter Weight!");
-            return false;
-        }
-
-        $.ajax({
-            type: "POST",
-            url: "{{ route('ajax.productionbarcodegenerate') }}",
-            data: {
-                plan_number : planNumber,
-                weight : weight
-            },
-            dataType: "json",
-            success: function (response) {
-                if(response){
-
-                }
-            }
-        });
-
-    }
 </script>
 @endpush
