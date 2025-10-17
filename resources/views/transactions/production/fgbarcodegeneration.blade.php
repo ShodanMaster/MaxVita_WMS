@@ -22,7 +22,7 @@
                 <div class="card-header">
                     <h3 class="card-title">Fg Barcode Generation</h3>
                 </div>
-                <form action="{{ route('fg-barcode-generation.store') }}", method="POST">
+                <form action="{{ route('production-barcode-generation.store') }}", method="POST">
                     @csrf
                 <div class="card-body">
                     <div class="form-group row">
@@ -47,7 +47,6 @@
                     <h3 class="card-title">Product Details</h3>
                 </div>
                 <div class="card-body">
-
                     <div class="form-group row">
                         <div class="col-md-6 mb-3">
                             <div class="form-group">
@@ -81,20 +80,7 @@
                     </div>
                 </div>
                 <div class="card-footer">
-                    <div class="form-group row">
-                        <label for="batch" class="col-md-4 control-label">
-                            Batch
-                        </label>
-                        <div class="col-sm-8">
-                            <input
-                                    type="text"
-                                    readonly
-                                    class="form-control form-control-sm"
-                                    value="{{ $batch }}"
-                                    id="batch"
-                                >
-                        </div>
-                    </div>
+                    <h3 class="card-title">Batch: {{ $batch }}</h3>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group row">
@@ -192,7 +178,7 @@
 
         $.ajax({
             type: "POST",
-            url: "{{ route('ajax.fgbarcodegenerate') }}",
+            url: "{{ route('ajax.productionbarcodegenerate') }}",
             data: {
                 plan_number : planNumber,
                 weight : weight

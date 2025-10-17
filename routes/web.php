@@ -18,7 +18,7 @@ use App\Http\Controllers\Transactions\Grn\GrnController;
 use App\Http\Controllers\Transactions\Production\ProductionIssueController;
 use App\Http\Controllers\Transactions\PurchaseEntry\PurchaseOrderController;
 use App\Http\Controllers\Transactions\Grn\StorageScanController;
-use App\Http\Controllers\Transactions\Production\FgBarcodeGenerationController;
+use App\Http\Controllers\Transactions\Production\ProductionBarcodeGenerationController;
 use App\Http\Controllers\Transactions\Production\ProductionPlanController;
 use App\Http\Controllers\Utility\PasswordChangeController;
 use App\Http\Controllers\Utility\PermissionController;
@@ -87,8 +87,8 @@ Route::group(['middleware' => ['auth']], function () {
         //Production Scan
         Route::resource('production-issue', ProductionIssueController::class);
 
-        //Fg Barcode Generation
-        Route::resource('fg-barcode-generation', FgBarcodeGenerationController::class);
+        //Production Barcode Generation
+        Route::resource('production-barcode-generation', ProductionBarcodeGenerationController::class);
         // Utitlity
 
         // Permission

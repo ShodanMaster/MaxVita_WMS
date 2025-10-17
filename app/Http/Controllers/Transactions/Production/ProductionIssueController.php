@@ -19,6 +19,6 @@ class ProductionIssueController extends Controller
 
     public function show($id){
         $productionPlan = ProductionPlan::with('productionPlanSubs.item')->find($id);
-        return view('transactions.production.scan', compact('id', 'productionPlan'));
+        return view('transactions.production.productionscan', compact('id', 'productionPlan'));
     }
 }

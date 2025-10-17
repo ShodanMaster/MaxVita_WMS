@@ -168,19 +168,28 @@ class SubMenuSeeder extends Seeder
                 'listing_order' => 11,
                 'created_at' => now(),
             ],
-            //Fg Barcode Generation
+            //Production Barcode Generation
             // 19
             [
                 'menu_id' => 5,
-                'title' => 'Fg Barcode Generation',
-                'link' => 'fg-barcode-generation',
+                'title' => 'Production Barcode Generation',
+                'link' => 'production-barcode-generation',
+                'listing_order' => 11,
+                'created_at' => now(),
+            ],
+            //Production Barcode Scan
+            // 20
+            [
+                'menu_id' => 5,
+                'title' => 'Production Barcode Scan',
+                'link' => 'produciton-barcode-scan',
                 'listing_order' => 11,
                 'created_at' => now(),
             ],
 
             // Utility Submenus
             // Permission
-            //20
+            //21
             [
                 'menu_id' => 7,
                 'title' => 'Permission',
@@ -190,7 +199,7 @@ class SubMenuSeeder extends Seeder
             ],
 
             // Change Password
-            // 21
+            // 22
             [
                 'menu_id' => 7,
                 'title' => 'Change Password',

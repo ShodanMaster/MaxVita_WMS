@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use RealRashid\SweetAlert\Facades\Alert;
 
-class FgBarcodeGenerationController extends Controller
+class ProductionBarcodeGenerationController extends Controller
 {
     public function index(){
         $planNumbers = ProductionPlan::where('status', 2)->get(['id', 'plan_number']);
@@ -33,8 +33,8 @@ class FgBarcodeGenerationController extends Controller
             $branchId = $location->branch_id;
             // dd($productionPlan->total_quantity);
             DB::beginTransaction();
-
-            while($productionPlan->total_quantity--){
+            $numberOfBacodes = $productionPlan->total_quantity;
+            while($numberOfBacodes--){
 
                 $barcodeNumber = BarcodeGenerator::nextNumber($location->prefix);
                 $barcodeData[] = [
@@ -56,7 +56,7 @@ class FgBarcodeGenerationController extends Controller
                                 'qc_approval_status' => '0',
                             ];
             }
-            
+
             if (!empty($barcodeData)) {
                 Barcode::insert($barcodeData);
                 $productionPlan->update([
@@ -72,7 +72,7 @@ class FgBarcodeGenerationController extends Controller
             dd($e);
             Log::error('FG Barcode Generate Error: ' . $e->getMessage());
             Alert::toast('An error occurred while generating FG Barcode.', 'error')->autoClose(3000);
-            return redirect()->route('fg-barcode-generation.index');
+            return redirect()->route('production-barcode-generation.index');
         }
     }
         // public function fgBarcodeGenerate(Request $request){

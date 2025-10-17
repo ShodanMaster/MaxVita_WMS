@@ -10,12 +10,12 @@ use App\Models\ProductionPlan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class FgBarcodeGenerationAJaxController extends Controller
+class ProductionBarcodeGenerationAJaxController extends Controller
 {
     public function getPlanDetails(Request $request){
         if($request->ajax()){
             $productionPlan = ProductionPlan::find($request->plan_number);
-            
+
             $data = [
                 'fg_item' => $productionPlan->item->item_code.'/'. $productionPlan->item->name,
                 'total_quantity' => $productionPlan->total_quantity
@@ -25,7 +25,7 @@ class FgBarcodeGenerationAJaxController extends Controller
         }
     }
 
-    // public function fgBarcodeGenerate(Request $request){
+    // public function productionBarcodeGenerate(Request $request){
     //     if($request->ajax()){
     //         dd($request->all());
 
