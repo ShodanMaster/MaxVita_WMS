@@ -177,12 +177,12 @@ class SubMenuSeeder extends Seeder
                 'listing_order' => 11,
                 'created_at' => now(),
             ],
-            //Production Barcode Scan
+            //Production Storage Scan
             // 20
             [
                 'menu_id' => 5,
-                'title' => 'Production Barcode Scan',
-                'link' => 'produciton-barcode-scan',
+                'title' => 'Production Storage Scan',
+                'link' => 'production-storage-scan',
                 'listing_order' => 11,
                 'created_at' => now(),
             ],

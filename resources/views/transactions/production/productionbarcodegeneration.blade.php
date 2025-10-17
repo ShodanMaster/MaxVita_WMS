@@ -20,7 +20,7 @@
         <div class="container-fluid">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Fg Barcode Generation</h3>
+                    <h3 class="card-title">Production Barcode Generation</h3>
                 </div>
                 <form action="{{ route('production-barcode-generation.store') }}", method="POST">
                     @csrf

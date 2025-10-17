@@ -20,22 +20,22 @@
         <div class="container-fluid">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">FG Storage Scan</h3>
+                    <h3 class="card-title">Production Storage Scan</h3>
                 </div>
                 <div class="card-body">
-                    <form method="POST" action="{{ route('storage-scan.store') }}" enctype="multipart/form-data">
+                    <form method="POST" action="{{ route('production-storage-scan.store') }}" enctype="multipart/form-data">
                         @csrf
                         <div class="form-group row">
                             <label for="plan_number" class="col-md-4 control-label">
-                                GRN No
+                                Plan Number
                             </label>
                             <div class="col-sm-8">
                                 <select name="plan_number" id="plan_number" class="form-control form-control-sm select2" required onchange="fetchGrnDetails()">
-                                    <option value="" disabled selected>--Select Grn Number--</option>
+                                    <option value="" disabled selected>--Select Plan Number--</option>
                                     @forelse ($planNumbers as $planNumber)
                                         <option value="{{ $planNumber->id }}">{{ $planNumber->plan_number }}</option>
                                     @empty
-                                        <option value="" disabled >No Grn Numbers Found</option>
+                                        <option value="" disabled >No Plan Numbers Found</option>
                                     @endforelse
                                 </select>
                             </div>
@@ -95,7 +95,7 @@
 
         $.ajax({
             type: "POST",
-            url: "{{ route('ajax.getgrndetails') }}",
+            url: "{{ route('ajax.getplandetails') }}",
             data: {
                 id : planId
             },

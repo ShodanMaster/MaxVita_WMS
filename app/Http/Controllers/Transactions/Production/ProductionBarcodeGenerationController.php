@@ -19,7 +19,7 @@ class ProductionBarcodeGenerationController extends Controller
     public function index(){
         $planNumbers = ProductionPlan::where('status', 2)->get(['id', 'plan_number']);
         $batch = 'F' . date('ymd');
-        return view('transactions.production.fgbarcodegeneration', compact('planNumbers', 'batch'));
+        return view('transactions.production.productionbarcodegeneration', compact('planNumbers', 'batch'));
     }
 
     public function store(Request $request){
@@ -75,7 +75,7 @@ class ProductionBarcodeGenerationController extends Controller
             return redirect()->route('production-barcode-generation.index');
         }
     }
-        // public function fgBarcodeGenerate(Request $request){
+    // public function producitonBarcodeGenerate(Request $request){
     //     if($request->ajax()){
 
     //     }
