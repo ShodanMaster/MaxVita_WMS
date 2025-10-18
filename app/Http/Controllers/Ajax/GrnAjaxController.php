@@ -47,6 +47,12 @@ class GrnAjaxController extends Controller
                 }
             }
 
+            if ($request->location_id) {
+                $query->whereHas('locations', function ($q) use ($request) {
+                    $q->where('locations.id', $request->location_id);
+                });
+            }
+
             if ($request->category_id) {
                 $query->where('category_id', $request->category_id);
             }
