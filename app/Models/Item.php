@@ -35,6 +35,11 @@ class Item extends Model
         return $this->belongsTo(Uom::class);
     }
 
+    public function locations()
+    {
+        return $this->belongsToMany(Location::class, 'item_location');
+    }
+
     public function barcodes()
     {
         return $this->hasMany(Barcode::class);

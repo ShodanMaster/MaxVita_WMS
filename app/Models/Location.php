@@ -22,4 +22,10 @@ class Location extends Model
     {
         return $this->belongsTo(Branch::class);
     }
+
+    public function items()
+    {
+        return $this->belongsToMany(Item::class, 'item_location');
+    }
+
 }

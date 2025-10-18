@@ -7,10 +7,12 @@ use App\Http\Controllers\Controller;
 use App\Imports\Master\ItemImport;
 use App\Models\Category;
 use App\Models\Item;
+use App\Models\Location;
 use App\Models\Uom;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Locale;
 use Maatwebsite\Excel\Facades\Excel;
 use RealRashid\SweetAlert\Facades\Alert;
 use Yajra\DataTables\Facades\DataTables;
@@ -67,7 +69,8 @@ class ItemController extends Controller
     public function create(){
         $categories = Category::select('id', 'name')->get();
         $uoms = Uom::select('id', 'name')->get();
-        return view('master.item.create', compact('categories', 'uoms'));
+        $locations = Location::get(['id', 'name']);
+        return view('master.item.create', compact('categories', 'uoms', 'locations'));
     }
 
     public function store(Request $request){
@@ -108,7 +111,11 @@ class ItemController extends Controller
                 ]);
             }
 
-            Item::create($data);
+            $item = Item::create($data);
+
+            $locationsArray = explode(',', $request->selectedLocations);
+
+            $item->locations()->sync($locationsArray);
 
             Alert::toast('Item added successfully!', 'success')->autoClose(3000);
             return redirect()->route('item.index');
@@ -127,7 +134,9 @@ class ItemController extends Controller
 
             $categories = Category::select('id', 'name')->get();
             $uoms = Uom::select('id', 'name')->get();
-            return view('master.item.create', compact('item', 'categories', 'uoms'));
+            $locations = Location::get(['id', 'name']);
+            $locationIds = $item->locations->pluck('pivot.location_id')->toArray();
+            return view('master.item.create', compact('item', 'categories', 'uoms', 'locations', 'locationIds'));
         } catch (Exception $e) {
             dd($e);
             Log::error('item Fetch Error: ' . $e->getMessage());
@@ -145,6 +154,7 @@ class ItemController extends Controller
             'category_id' => 'required|integer|exists:categories,id',
             'uom_id' => 'required|integer|exists:uoms,id',
             'item_type' => 'required|in:FG,RM',
+            'price' => 'required',
         ]);
         try{
 
@@ -161,6 +171,7 @@ class ItemController extends Controller
                 'item_code' => $request->item_code,
                 'in_stock' => $request->in_stock,
                 'item_type' => $request->item_type,
+                'price' => $request->price,
                 'spq_quantity' => $spqQuantity,
             ];
 
@@ -178,7 +189,12 @@ class ItemController extends Controller
                 ]);
             }
 
-            item::where('id', $id)->update($data);
+            $item = Item::findOrFail($id);
+            $item->update($data);
+
+            $locationsArray = explode(',', $request->selectedLocations);
+            $item->locations()->detach();
+            $item->locations()->sync($locationsArray);
 
             Alert::toast('Item modified successfully', 'success')->autoClose(3000);
             return redirect()->route('item.index');
@@ -234,7 +250,7 @@ class ItemController extends Controller
             return redirect()->route('item.index');
 
         } catch(Exception $e){
-            // dd($e);
+            dd($e);
             Log::error('Item Excel Import Error: ' . $e->getMessage());
             Alert::toast('An error occurred while item excel importin: .'. $e->getMessage(), 'error')->autoClose(3000);
             return redirect()->route('item.index');

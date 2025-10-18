@@ -159,23 +159,69 @@
                             </div>
                         </div>
 
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="form-group">
+                                    <label for="price" class="col-sm-4 control-label">
+                                        Price <font color="#FF0000">*</font>
+                                    </label>
+                                    <input
+                                        type="text"
+                                        name="price"
+                                        id="price"
+                                        class="form-control form-control-sm"
+                                        value="{{ old('price', $item->price ?? '') }}"
+                                        required
+                                    >
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="form-group">
+                                    <label for="location-search-box" class="control-label">
+                                        Location <font color="#FF0000">*</font>
+                                    </label>
+                                    <div class="custom-select-dropdown position-relative">
+                                        <input type="text" class="form-control"
+                                            id="location-search-box"
+                                            onfocus="openDropdown('location')"
+                                            oninput="filterItems('location')"
+                                            placeholder="Search and select locations">
+
+                                        <div class="dropdown-menu w-100" id="location-dropdown-list">
+                                            <div class="px-3 mt-1">
+                                                <label>
+                                                    <input type="checkbox" id="select-all-location" onclick="selectAll('location')"> Select All
+                                                </label>
+                                            </div>
+                                            <div id="location-checkbox-list" class="px-3" style="max-height: 160px; overflow-y: auto; border: 1px solid #dee2e6; padding-right: 5px;">
+                                                @forelse ($locations as $location)
+                                                    @if (!empty($location->name))
+                                                        <label>
+                                                            <input
+                                                                type="checkbox"
+                                                                class="location-checkbox"
+                                                                value="{{ $location->id }}"
+                                                                data-name="{{ $location->name }}"
+                                                                onchange="updateSelection('location')"
+                                                                {{ in_array($location->id, $locationIds ?? []) ? 'checked' : '' }}
+                                                            > {{ $location->name }}
+                                                        </label><br>
+                                                    @endif
+                                                @empty
+                                                    <p>No Locations Found</p>
+                                                @endforelse
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <input type="hidden" name="selectedLocations" id="selected-location" value="">
+                                </div>
+                            </div>
+
+                        </div>
+
                         <div id="fgFields" style="display: none;">
                             <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <div class="form-group">
-                                        <label for="price" class="col-sm-4 control-label">
-                                            Price <font color="#FF0000">*</font>
-                                        </label>
-                                        <input
-                                            type="text"
-                                            name="price"
-                                            id="price"
-                                            class="form-control form-control-sm"
-                                            value="{{ old('price', $item->price ?? '') }}"
-                                        >
-                                    </div>
-                                </div>
-
                                 <div class="col-md-6 mb-3">
                                     <div class="form-group">
                                         <label for="single_packet_weight" class="col-sm-4 control-label">
@@ -191,9 +237,6 @@
                                         >
                                     </div>
                                 </div>
-                            </div>
-
-                            <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <div class="form-group">
                                         <label for="sku_code" class="col-sm-4 control-label">
@@ -208,7 +251,9 @@
                                         >
                                     </div>
                                 </div>
+                            </div>
 
+                            <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <div class="form-group">
                                         <label for="spq_quantity" class="col-sm-4 control-label">
@@ -223,9 +268,6 @@
                                         >
                                     </div>
                                 </div>
-                            </div>
-
-                            <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <div class="form-group">
                                         <label for="gst_rate" class="col-sm-4 control-label">
@@ -305,6 +347,9 @@
     }
 
     document.addEventListener('DOMContentLoaded', function () {
+
+        updateSelection('location');
+
         var itemType = document.querySelector('select[name="item_type"]').value;
         var fgFields = document.getElementById('fgFields');
         var requiredFields = fgFields.querySelectorAll('input');
@@ -322,5 +367,61 @@
         }
     });
 
+    document.addEventListener('click', function (event) {
+        const dropdowns = document.querySelectorAll('.custom-select-dropdown');
+
+        dropdowns.forEach(dropdown => {
+            const menu = dropdown.querySelector('.dropdown-menu');
+            if (!dropdown.contains(event.target)) {
+                menu?.classList.remove('show');
+            }
+        });
+    });
+
+    function filterItems(type) {
+        let input = document.getElementById(`${type}-search-box`);
+        let filter = input.value.trim().toUpperCase();
+        let labels = document.querySelectorAll(`#${type}-checkbox-list label`);
+
+        labels.forEach(label => {
+            const text = label.textContent || label.innerText;
+            label.style.display = text.toUpperCase().includes(filter) ? "" : "none";
+        });
+    }
+
+    function openDropdown(type) {
+        document.querySelectorAll(".dropdown-menu").forEach(menu => menu.classList.remove("show"));
+        const list = document.getElementById(`${type}-dropdown-list`);
+        if (list) list.classList.add("show");
+    }
+
+    function selectAll(type) {
+        let isChecked = document.getElementById(`select-all-${type}`).checked;
+        document.querySelectorAll(`.${type}-checkbox`).forEach(cb => cb.checked = isChecked);
+        updateSelection(type);
+    }
+
+    function updateSelection(type, skipSearchBoxUpdate = false) {
+        let selected = [];
+        let names = [];
+
+        document.querySelectorAll(`.${type}-checkbox:checked`).forEach(cb => {
+            selected.push(cb.value);
+            names.push(cb.getAttribute("data-name"));
+        });
+
+        const allNumbers = selected.every(val => !isNaN(val) && val.trim() !== '');
+
+        const hiddenInput = document.getElementById(`selected-${type}`);
+        if (hiddenInput) hiddenInput.value = selected.join(',');
+
+        // Only update the visible input if we're not in the middle of typing
+        if (!skipSearchBoxUpdate) {
+            const searchBox = document.getElementById(`${type}-search-box`);
+            if (searchBox) {
+                searchBox.value = names.length > 0 ? names.join(", ") : "";
+            }
+        }
+    }
 </script>
 @endpush
