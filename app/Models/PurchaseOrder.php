@@ -18,22 +18,22 @@ class PurchaseOrder extends Model
         'status',
     ];
 
-    public static function nextNumber()
-    {
-        $prefix = 'PR' . date('ym');
-        $len = strlen($prefix);
+    // public static function nextNumber()
+    // {
+    //     $prefix = 'PR' . date('ym');
+    //     $len = strlen($prefix);
 
-        $purchaseNumber = DB::select("
-            SELECT CONCAT(
-                '$prefix',
-                LPAD(CAST(IFNULL(MAX(SUBSTRING(purchase_number, $len + 1)), '0') + 1 AS UNSIGNED), 5, '0')
-            ) AS purchase_number
-            FROM purchase_orders
-            WHERE purchase_number LIKE '$prefix%'
-        ");
+    //     $purchaseNumber = DB::select("
+    //         SELECT CONCAT(
+    //             '$prefix',
+    //             LPAD(CAST(IFNULL(MAX(SUBSTRING(purchase_number, $len + 1)), '0') + 1 AS UNSIGNED), 5, '0')
+    //         ) AS purchase_number
+    //         FROM purchase_orders
+    //         WHERE purchase_number LIKE '$prefix%'
+    //     ");
 
-        return $purchaseNumber[0]->purchase_number;
-    }
+    //     return $purchaseNumber[0]->purchase_number;
+    // }
 
     public function purchaseOrderSubs()
     {

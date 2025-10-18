@@ -42,7 +42,7 @@
 
                         <!-- User Form Fields -->
                         <div class="row">
-                            <div class="col-md-6 mb-3">
+                            {{-- <div class="col-md-6 mb-3">
                                 <div class="form-group">
                                     <label for="name" class="col-sm-4 control-label">
                                         PO Number
@@ -52,6 +52,20 @@
                                         disabled
                                         class="form-control form-control-sm"
                                         value="{{ $purchaseNumber }}"
+                                    >
+                                </div>
+                            </div> --}}
+                            <div class="col-md-6 mb-3">
+                                <div class="form-group">
+                                    <label for="purchase_number" class="col-sm-4 control-label">
+                                        PO Number
+                                    </label>
+                                    <input
+                                        type="text"
+                                        class="form-control form-control-sm"
+                                        id="purchase_number"
+                                        name="purchase_number"
+                                        required
                                     >
                                 </div>
                             </div>
@@ -66,7 +80,7 @@
                                         name="purchase_date"
                                         id="purchase_date"
                                         required
-                                        class="form-control form-control-sm date-field"
+                                        class="form-control form-control-sm"
                                         value="{{ old('purchase_date') }}"
                                     >
                                 </div>
@@ -127,7 +141,7 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <div class="form-group">
-                                    <label for="permission_level" class="col-sm-4 control-label">
+                                    <label for="vendor" class="col-sm-4 control-label">
                                         Vendor <font color="#FF0000">*</font>
                                     </label>
                                     <select id="vendor" name="vendor" class="form-control select2 form-control-sm">
@@ -250,10 +264,21 @@
 
 
         function checkData() {
+            if ($('#purchase_number').val() == '') {
+                alert('Enter PO Number');
+                return false;
+            }
+
             if ($('#purchase_date').val() == '') {
                 alert('Select Purchase Date');
                 return false;
             }
+
+            if ($('#vendor').val() == '') {
+                alert('Select Vendor');
+                return false;
+            }
+
 
             if (itemCount == 0) {
                 alert('Empty Grid');

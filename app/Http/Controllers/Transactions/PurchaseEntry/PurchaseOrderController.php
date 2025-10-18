@@ -19,17 +19,24 @@ use RealRashid\SweetAlert\Facades\Alert;
 class PurchaseOrderController extends Controller
 {
     public function index(){
-        $purchaseNumber = PurchaseOrder::nextNumber();
+        // $purchaseNumber = PurchaseOrder::nextNumber();
         $items = Item::where('item_type', 'RM')->get(['id', 'item_code', 'name']);
         $vendors = Vendor::get(['id', 'name']);
-        return view('transactions.purchaseorder.index', compact('purchaseNumber', 'items', 'vendors'));
+        return view('transactions.purchaseorder.index', compact( 'items', 'vendors'));
     }
 
     public function store(Request $request){
+        $request->validate([
+            "purchase_number" => 'required|unique:purchase_order,purchase_number',
+            "purchase_date" => 'required|date',
+            "vendor" => 'required|exists:vendors,id',
+        ]);
+
         try{
 
             DB::beginTransaction();
-            $purchaseNumber = PurchaseOrder::nextNumber();
+            // $purchaseNumber = PurchaseOrder::nextNumber();
+            $purchaseNumber = $request->purchase_number;
             $purchaseOrder = PurchaseOrder::create([
                 'branch_id' => Auth::user()->branch_id,
                 'purchase_number' => $purchaseNumber,
@@ -73,7 +80,7 @@ class PurchaseOrderController extends Controller
             DB::beginTransaction();
 
             $data = $this->getExcelData($request->excel_file);
-
+            // dd($data);
             if ($data['error'] !== '') {
 
                 $errors = array_filter(
@@ -84,7 +91,8 @@ class PurchaseOrderController extends Controller
                 return redirect()->route('purchase-order.index')->withErrors($errors);
             }
 
-            $purchaseNumber = PurchaseOrder::nextNumber();
+            // $purchaseNumber = PurchaseOrder::nextNumber();
+            $purchaseNumber = $data['po_number'];
             $purchaseOrder = PurchaseOrder::create([
                 'branch_id' => Auth::user()->branch_id,
                 'purchase_number' => $purchaseNumber,
@@ -117,15 +125,32 @@ class PurchaseOrderController extends Controller
     private function getExcelData($file){
         $sheet = Excel::toArray([], $file);
         $rows = $sheet[0] ?? [];
+
         $data = [
             'error' => '',
+            'po_number' => '',
             'vendor_id' => '',
             'items' => [],
         ];
 
+        $poNumber = $rows[0][1];
+        if(empty($poNumber)){
+            $data['error'] .= "PO Number is required|";
+            return $data;
+        }
+
+        $purchaseOrder = PurchaseOrder::where('purchase_number', $poNumber)->first();
+
+        if($purchaseOrder){
+            $data['error'] .= "PO Number already exists!|";
+            return $data;
+        }else{
+            $data['po_number'] = $poNumber;
+        }
+
         $vendor = [
-            'vendor_name' => $rows[0][1],
-            'vendor_code' => $rows[0][3],
+            'vendor_name' => $rows[1][1],
+            'vendor_code' => $rows[2][1],
         ];
 
         foreach(['vendor_name', 'vendor_code'] as $key){
@@ -145,17 +170,17 @@ class PurchaseOrderController extends Controller
 
         if ($data['error'] !== '') return $data;
 
-        for($i = 2; $i < count($rows); $i++){
+        for($i = 4; $i < count($rows); $i++){
             $row = $rows[$i];
-
+            // dd($row);
             if (!array_filter($row)) {
                 continue;
             }
 
             $item = [
-                'item_name' => $row[0] ?? '',
-                'item_code' => $row[1] ?? '',
-                'quantity' => $row[2] ?? '',
+                'item_name' => trim($row[0]) ?? '',
+                'item_code' => trim($row[1]) ?? '',
+                'quantity' => trim($row[2]) ?? '',
             ];
 
             foreach(['item_name', 'item_code', 'quantity'] as $key){
