@@ -113,7 +113,6 @@ class GrnController extends Controller
                     ];
                 }
 
-
                 $totalQuantity = $item["total_quantity"];
                 $spq = $item["spq"];
                 $fullBarcodes = $totalQuantity / $spq;
@@ -252,7 +251,7 @@ class GrnController extends Controller
             $purchaseNumber = null;
 
             $data = $this->getExcelData($request->excel_file);
-            dd($data);
+            // dd($data);
             if ($data['error'] !== '') {
 
                 $errors = array_filter(
@@ -279,7 +278,6 @@ class GrnController extends Controller
                 'invoice_date' => $data["invoice_date"],
                 'vendor_id' => $data["vendor_id"],
                 'location_id' => $data["location_id"],
-                'grn_type' => $data["grn_type"],
                 'remarks' => $data["remarks"],
                 'branch_id' => $branchId,
             ]);
@@ -326,20 +324,27 @@ class GrnController extends Controller
                 }
 
                 $numberOfBarcodes = $item["number_of_barcodes"];
-                $totalPrice = (int)$item["spq_quantity"] * $item["price"];
-                $numberOfBarcodes = $item["number_of_barcodes"];
                 $totalQuantity = $item["total_quantity"];
                 $spq = $item["spq_quantity"];
-                $fullBarcodes = $totalQuantity / $spq;
+                $fullBarcodes = floor($totalQuantity / $spq);
                 $remainder = $totalQuantity % $spq;
-                $itemPrice = Item::find('$item["item_id"]', ['price']);
+                $itemPrice = Item::find($item["item_id"])->price;
+                $totalPrice = (int)$item["spq_quantity"] * $itemPrice;
+                $quantityPerBarcode = $item["item_type"] == "FG" ? $spq : ($totalQuantity / $numberOfBarcodes);
+                $baseQuantity = $item["item_type"] === "RM" ? $totalQuantity / $numberOfBarcodes : $spq;
 
                 for ($i = 0; $i < $numberOfBarcodes; $i++) {
 
                     $barcode = BarcodeGenerator::nextNumber($prefix);
 
-                    $netWeight = ($i == $numberOfBarcodes - 1 && $remainder > 0) ? $remainder : $spq;
-                    // $totalPrice = $netWeight * $item["price"];
+                    if ($item["item_type"] === "FG") {
+                        $quantityPerBarcode = ($i == $numberOfBarcodes - 1 && $remainder > 0) ? $remainder : $spq;
+                    } else {
+                        $quantityPerBarcode = ($i == $numberOfBarcodes - 1)
+                            ? ($totalQuantity - ($baseQuantity * ($numberOfBarcodes - 1)))
+                            : $baseQuantity;
+                    }
+
                     Barcode::create([
                         'serial_number' => $barcode,
                         'transaction_id' => $grn->id,
@@ -351,36 +356,33 @@ class GrnController extends Controller
                         'best_before_date' => $item["best_before_date"],
                         'batch_number' => $batchNumber,
                         'price' => $itemPrice,
-                        // 'total_price' => $totalPrice,
-                        'net_weight' => $netWeight,
-                        'grn_net_weight' => $netWeight,
-                        'spq_quantity' => $netWeight,
-                        'grn_spq_quantity' => $netWeight,
+                        'net_weight' => $quantityPerBarcode,
+                        'grn_net_weight' => $quantityPerBarcode,
+                        'spq_quantity' => $quantityPerBarcode,
+                        'grn_spq_quantity' => $quantityPerBarcode,
                         'status' => '-1',
                         'user_id' => $userid,
                         'qc_approval_status' => '0',
                     ]);
 
-                    if($purchaseOrderExists){
+                    if ($purchaseOrderExists) {
+
                         PurchaseOrderSub::where('purchase_order_id', $purchaseOrderExists->id)
                             ->where('item_id', $item["item_id"])
                             ->where('status', '0')
                             ->whereColumn('quantity', 'picked_quantity')
-                            ->update([
-                                'status' => '1'
-                            ]);
+                            ->update(['status' => '1']);
 
-                        $dataCheck = PurchaseOrderSub::where('purchase_order_id', $purchaseOrderExists->id)->where('status', '0')->count();
+                        $dataCheck = PurchaseOrderSub::where('purchase_order_id', $purchaseOrderExists->id)
+                            ->where('status', '0')
+                            ->count();
+
                         if ($dataCheck == 0) {
                             PurchaseOrder::where('id', $purchaseOrderExists->id)
                                 ->where('status', "0")
-                                ->update([
-                                    'status' => '1'
-                                ]);
+                                ->update(['status' => '1']);
                         }
-
                     }
-
                 }
 
             }
@@ -406,9 +408,9 @@ class GrnController extends Controller
     private function getExcelData($file){
         $sheet = Excel::toArray([], $file);
         $rows = $sheet[0] ?? [];
+        // dd($rows);
         $data = [
             'error' => '',
-            'grn_type' => '',
             'location_id' => '',
             'vendor_id' => '',
             'invoice_number' => '',
@@ -419,27 +421,24 @@ class GrnController extends Controller
         ];
 
         $grn = [
-            'grn_type' => $rows[0][1] ?? null,
-            'location' => $rows[1][1] ?? null,
-            'vendor_name' => $rows[0][3] ?? null,
-            'vendor_code' => $rows[1][3] ?? null,
-            'invoice_number' => $rows[0][5] ?? null,
-            'invoice_date' => $rows[1][5] ?? null,
-            'purchase_number' => $rows[0][7] ?? null,
-            'remarks' => $rows[1][7] ?? null,
+            'vendor_name' => $rows[0][1] ?? null,
+            'invoice_number' => $rows[0][3] ?? null,
+            'purchase_number' => $rows[0][5] ?? null,
+            'location' => $rows[0][7] ?? null,
+            'vendor_code' => $rows[1][1] ?? null,
+            'invoice_date' => $rows[1][3] ?? null,
+            'remarks' => $rows[1][5] ?? null,
         ];
 
-        foreach (['grn_type', 'location', 'vendor_name', 'vendor_code'] as $key) {
+        foreach (['location', 'vendor_name', 'vendor_code'] as $key) {
             if (empty($grn[$key])) {
                 $label = ucwords(str_replace('_', ' ', $key));
                 $data['error'] .= $label . " is required|";
             }
         }
 
-
         if ($data['error'] !== '') return $data;
 
-        $data['grn_type'] = $grn['grn_type'];
         $data['invoice_number'] = $grn['invoice_number'];
         $data['invoice_date'] = $grn['invoice_date'];
         $data['remarks'] = $grn['remarks'];
@@ -475,18 +474,18 @@ class GrnController extends Controller
             if (!array_filter($row)) {
                 continue;
             }
-            // dd($row);
+
             $itemArray = [
                 'item_name' => $row[0] ?? '',
-                'price' => $row[1] ?? '',
-                'date_of_manufacture' => is_numeric($row[3]) ? Date::excelToDateTimeObject($row[3])->format('Y-m-d') : $row[2],
-                'best_before_date' => is_numeric($row[4]) ? Date::excelToDateTimeObject($row[4])->format('Y-m-d') : $row[3],
-                'total_quantity' => $row[4] ?? '',
+                'date_of_manufacture' => is_numeric($row[1]) ? Date::excelToDateTimeObject($row[1])->format('Y-m-d') : $row[1],
+                'best_before_date' => is_numeric($row[2]) ? Date::excelToDateTimeObject($row[2])->format('Y-m-d') : $row[2],
+                'total_quantity' => $row[3] ?? '',
                 'spq_quantity' => null,
-                'number_of_barcodes' => null,
+                'number_of_barcodes' => $row[4] ?? null,
+                'item_type' => null,
             ];
 
-            foreach(['item_name', 'price', 'date_of_manufacture', 'best_before_date', 'total_quantity'] as $key){
+            foreach(['item_name', 'date_of_manufacture', 'best_before_date', 'total_quantity'] as $key){
                 if (empty($itemArray[$key])) {
                     $label = ucwords(str_replace('_', ' ', $key));
                     $data['error'] .= $label . " is required|";
@@ -537,36 +536,15 @@ class GrnController extends Controller
             $totalQuantity = null;
             // dd($itemArray['total_quantity']);
             if (isset($itemArray['total_quantity']) && is_numeric($itemArray['total_quantity'])) {
-                $totalQuantity = (float)$itemArray['total_quantity'];
-                $spqQuantity = (float)$item->spq_quantity;
+                $totalQuantity = (int)$itemArray['total_quantity'];
+                $spqQuantity = (int)$item->spq_quantity;
 
-                if ($totalQuantity < $spqQuantity && $item->item_type === 'FG') {
-                    $data['error'] .= 'Row ' . ($i + 1) . " : Total Quantity can not be less than SPQ (" . $spqQuantity . ") for FG items.|";
+                if ($totalQuantity < $spqQuantity) {
+                    $data['error'] .= 'Row ' . ($i + 1) . " : Total Quantity can not be less than spq(" . $spqQuantity . ").|";
                     return $data;
                 }
 
                 $itemArray['spq_quantity'] = $spqQuantity;
-
-                if ($item->item_type === 'FG') {
-                    // For FG: full packs based on SPQ, add 1 if there's a remainder
-                    $fullPack = floor($totalQuantity / $spqQuantity);
-                    $remainder = fmod($totalQuantity, $spqQuantity);
-                    $numberOfBarcodes = ($remainder > 0) ? $fullPack + 1 : $fullPack;
-                } else {
-                    // For RM: divide equally among barcodes — just use 1 barcode for now or ask how to determine
-                    $numberOfBarcodes = $data['number_of_barcodes'] ?? 1;
-
-                    if ($numberOfBarcodes < 1) {
-                        $data['error'] .= 'Row ' . ($i + 1) . " : Invalid number of barcodes for RM item.|";
-                        return $data;
-                    }
-                }
-
-                $itemArray['number_of_barcodes'] = $numberOfBarcodes;
-            }
-
-            if($item->item_type != $grn['grn_type']){
-                $data['error'] .= 'Row ' . ($i + 1) . " : Item Type is Not ". $grn['grn_type'] ."|";
             }
 
 
@@ -574,12 +552,12 @@ class GrnController extends Controller
 
             $data['items'][] = [
                     'item_id' => $item->id,
-                    'price' => $itemArray['price'],
                     'date_of_manufacture' => $itemArray['date_of_manufacture'],
                     'best_before_date' => $itemArray['best_before_date'],
                     'total_quantity' => $itemArray['total_quantity'],
                     'spq_quantity' => $itemArray['spq_quantity'],
                     'number_of_barcodes' => $itemArray['number_of_barcodes'],
+                    'item_type' => $item->item_type,
                 ];
         }
 
