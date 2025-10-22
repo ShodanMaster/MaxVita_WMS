@@ -32,6 +32,7 @@ class ProductionBarcodeGenerationController extends Controller
             $location = Location::find($user->location_id);
             $branchId = $location->branch_id;
             // dd($productionPlan->total_quantity);
+            $netWeight = $productionPlan->item->spq_quantity;
             DB::beginTransaction();
             $numberOfBacodes = $productionPlan->total_quantity;
             while($numberOfBacodes--){
@@ -49,8 +50,10 @@ class ProductionBarcodeGenerationController extends Controller
                                 'batch_number' => $batchNumber,
                                 'price' => $productionPlan->item->price,
                                 // 'total_price' => $totalPrice,
-                                // 'net_weight' => $netWeight,
-                                // 'grn_net_weight' => $item["total_quantity"],
+                                'net_weight' => $netWeight,
+                                'grn_net_weight' => $netWeight,
+                                'spq_quantity' => $netWeight,
+                                'grn_spq_quantity' => $netWeight,
                                 'status' => '-1',
                                 'user_id' => $user->id,
                                 'qc_approval_status' => '0',

@@ -72,7 +72,7 @@ class ProductionStorageScanAjaxController extends Controller
                     ]);
                 }
 
-                $bin = Bin::where('name', $request->bin)->first();
+                $bin = Bin::where('bin_code', $request->bin)->first();
 
                 if(!$bin){
                     return response()->json([
