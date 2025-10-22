@@ -56,6 +56,7 @@
                         <th>SKU Code</th>
                         <th>SPQ Quantity</th>
                         <th>Item Type</th>
+                        <th>locations</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -180,6 +181,10 @@
             {
                 data: 'item_type',
                 name: 'item_type'
+            },
+            {
+                data: 'locations',
+                name: 'locations'
             },
             {
                 data: 'action',

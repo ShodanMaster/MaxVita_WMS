@@ -85,13 +85,13 @@ Route::group(['middleware' => ['auth']], function () {
         //Production Plan
         Route::resource('production-plan', ProductionPlanController::class);
 
-        //Production Scan
+        // Production Scan
         Route::resource('production-issue', ProductionIssueController::class);
 
-        //Production Barcode Generation
+        // Production Barcode Generation
         Route::resource('production-barcode-generation', ProductionBarcodeGenerationController::class);
 
-        //Production Storage Scan
+        // Production Storage Scan
         Route::resource('production-storage-scan', ProductionStorageScanController::class);
 
         // Utitlity

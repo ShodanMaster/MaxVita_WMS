@@ -25,7 +25,7 @@ class ItemController extends Controller
 
     public function getItems(Request $request){
         if($request->ajax()){
-            $items = Item::with('category', 'uom')->select(['id', 'category_id', 'uom_id', 'item_code', 'name', 'in_stock', 'gst_rate', 'price', 'single_packet_weight', 'sku_code', 'item_type', 'spq_quantity']);
+            $items = Item::with('category:id,name', 'uom:id,name', 'locations:name')->select(['id', 'category_id', 'uom_id', 'item_code', 'name', 'in_stock', 'gst_rate', 'price', 'single_packet_weight', 'sku_code', 'item_type', 'spq_quantity']);
 
             return DataTables::of($items)
                 ->addIndexColumn()
@@ -33,6 +33,9 @@ class ItemController extends Controller
                     return $row->category->name ?? '-';
                 })->addColumn('uom', function ($row) {
                     return $row->uom->name ?? '-';
+                })->addColumn('locations', function ($row) {
+                    $locationNames = $row->locations->pluck('name')->toArray();
+                    return implode(', ', $locationNames);
                 })
                 ->addColumn('action', function ($row) {
                     $editUrl = route('item.edit', $row->id);

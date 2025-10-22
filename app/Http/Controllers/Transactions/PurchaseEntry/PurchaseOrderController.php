@@ -27,7 +27,7 @@ class PurchaseOrderController extends Controller
 
     public function store(Request $request){
         $request->validate([
-            "purchase_number" => 'required|unique:purchase_order,purchase_number',
+            "purchase_number" => 'required|unique:purchase_orders,purchase_number',
             "purchase_date" => 'required|date',
             "vendor" => 'required|exists:vendors,id',
         ]);
@@ -208,24 +208,15 @@ class PurchaseOrderController extends Controller
 
     public function purchaseOrderCancel(){
 
-        $orders = PurchaseOrder::whereNot('status', 2)->get(['id', 'purchase_number']);
+        $orders = PurchaseOrder::where('status', 0)->get(['id', 'purchase_number']);
         return view('transactions.purchaseorder.cancel', compact('orders'));
     }
 
     public function cancelPurchaseOrder(Request $request){
 
         $user_id = Auth::user()->id;
-        $purchaseOrderNumber = $request->purchaseOrderNumber;
 
-        // $grn = Grn::where('po_no', '=', $id)->first();
-
-        // if ($grn) {
-
-        //     Alert::toast('The Purchase Order has initiated for GRN entry', 'error')->autoClose(3000);
-        //     return redirect()->route('purchase_order_cancel');
-        // }
-
-        $purchaseOrder = PurchaseOrder::where('purchase_number', $purchaseOrderNumber)->first(['id']);
+        $purchaseOrder = PurchaseOrder::find($request->purchaseOrderNumber);
 
         $purchaseOrder->update([
             'status' => 2
@@ -236,8 +227,7 @@ class PurchaseOrderController extends Controller
             'user_id' => $user_id
         ]);
 
-
-        Alert::toast('Purchase Order Canceled Successfully', 'success')->autoClose(3000);
+        Alert::toast('Purchase Order Cancelled Successfully', 'success')->autoClose(3000);
         return redirect()->route('purchase-order-cancel');
     }
 
