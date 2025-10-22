@@ -54,7 +54,7 @@ class GrnController extends Controller
             $branchId = $location->branch_id;
             $prefix = $location->prefix;
             $grnNumber = Grn::grnNumber();
-            // dd($branchId);
+
             $grn = Grn::create([
                 'grn_number' => $grnNumber,
                 'purchase_number' => $purchaseNumber,
@@ -78,6 +78,7 @@ class GrnController extends Controller
             $grnPurchaseOrderSubData = [];
             $barcodeData = [];
             $purchaseOrderSubUpdates = [];
+
             foreach($request->items as $item){
 
                 $purchaseOrderExists = PurchaseOrder::where('id', '=', $item["purchase_id"])->where('status', 0)->first();
@@ -113,19 +114,26 @@ class GrnController extends Controller
                 }
 
 
-                $totalQty = $item["total_quantity"];
+                $totalQuantity = $item["total_quantity"];
                 $spq = $item["spq"];
-                $fullBarcodes = floor($totalQty / $spq);
-                $remainder = $totalQty % $spq;
-                $numberOfBarcodes = $remainder > 0 ? $item["number_of_barcodes"] + 1 : $item["number_of_barcodes"];
-                $itemPrice = Item::find('$item["item_id"]', ['price']);
+                $fullBarcodes = $totalQuantity / $spq;
+                $remainder = fmod((float)$totalQuantity, (float)$spq);
+                $numberOfBarcodes = $item["number_of_barcodes"];
+                $quantityPerBarcode = $item["item_type"] == "FG" ? $spq : ($totalQuantity / $numberOfBarcodes);
+                $itemPrice = Item::find($item["item_id"])->price;
+                $baseQuantity = $item["item_type"] === "RM" ? $totalQuantity / $numberOfBarcodes : $spq;
 
                 for ($i = 0; $i < $numberOfBarcodes; $i++) {
 
                     $barcode = BarcodeGenerator::nextNumber($prefix);
 
-                    $netWeight = ($i == $numberOfBarcodes - 1 && $remainder > 0) ? $remainder : $spq;
-                    // $totalPrice = $netWeight * $item["price"];
+                    if ($item["item_type"] === "FG") {
+                        $quantityPerBarcode = ($i == $numberOfBarcodes - 1 && $remainder > 0) ? $remainder : $spq;
+                    } else {
+                        $quantityPerBarcode = ($i == $numberOfBarcodes - 1)
+                            ? ($totalQuantity - ($baseQuantity * ($numberOfBarcodes - 1)))
+                            : $baseQuantity;
+                    }
 
                     $barcodeData[] = [
                         'serial_number' => $barcode,
@@ -139,8 +147,10 @@ class GrnController extends Controller
                         'batch_number' => $batchNumber,
                         'price' => $itemPrice,
                         // 'total_price' => $totalPrice,
-                        'net_weight' => $netWeight,
-                        'grn_net_weight' => $item["total_quantity"],
+                        'net_weight' => $quantityPerBarcode,
+                        'grn_net_weight' => $quantityPerBarcode,
+                        'spq_quantity' => $quantityPerBarcode,
+                        'grn_spq_quantity' => $quantityPerBarcode,
                         'status' => '-1',
                         'user_id' => $userid,
                         'qc_approval_status' => '0',
@@ -152,7 +162,7 @@ class GrnController extends Controller
                         'grn_number' => $grn->grn_number,
                         'barcode' => $barcode,
                         'item_name' => $itemName,
-                        'spq_quantity' => $netWeight
+                        'spq_quantity' => $quantityPerBarcode
                     ];
                 }
 
@@ -172,6 +182,7 @@ class GrnController extends Controller
 
                 }
             }
+            // dd($barcodeData);
             // dd($grnSubData, $grnPurchaseOrderSubData, $barcodeData);
             if (!empty($grnSubData)) {
                 GrnSub::insert($grnSubData);
@@ -218,7 +229,6 @@ class GrnController extends Controller
                 return redirect()->back();
                 // return back()->with('print_barcode', $print_barcode);
             }
-            // return redirect()->back()->with('print_content', $printableContent);
 
         } catch(Exception $e){
             DB::rollBack();
@@ -242,7 +252,7 @@ class GrnController extends Controller
             $purchaseNumber = null;
 
             $data = $this->getExcelData($request->excel_file);
-            // dd($data);
+            dd($data);
             if ($data['error'] !== '') {
 
                 $errors = array_filter(
@@ -261,7 +271,7 @@ class GrnController extends Controller
             $location = Location::find($data["location_id"]);
             $branchId = $location->branch_id;
             $prefix = $location->prefix;
-            // dd($data["remarks"]);
+
             $grn = Grn::create([
                 'grn_number' => Grn::grnNumber(),
                 'purchase_number' => $purchaseNumber,
@@ -318,10 +328,10 @@ class GrnController extends Controller
                 $numberOfBarcodes = $item["number_of_barcodes"];
                 $totalPrice = (int)$item["spq_quantity"] * $item["price"];
                 $numberOfBarcodes = $item["number_of_barcodes"];
-                $totalQty = $item["total_quantity"];
+                $totalQuantity = $item["total_quantity"];
                 $spq = $item["spq_quantity"];
-                $fullBarcodes = floor($totalQty / $spq);
-                $remainder = $totalQty % $spq;
+                $fullBarcodes = $totalQuantity / $spq;
+                $remainder = $totalQuantity % $spq;
                 $itemPrice = Item::find('$item["item_id"]', ['price']);
 
                 for ($i = 0; $i < $numberOfBarcodes; $i++) {
@@ -343,7 +353,9 @@ class GrnController extends Controller
                         'price' => $itemPrice,
                         // 'total_price' => $totalPrice,
                         'net_weight' => $netWeight,
-                        'grn_net_weight' => $item["total_quantity"],
+                        'grn_net_weight' => $netWeight,
+                        'spq_quantity' => $netWeight,
+                        'grn_spq_quantity' => $netWeight,
                         'status' => '-1',
                         'user_id' => $userid,
                         'qc_approval_status' => '0',
@@ -490,6 +502,16 @@ class GrnController extends Controller
                 return $data;
             }
 
+            $belongs = DB::table('item_location')
+                ->where('item_id', $item->id)
+                ->where('location_id', $location->id)
+                ->exists();
+
+            if(!$belongs){
+                $data['error'] .= 'Row ' . ($i + 1) . " : Item does not exist in this location|";
+                return $data;
+            }
+
             if (!empty($data['purchase_id'])) {
                 $existsInPurchase = PurchaseOrderSub::where('purchase_order_id', $data['purchase_id'])
                     ->where('item_id', $item->id)
@@ -515,18 +537,32 @@ class GrnController extends Controller
             $totalQuantity = null;
             // dd($itemArray['total_quantity']);
             if (isset($itemArray['total_quantity']) && is_numeric($itemArray['total_quantity'])) {
-                $totalQuantity = (int)$itemArray['total_quantity'];
-                $spqQuantity = (int)$item->spq_quantity;
+                $totalQuantity = (float)$itemArray['total_quantity'];
+                $spqQuantity = (float)$item->spq_quantity;
 
-                if ($totalQuantity < $spqQuantity) {
-                    $data['error'] .= 'Row ' . ($i + 1) . " : Total Quantity can not be less than spq(" . $spqQuantity . ").|";
+                if ($totalQuantity < $spqQuantity && $item->item_type === 'FG') {
+                    $data['error'] .= 'Row ' . ($i + 1) . " : Total Quantity can not be less than SPQ (" . $spqQuantity . ") for FG items.|";
                     return $data;
                 }
 
                 $itemArray['spq_quantity'] = $spqQuantity;
-                $fullPack = floor(($totalQuantity / $spqQuantity));
-                $reminder = $totalQuantity % $spqQuantity;
-                $itemArray['number_of_barcodes'] = $reminder > 0 ? $fullPack + 1 : $fullPack;
+
+                if ($item->item_type === 'FG') {
+                    // For FG: full packs based on SPQ, add 1 if there's a remainder
+                    $fullPack = floor($totalQuantity / $spqQuantity);
+                    $remainder = fmod($totalQuantity, $spqQuantity);
+                    $numberOfBarcodes = ($remainder > 0) ? $fullPack + 1 : $fullPack;
+                } else {
+                    // For RM: divide equally among barcodes — just use 1 barcode for now or ask how to determine
+                    $numberOfBarcodes = $data['number_of_barcodes'] ?? 1;
+
+                    if ($numberOfBarcodes < 1) {
+                        $data['error'] .= 'Row ' . ($i + 1) . " : Invalid number of barcodes for RM item.|";
+                        return $data;
+                    }
+                }
+
+                $itemArray['number_of_barcodes'] = $numberOfBarcodes;
             }
 
             if($item->item_type != $grn['grn_type']){

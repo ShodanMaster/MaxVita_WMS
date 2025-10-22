@@ -26,9 +26,11 @@ return new class extends Migration
             $table->string('batch_number');
             $table->decimal('price', 11,3)->nullable();
             $table->decimal('total_price', 11, 3)->nullable();
-            $table->integer('shelf_life')->default(0);
-            $table->integer('net_weight')->default(0);
-            $table->integer('grn_net_weight')->default(0);
+            $table->decimal('shelf_life', 11,3)->default(0);
+            $table->decimal('net_weight', 11,3)->default(0);
+            $table->decimal('grn_net_weight', 11,3)->default(0);
+            $table->decimal('spq_quantity', 11,3)->default(0);
+            $table->decimal('grn_spq_quantity', 11,3)->default(0);
             $table->dateTime('barcode_time')->useCurrent();
             $table->enum('status', ['-1', '0', '1', '2', '3', '4', '5', '6', '8'])->comment('-1=>NIS; 0=>purchase return; 1=>stock; 2=>Dispatch; 4=>Transit; 5=>production 6=>Rejection; 8=>stock_out; 9=>repacked;');
             $table->foreignId('user_id')->constrained();

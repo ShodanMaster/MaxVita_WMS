@@ -36,6 +36,10 @@ class ItemController extends Controller
                 })->addColumn('locations', function ($row) {
                     $locationNames = $row->locations->pluck('name')->toArray();
                     return implode(', ', $locationNames);
+                })->filterColumn('locations', function($query, $keyword) {
+                    $query->whereHas('locations', function ($q) use ($keyword) {
+                        $q->where('name', 'like', "%{$keyword}%");
+                    });
                 })
                 ->addColumn('action', function ($row) {
                     $editUrl = route('item.edit', $row->id);

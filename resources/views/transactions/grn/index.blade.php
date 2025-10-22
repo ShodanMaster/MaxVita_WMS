@@ -385,6 +385,12 @@
         var  categoryId = $('#category_id').val();
         var  purchaseNumber = $('#purchase_number').val();
 
+        if(grnType == 'FG'){
+            $('#number_of_barcodes').prop('readonly', true);
+        }else{
+            $('#number_of_barcodes').prop('readonly', false);
+        }
+
         $.ajax({
             type: "POST",
             url: "{{ route('ajax.getgrnitems') }}",
@@ -584,8 +590,9 @@
         let ponumber = $.trim($("#purchase_number").val());
         let poQty = $.trim($("#po_qty").val());
         let numberOfBarcodes = $.trim($("#number_of_barcodes").val());
+        let itemType = $.trim($("#grn_type").val());
 
-        itemTotalQuantity();
+        // itemTotalQuantity();
 
         // Validate if DOM is before Best Before date
         if (dateom > bbv) {
@@ -705,6 +712,11 @@
             type: 'hidden',
             name: `items[${rowIndex}][purchase_id]`,
             value: ponumber
+        }).appendTo('form');
+        $('<input>').attr({
+            type: 'hidden',
+            name: `items[${rowIndex}][item_type]`,
+            value: itemType
         }).appendTo('form');
 
         // Reset the form fields for the next entry
