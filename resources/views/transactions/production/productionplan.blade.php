@@ -127,6 +127,7 @@
                                             @endforelse
                                         </select>
                                     </div>
+                                    <b><span id="item-uom" style="display: none" class="text-danger"></span></b>
                                 </div>
 
                                 <div class="col-md-6 mb-3">
@@ -239,10 +240,30 @@
         // Initialize select2
         $('.select2').select2();
 
+        function getItemUOM(){
+            var itemId = $('#rmItem').val();
+
+            $.ajax({
+                type: "POST",
+                url: "{{route('ajax.getitemuom')}}",
+                data: {
+                    item_id : itemId
+                },
+                dataType: "json",
+                success: function (response) {
+                    if (response) {
+                        $('#item-uom').text("Item UOM: " + response.uom_name).show();
+                    }
+                }
+            });
+        }
+
         let itemCount = 0;
 
         // Define the addToGrid function
         function addToGrid() {
+            $('#item-uom').hide();
+
             let itemId = $('#rmItem').val();
             let itemName = $('#rmItem option:selected').text();
             let totalQuantity = $('#total_quantity').val();
@@ -317,6 +338,10 @@
                 document.getElementById('productionPlan').submit();
             }
         }
+
+        $('#rmItem').change(function() {
+            getItemUOM();
+        });
 
         // Bind the checkData function to the Save button
         $('#submitButton').click(function() {
