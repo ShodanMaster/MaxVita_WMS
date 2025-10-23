@@ -19,6 +19,7 @@ return new class extends Migration
             $table->foreignId('branch_id')->constrained();
             $table->foreignId('location_id')->constrained();
             $table->foreignId('bin_id')->nullable()->constrained();
+            $table->foreignId('uom_id')->constrained();
             // $table->foreignId('pallet_id')->nullable()->constrained();
             $table->foreignId('item_id')->constrained();
             $table->date('date_of_manufacture');

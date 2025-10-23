@@ -172,7 +172,7 @@ class SubMenuSeeder extends Seeder
             // 19
             [
                 'menu_id' => 5,
-                'title' => 'Production Barcode Generation',
+                'title' => 'FG Barcode Generation',
                 'link' => 'production-barcode-generation',
                 'listing_order' => 11,
                 'created_at' => now(),
@@ -181,7 +181,7 @@ class SubMenuSeeder extends Seeder
             // 20
             [
                 'menu_id' => 5,
-                'title' => 'Production Storage Scan',
+                'title' => 'FG Storage Scan',
                 'link' => 'production-storage-scan',
                 'listing_order' => 11,
                 'created_at' => now(),

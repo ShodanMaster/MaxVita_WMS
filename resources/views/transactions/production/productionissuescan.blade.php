@@ -20,37 +20,31 @@
         <div class="container-fluid">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Storage Scan</h3>
+                    <h3 class="card-title">Production Issue Scan</h3>
                 </div>
                 <div class="card-body">
                     @csrf
                     <div class="form-group row">
-                        <label for="grn_no" class="col-md-4 control-label">GRN No</label>
+                        <label for="plan_number" class="col-md-4 control-label">Plan No</label>
                         <div class="col-sm-8">
-                            <input type="text" id="grn_no" name="grn_no" class="form-control form-control-sm" required readonly value="{{ $grn->grn_number }}">
+                            <input type="text" id="plan_number" name="plan_number" class="form-control form-control-sm" required readonly value="{{ $productionPlan->plan_number }}">
                         </div>
                     </div>
 
                     <div class="form-group row">
-                        <label for="bin" class="col-sm-4 control-label">
-                            Bin <font color="#FF0000">*</font>
+                        <label for="weight" class="col-sm-4 control-label">
+                            Weight <font color="#FF0000">*</font>
                         </label>
                         <div class="col-sm-8">
-                            <div class="input-group">
-                                <input type="text" id="bin" name="bin" class="form-control form-control-sm" required oninput="binExists()" value="{{ isset($bin) ? $bin : '' }}">
-                                <button type="button" class="btn btn-sm" id="reset-button" title="Reset Bin" style="display: none" onclick="resetButton()">
-					                <i class="link-icon" data-feather="refresh-ccw"></i>
-                                </button>
-                            </div>
+                            <input type="text" id="weight" name="weight" class="form-control form-control-sm" required>
                         </div>
                     </div>
-
                     <div class="form-group row">
                         <label for="barcode" class="col-sm-4 control-label">
                             Barcode <font color="#FF0000">*</font>
                         </label>
                         <div class="col-sm-8">
-                            <input type="text" id="barcode" name="barcode" class="form-control form-control-sm" oninput="storageScan()" required>
+                            <input type="text" id="barcode" name="barcode" class="form-control form-control-sm" oninput="productionIssueScan()" required>
                         </div>
                     </div>
                 </div>
@@ -66,6 +60,7 @@
                         <thead>
                             <tr>
                                 <th>Barcode</th>
+                                <th>Weight</th>
                                 <th>Message</th>
                             </tr>
                         </thead>
@@ -82,7 +77,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="detailsModalLabel">Storage Scan Item Display</h5>
+                <h5 class="modal-title" id="detailsModalLabel">FG Item: {{$productionPlan->item->item_code}}/{{$productionPlan->item->name}}</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -91,17 +86,17 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>Item Name</th>
-                            <th>B.Qty</th>
-                            <th>S.Qty</th>
+                            <th>RM Item</th>
+                            <th>Total Quantity</th>
+                            <th>Picked Quantity</th>
                         </tr>
                     </thead>
                     <tbody id="balancegrid">
-                        @foreach($grn->grnSubs as $grnSub)
+                        @foreach ($productionPlan->productionPlanSubs as $productionPlanSub)
                             <tr>
-                                <td>{{$grnSub->item->name}}</td>
-                                <td>{{$grnSub->total_quantity - $grnSub->scanned_quantity}}</td>
-                                <td>{{$grnSub->scanned_quantity}}</td>
+                                <td>{{$productionPlanSub->item->name}}</td>
+                                <td>{{$productionPlanSub->total_quantity}}</td>
+                                <td>{{$productionPlanSub->picked_quantity}}</td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -140,56 +135,22 @@
 <script src="{{ asset('assets/js/data-table.js') }}"></script>
 
 <script>
-    function binExists() {
-        const bin = document.getElementById('bin');
-        const binValue = bin.value.trim();
-        const resetButton = document.getElementById('reset-button');
+
+    function productionIssueScan(){
+        const planNumber = document.getElementById('plan_number');
+        const weight = document.getElementById('weight');
         const barcode = document.getElementById('barcode');
 
-        $.ajax({
-            type: "POST",
-            url: "{{ route('ajax.bin-exists') }}",
-            data: {
-                bin : binValue
-            },
-            dataType: "json",
-            success: function (response) {
-                console.log(response);
+        if(weight.value ==''){
+            alert('Enter Weight!');
+            weight.focus();
+            barcode.value = '';
+            return false;
+        }
 
-                if (response.status === 200) {
-                    bin.readOnly = true;
-                    resetButton.style.display = 'block';
-                    barcode.focus();
-                } else {
-                    alert('Bin Code Not Found!');
-                    bin.value = '';
-                    bin.readOnly = false;
-                    bin.focus();
-                    resetButton.style.display = 'none';
-                }
-            }
-        });
-    }
-
-    function resetButton(){
-        const bin = document.getElementById('bin');
-        const resetButton = document.getElementById('reset-button');
-
-        bin.value = '';
-        bin.readOnly = false;
-        bin.focus();
-        resetButton.style.display = 'none';
-    }
-
-    function storageScan(){
-        const bin = document.getElementById('bin');
-        const barcode = document.getElementById('barcode');
-
-        console.log(barcode.value);
-
-        if(bin.value ==''){
-            alert('Enter Bin!');
-            bin.focus();
+        if(planNumber.value == ''){
+            alert('Plan Number Not Found!');
+            window.location.href = "{{ route('production-issue.index') }}";
             return false;
         }
 
@@ -201,11 +162,11 @@
 
         $.ajax({
             type: "POST",
-            url: "{{ route('ajax.storagescan') }}",
+            url: "{{ route('ajax.productionissuescan') }}",
             data: {
-                grn_id: {{$id}},
-                bin: bin.value,
-                barcode : barcode.value
+                production_plan_id : {{ $id }},
+                weight : weight.value,
+                barcode : barcode.value,
             },
             dataType: "json",
             success: function (response) {
@@ -214,6 +175,7 @@
                     var row = $('<tr>');
 
                     row.append('<td>' + barcode.value + '</td>');
+                    row.append('<td>' + weight.value + '</td>');
 
                     var messageCell = $('<td>').text(response.message);
 
@@ -227,10 +189,11 @@
                     $('#dataTable').prepend(row);
 
                     if(response.scan_complete){
-                        alert('Storage Scan Completed');
-                        window.location.href = "{{ route('storage-scan.index') }}";
+                        alert('Production Storage Scan Completed');
+                        window.location.href = "{{ route('production-issue.index') }}";
                     }
                 }
+                weight.value = '';
                 barcode.value = '';
             }
         });

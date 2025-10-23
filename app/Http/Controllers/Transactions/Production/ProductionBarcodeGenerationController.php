@@ -24,7 +24,7 @@ class ProductionBarcodeGenerationController extends Controller
 
     public function store(Request $request){
         try{
-            // dd($request->all());
+            dd($request->all());
 
             $productionPlan = ProductionPlan::find($request->plan_number);
             $user = Auth::user();
@@ -33,7 +33,9 @@ class ProductionBarcodeGenerationController extends Controller
             $branchId = $location->branch_id;
             // dd($productionPlan->total_quantity);
             $netWeight = $productionPlan->item->spq_quantity;
+
             DB::beginTransaction();
+
             $numberOfBacodes = $productionPlan->total_quantity;
             while($numberOfBacodes--){
 

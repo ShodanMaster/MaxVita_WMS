@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Ajax;
 
 use App\Http\Controllers\Controller;
 use App\Models\Barcode;
-use App\Models\Bin;
 use App\Models\ProductionPlan;
 use App\Models\ProductionPlanSub;
 use App\Models\ProductionIssue;
@@ -34,6 +33,7 @@ class ProductionIssueAjaxController extends Controller
             $user = Auth::user();
             $productionPlan = ProductionPlan::find($request->production_plan_id);
             $barcode = Barcode::where('serial_number', $request->barcode)->first();
+            $weight = $request->weight;
             // dd($barcode);
             if(!$barcode){
                 return response()->json([
@@ -63,6 +63,13 @@ class ProductionIssueAjaxController extends Controller
                     'message' => 'Not In Stock!'
                 ]);
             }
+            // dd($barcode->net_weight < $weight);
+            if($barcode->net_weight < $weight){
+                return response()->json([
+                    'status' => 404,
+                    'message' => 'Exceeded Net Weight!'
+                ]);
+            }
 
             $productionPlanSub = ProductionPlanSub::where('production_plan_id', $productionPlan->id)
                                 ->where('item_id', $barcode->item_id)
@@ -81,13 +88,11 @@ class ProductionIssueAjaxController extends Controller
                     'message' => 'Item Mis Match!'
                 ]);
             }
-
-            $bin = Bin::where('bin_code', $request->bin)->first();
-
-            if(!$bin){
+            // dd($productionPlanSub->total_quantity < $weight);
+            if($productionPlanSub->total_quantity < $weight){
                 return response()->json([
-                    'status' => 404,
-                    'message' => 'Bin not found!'
+                    'status' => 422,
+                    'message' => 'Item Quantity Exceeded!'
                 ]);
             }
 
@@ -97,22 +102,27 @@ class ProductionIssueAjaxController extends Controller
                 'barcode' => $barcode->serial_number,
                 'item_id' => $barcode->item_id,
                 'production_plan_id' => $productionPlan->id,
-                'bin_id' => $bin->id,
-                'scanned_quantity' => $barcode->net_weight,
-                'net_weight' => $barcode->net_weight,
+                'scanned_quantity' => $weight,
+                'net_weight' => $weight,
                 'user_id' => $user->id,
             ]);
 
             $barcode->update([
                 'branch_id' => $user->branch_id,
                 'location_id' => $user->location_id,
-                'bin_id' => $bin->id,
-                'status' => '5',
+                'net_weight' => $barcode->net_weight - $weight,
+                'spq_quantity' => $barcode->spq_quantity - $weight,
             ]);
+
+            if($barcode->net_weight == 0){
+                $barcode->update([
+                    'status' => '8',
+                ]);
+            }
 
             // dd($productionPlanSub->scanned_quantity, $barcode->net_weight);
             $productionPlanSub->update([
-                'picked_quantity' => $productionPlanSub->picked_quantity + $barcode->net_weight,
+                'picked_quantity' => $productionPlanSub->picked_quantity + 1,
             ]);
 
             $productionPlanSubUpdated = ProductionPlanSub::where('item_id', $barcode->item_id)

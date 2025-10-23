@@ -57,7 +57,7 @@ class ProductionPlanController extends Controller
             }
 
             DB::commit();
-            Alert::toast('Production lan saved with Number ' . $productionNumebr, 'success')->autoClose(3000);
+            Alert::toast('Production lan saved with Number ' . $productionNumebr, icon: 'success')->autoClose(3000);
             return redirect()->back();
         } catch (Exception $e) {
             DB::rollBack();

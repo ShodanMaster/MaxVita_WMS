@@ -121,7 +121,7 @@ class GrnController extends Controller
                 $quantityPerBarcode = $item["item_type"] == "FG" ? $spq : ($totalQuantity / $numberOfBarcodes);
                 $itemPrice = Item::find($item["item_id"])->price;
                 $baseQuantity = $item["item_type"] === "RM" ? $totalQuantity / $numberOfBarcodes : $spq;
-
+                $itemUom = Item::find($item["item_id"])->uom_id;
                 for ($i = 0; $i < $numberOfBarcodes; $i++) {
 
                     $barcode = BarcodeGenerator::nextNumber($prefix);
@@ -150,6 +150,7 @@ class GrnController extends Controller
                         'grn_net_weight' => $quantityPerBarcode,
                         'spq_quantity' => $quantityPerBarcode,
                         'grn_spq_quantity' => $quantityPerBarcode,
+                        'uom_id' => $itemUom,
                         'status' => '-1',
                         'user_id' => $userid,
                         'qc_approval_status' => '0',
