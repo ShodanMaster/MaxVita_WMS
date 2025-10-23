@@ -42,7 +42,7 @@ class ProductionBarcodeGenerationController extends Controller
             DB::beginTransaction();
 
             $balanceQuantity = $productionPlan->total_quantity - $productionPlan->picked_quantity;
-            
+
             $baseNumberOfBacodes = $request->number_of_barcodes > $balanceQuantity ? $balanceQuantity : $request->number_of_barcodes ;
             $numberOfBacodes = $baseNumberOfBacodes;
             while($numberOfBacodes--){
@@ -61,8 +61,6 @@ class ProductionBarcodeGenerationController extends Controller
                                 'price' => $productionPlan->item->price,
                                 // 'total_price' => $totalPrice,
                                 'uom_id' => $uomId,
-                                'net_weight' => $netWeight,
-                                'grn_net_weight' => $netWeight,
                                 'spq_quantity' => $netWeight,
                                 'grn_spq_quantity' => $netWeight,
                                 'status' => '-1',
