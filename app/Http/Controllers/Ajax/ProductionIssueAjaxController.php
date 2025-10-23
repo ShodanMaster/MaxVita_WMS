@@ -82,13 +82,15 @@ class ProductionIssueAjaxController extends Controller
                 ]);
             }
 
-            if (!$productionPlan->productionPlanSubs->contains('item_id', $barcode->item_id)) {
+            // dd($productionPlan->productionPlanSubs->contains('item_id', $barcode->item_id));
+            $itemMatch = $productionPlan->productionPlanSubs->contains('item_id', $barcode->item_id);
+            if (!$itemMatch) {
                 return response()->json([
                     'status' => 409,
                     'message' => 'Item Mis Match!'
                 ]);
             }
-            // dd($productionPlanSub->total_quantity < $weight);
+
             if($productionPlanSub->total_quantity < $weight){
                 return response()->json([
                     'status' => 422,
@@ -125,10 +127,11 @@ class ProductionIssueAjaxController extends Controller
                 'picked_quantity' => $productionPlanSub->picked_quantity + 1,
             ]);
 
+            // dd($barcode->item_id);
             $productionPlanSubUpdated = ProductionPlanSub::where('item_id', $barcode->item_id)
-                                                        ->whereNot('status', 1)
+                                                        ->where('status', 0)
                                                         ->first();
-
+                                                        
             if($productionPlanSubUpdated->total_quantity == $productionPlanSubUpdated->picked_quantity){
                 $productionPlanSubUpdated->update(['status' => 1]);
             }

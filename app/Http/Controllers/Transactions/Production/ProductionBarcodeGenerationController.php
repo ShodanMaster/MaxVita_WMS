@@ -41,7 +41,9 @@ class ProductionBarcodeGenerationController extends Controller
             $itemName = Item::find($productionPlan->item_id)->name;
             DB::beginTransaction();
 
-            $baseNumberOfBacodes = $request->number_of_barcodes > $productionPlan->total_quantity ? $productionPlan->total_quantity : $request->number_of_barcodes ;
+            $balanceQuantity = $productionPlan->total_quantity - $productionPlan->picked_quantity;
+            
+            $baseNumberOfBacodes = $request->number_of_barcodes > $balanceQuantity ? $balanceQuantity : $request->number_of_barcodes ;
             $numberOfBacodes = $baseNumberOfBacodes;
             while($numberOfBacodes--){
 
