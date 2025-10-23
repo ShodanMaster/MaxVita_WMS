@@ -27,7 +27,7 @@
 
 
         <div >
-        @foreach ($grn->barcodes as $barcode )
+        @foreach ($contents as $content )
 
 			<table  class="report1" >
 				<thead>
@@ -39,14 +39,15 @@
                         <tr>
                             <td>
                                 {{-- {!! QrCode::size(200)->generate($pr->serial_no); !!} --}}
-                                {{ $barcode->serial_number }}
+                                {{$content['barcode']}}
                             </td>
                         </tr>
                         <tr>
                            <td>
-                           {{$barcode->grn_no}}<br>
-                           {{$barcode->grn->grn_number}}<br>
-                            {{$barcode->item->name}}
+                           {{$content['transaction_number']}}<br>
+                            {{$content['item_name']}}<br>
+                            {{$content['spq_quantity']}}<br>
+
                            </td>
                         </tr>
 
@@ -56,7 +57,7 @@
             <br>
                         <br>
 
-            @endforeach
+        @endforeach
         </div>
 
 

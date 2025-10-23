@@ -5,13 +5,16 @@ namespace App\Http\Controllers\Transactions\Production;
 use App\Helpers\BarcodeGenerator;
 use App\Http\Controllers\Controller;
 use App\Models\Barcode;
+use App\Models\Item;
 use App\Models\Location;
 use App\Models\ProductionPlan;
+use App\Models\Uom;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class ProductionBarcodeGenerationController extends Controller
@@ -19,12 +22,13 @@ class ProductionBarcodeGenerationController extends Controller
     public function index(){
         $planNumbers = ProductionPlan::where('status', 2)->get(['id', 'plan_number']);
         $batch = 'F' . date('ymd');
-        return view('transactions.production.productionbarcodegeneration', compact('planNumbers', 'batch'));
+        $uoms = Uom::wherein('name', ['Bag', 'Box'])->get(['id', 'name']);
+        return view('transactions.production.productionbarcodegeneration', compact('planNumbers', 'batch', 'uoms'));
     }
 
     public function store(Request $request){
         try{
-            dd($request->all());
+            // dd($request->all());
 
             $productionPlan = ProductionPlan::find($request->plan_number);
             $user = Auth::user();
@@ -33,10 +37,12 @@ class ProductionBarcodeGenerationController extends Controller
             $branchId = $location->branch_id;
             // dd($productionPlan->total_quantity);
             $netWeight = $productionPlan->item->spq_quantity;
-
+            $uomId = $request->uom;
+            $itemName = Item::find($productionPlan->item_id)->name;
             DB::beginTransaction();
 
-            $numberOfBacodes = $productionPlan->total_quantity;
+            $baseNumberOfBacodes = $request->number_of_barcodes > $productionPlan->total_quantity ? $productionPlan->total_quantity : $request->number_of_barcodes ;
+            $numberOfBacodes = $baseNumberOfBacodes;
             while($numberOfBacodes--){
 
                 $barcodeNumber = BarcodeGenerator::nextNumber($location->prefix);
@@ -52,6 +58,7 @@ class ProductionBarcodeGenerationController extends Controller
                                 'batch_number' => $batchNumber,
                                 'price' => $productionPlan->item->price,
                                 // 'total_price' => $totalPrice,
+                                'uom_id' => $uomId,
                                 'net_weight' => $netWeight,
                                 'grn_net_weight' => $netWeight,
                                 'spq_quantity' => $netWeight,
@@ -60,18 +67,40 @@ class ProductionBarcodeGenerationController extends Controller
                                 'user_id' => $user->id,
                                 'qc_approval_status' => '0',
                             ];
-            }
 
+
+                            $contents[] = [
+                                'transaction_number' => $productionPlan->plan_number,
+                                'barcode' => $barcodeNumber,
+                                'item_name' => $itemName,
+                                'spq_quantity' => $barcodeData[count($barcodeData) - 1]['spq_quantity']
+                            ];
+            }
+            // dd($contents);
             if (!empty($barcodeData)) {
                 Barcode::insert($barcodeData);
+
                 $productionPlan->update([
-                    'status' => 3,
+                    'picked_quantity' => $productionPlan->picked_quantity + $baseNumberOfBacodes,
                 ]);
+
+                if($productionPlan->picked_quantity >= $productionPlan->total_quantity){
+                    $productionPlan->update([
+                        'status' => 3,
+                    ]);
+                }
             }
 
             DB::commit();
             Alert::toast('FG Barcode(s) has been Generated for ' . $productionPlan->plan_number, 'success')->autoClose(3000);
-            return redirect()->back();
+
+            if ($request->has('prn')) {
+                Session::put('contents', $contents);
+
+                return redirect()->back();
+            } else {
+                return redirect()->back();
+            }
         } catch(Exception $e){
             DB::rollBack();
             dd($e);

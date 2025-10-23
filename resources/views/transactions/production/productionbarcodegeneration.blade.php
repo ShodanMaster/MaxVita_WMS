@@ -43,43 +43,16 @@
                 </div>
             </div>
             <div class="card" style="display: none" id="planDetails">
-                <div class="card-header">
-                    <h3 class="card-title">Product Details</h3>
-                </div>
-                <div class="card-body">
-                    <div class="form-group row">
-                        <div class="col-md-6 mb-3">
-                            <div class="form-group">
-                                <label for="name" class="col-sm-4 control-label">
-                                    FG Item
-                                </label>
-                                <input
-                                    type="text"
-                                    readonly
-                                    class="form-control form-control-sm"
-                                    value=""
-                                    id="fg_item"
-                                >
-                            </div>
-                        </div>
-
-                        <div class="col-md-6 mb-3">
-                            <div class="form-group">
-                                <label for="purchase_date" class="col-sm-4 control-label">
-                                    Total Quantity <font color="#FF0000">*</font>
-                                </label>
-                                <input
-                                    type="text"
-                                    readonly
-                                    class="form-control form-control-sm"
-                                    value=""
-                                    id="total_quantity"
-                                >
-                            </div>
-                        </div>
+                <div class="card-header d-flex justify-content-around">
+                    <h3 class="card-title" id="fg-item"></h3>
+                    <div>
+                        <h3 class="card-title" id="item-quantity"></h3><br>
+                    </div>
+                    <div>
+                        <h3 class="card-title" id="balance-quantity"></h3>
                     </div>
                 </div>
-                <div class="card-footer">
+                <div class="card-body">
                     <h3 class="card-title">Batch: {{ $batch }}</h3>
                     <div class="row">
                         <div class="col-md-6">
@@ -99,11 +72,39 @@
                             </div>
                         </div>
                     </div>
-                    <div class="d-flex justify-content-end">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label for="number_of_barcode" class="col-sm-4 control-label">Number of Barcode to Print <font color="#FF0000">*</font></label>
+                                <div class="col-sm-8">
+                                    <input type="number" class="form-control" id="number_of_barcode" min="1" name="number_of_barcodes" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label for="uom" class="col-sm-4 control-label">UOM <font color="#FF0000">*</font></label>
+                                <div class="col-sm-8">
+                                    <select name="uom" id="uom" class="form-group select2" required>
+                                        <option value="" disabled selected>--Select UOM--</option>
+                                        @foreach ($uoms as $uom)
+                                            <option value="{{ $uom->id }}">{{ $uom->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <div class="form-inline">
+                            <label for="prn" class="control-label">PRN Print</label>
+                            <input type="checkbox" name="prn" id="prn" class="custom-class ml-2">
+                        </div>
+
                         <button type="submit" class="btn btn-primary">Submit</button>
                     </div>
-                    </form>
                 </div>
+                </form>
             </div>
         </div>
     </section>
@@ -149,16 +150,16 @@
             },
             dataType: "json",
             success: function (response) {
-                const fgItem = document.getElementById("fg_item");
-                const totalQuanity = document.getElementById("total_quantity");
-                fgItem.value= "";
-                totalQuanity.value= "";
+                const fgItem = document.getElementById("fg-item");
+                const totalQuanity = document.getElementById("item-quantity");
+                const balanceQuanity = document.getElementById("balance-quantity");
 
                 if (response) {
                     document.getElementById("planDetails").style.display = "block";
 
-                    fgItem.value = response.fg_item;
-                    totalQuanity.value = response.total_quantity;
+                    fgItem.innerText = response.fg_item;
+                    totalQuanity.innerText = "Total Quantity: " +  response.total_quantity;
+                    balanceQuanity.innerText = "Balance Quantity: " +  response.balance_quantity;
 
                 } else {
                     document.getElementById("planDetails").style.display = "none";
@@ -168,3 +169,11 @@
     }
 </script>
 @endpush
+
+@if (!is_null(session()->get('contents')))
+    <script>
+        console.log("qwertyu: ", @json(session()->all()));
+
+        window.open("{{ route('printbarcode') }}");
+    </script>
+@endif

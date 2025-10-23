@@ -20,6 +20,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
 use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -159,7 +160,7 @@ class GrnController extends Controller
                     $itemName = Item::find($item["item_id"])->name;
 
                     $contents[] = [
-                        'grn_number' => $grn->grn_number,
+                        'transaction_number' => $grn->grn_number,
                         'barcode' => $barcode,
                         'item_name' => $itemName,
                         'spq_quantity' => $quantityPerBarcode
@@ -223,8 +224,8 @@ class GrnController extends Controller
 
             Alert::toast('GRN saved with Number ' . $grn->grn_number, 'success')->autoClose(3000);
             if ($request->has('prn')) {
-                $grnPrintableContent = $grn->id;
-                return back()->with('print_barcode', $grnPrintableContent);
+                Session::put('contents', $contents);
+                return redirect()->back();
             } else {
                 return redirect()->back();
                 // return back()->with('print_barcode', $print_barcode);
@@ -569,12 +570,14 @@ class GrnController extends Controller
 
     }
 
-    public function printBarcode($id){
-        $grn = Grn::with(['barcodes.item'])
-                    ->where('id', $id)
-                    ->first();
+    public function printBarcode(){
+        $contents = Session::pull('contents');
+        // dd($contents);
+        if (!$contents) {
+            abort(404, 'No barcode data found');
+        }
         // dd($grn);
-        return view('transactions.grn.printbarcode', compact('grn'));
+        return view('transactions.grn.printbarcode', compact('contents'));
     }
 
     protected function generateDPL($contents = [])

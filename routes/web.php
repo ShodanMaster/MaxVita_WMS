@@ -178,7 +178,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     // Grn
     Route::post('grn-excel-upload', [GrnController::class, 'grnExcelUpload'])->name('grn-excel-upload');
-    Route::get('print-barcode/{id}', [GrnController::class, 'printBarcode'])->name('printbarcode');
+    Route::get('print-barcode', [GrnController::class, 'printBarcode'])->name('printbarcode');
 
     // Production Plan
     Route::post('production-plan-excel-upload', [ProductionPlanController::class, 'productionPlanExcelUpload'])->name('production-plan-excel-upload');
