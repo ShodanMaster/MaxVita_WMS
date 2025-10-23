@@ -16,6 +16,7 @@ class ProductionScan extends Model
         'bin_id',
         'picked_quantity',
         'net_weight',
+        'spq_quantity',
         'user_id',
         'scan_time',
     ];

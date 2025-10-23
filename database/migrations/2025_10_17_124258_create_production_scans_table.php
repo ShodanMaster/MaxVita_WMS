@@ -19,6 +19,7 @@ return new class extends Migration
             $table->foreignId('bin_id')->constrained();
             $table->integer('picked_quantity')->default(0);
             $table->decimal('net_weight', 10,4);
+            $table->decimal('spq_quantity', 10,4);
             $table->foreignId('user_id')->constrained();
             $table->dateTime('scan_time')->useCurrent();
             $table->softDeletes();

@@ -20,7 +20,7 @@ class ProductionStorageScanAjaxController extends Controller
                 // dd($request->all());
                 $user = Auth::user();
                 $barcode = Barcode::where('serial_number', $request->barcode)->where('transaction_type', 2)->first();
-
+                $weight = $request->weight;
                 if(!$barcode){
                     return response()->json([
                         'status' => 404,
@@ -86,7 +86,8 @@ class ProductionStorageScanAjaxController extends Controller
                 $barcode->update([
                     'branch_id' => $user->branch_id,
                     'location_id' => $user->location_id,
-                    'net_weight' => $request->weight,
+                    'net_weight' => $weight,
+                    'grn_net_weight' => $weight,
                     'bin_id' => $bin->id,
                     'status' => '1',
                 ]);
@@ -97,7 +98,8 @@ class ProductionStorageScanAjaxController extends Controller
                     'production_plan_id' => $productionPlan->id,
                     'bin_id' => $bin->id,
                     'picked_quantity' => 1,
-                    'net_weight' => $barcode->net_weight,
+                    'net_weight' => $weight,
+                    'spq_quantity' => $barcode->spq_quantity,
                     'user_id' => $user->id,
                 ]);
 
@@ -114,7 +116,7 @@ class ProductionStorageScanAjaxController extends Controller
                     $productionPlanUpdated->update(['status' => 1]);
                 }
 
-                $productionPlanStatus = ProductionPlan::where('id', $productionPlan->id)->where('status', 0)->exists();
+                $productionPlanStatus = ProductionPlan::where('id', $productionPlan->id)->where('status', 3)->exists();
 
                 $productionPlan = ProductionPlan::find($productionPlan->id);
 
