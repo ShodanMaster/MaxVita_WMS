@@ -508,7 +508,7 @@
 
         if (!item) {
             $('#total_quantity').val('');
-            alert('Select item');
+            sweetAlertMessage('warning', 'Select Item', 'You must select an Item!');
             return false;
         }
 
@@ -522,23 +522,23 @@
             var purchaseQuantity = $('#purchase_item_quantity').val();
 
             if (isNaN(spq) || isNaN(totalQuantity)) {
-                alert('Please enter valid numbers for SPQ and Total Quantity');
+                sweetAlertMessage('warning', 'Invalid Number', 'Please enter valid numbers for SPQ and Total Quantity!');
                 return;
             }
 
             if (totalQuantity <= 0) {
-                alert('Total Quantity must be greater than zero');
+                sweetAlertMessage('warning', 'Invalid Quantity', 'Total Quantity must be greater than zero!');
                 return;
             }
 
             if(totalQuantity < spq){
-                alert('Total Quantity must be greater than or equal to spq');
+                sweetAlertMessage('warning', 'Invalid Quantity', 'Total Quantity must be greater than or equal to spq!');
                 $('#total_quantity').val(spq);
                 return;
             }
 
             if (purchaseQuantity && !isNaN(purchaseQuantity) && totalQuantity > parseFloat(purchaseQuantity)) {
-                alert('Total Quantity cannot be greater than purchase quantity');
+                sweetAlertMessage('warning', 'Invalid Quantity', 'Total Quantity cannot be greater than purchase quantity!');
                 $('#total_quantity').val(purchaseQuantity);
                 return;
             }
@@ -558,7 +558,7 @@
             var purchaseQuantity = $('#purchase_item_quantity').val();
 
             if (barcode <= 0) {
-                alert('Number of Barcodes must be greater than zero');
+                sweetAlertMessage('warning', 'Invalid Quantity', 'Number of Barcodes must be greater than zero!');
                 $('#number_of_barcodes').val('');
                 return;
             }
@@ -566,7 +566,7 @@
             var totalQuantity = spq * barcode;
 
             if (purchaseQuantity && !isNaN(purchaseQuantity) && totalQuantity > parseFloat(purchaseQuantity)) {
-                alert('Total Quantity cannot be greater than purchase quantity');
+                sweetAlertMessage('warning', 'Invalid Quantity', 'Total Quantity cannot be greater than purchase quantity!');
                 $('#total_quantity').val(purchaseQuantity);
                 return;
             }
@@ -784,19 +784,19 @@
 
 
         if(!grnType){
-            alert('Please Select Grn Type');
+            sweetAlertMessage('warning', 'Select GRN Type', 'Please Select Grn Type!');
             return false;
         }
         else if(!vendor){
-            alert('Please Select Vendor');
+            sweetAlertMessage('warning', 'Select Vendor', 'Please Select Vendor!');
             return false;
         }
         else if(!location){
-            alert('Please Select Location');
+            sweetAlertMessage('warning', 'Select Location', 'Please Select Location!');
             return false;
         }
         else if (itemCount == 0) {
-            alert('Empty Grid: Please add items to the GRN.');
+            sweetAlertMessage('warning', 'Empty Grid', 'Please add items to the GRN!');
             return false;
         }
         else {

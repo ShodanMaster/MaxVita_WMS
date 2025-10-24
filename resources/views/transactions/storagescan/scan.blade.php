@@ -161,7 +161,7 @@
                     resetButton.style.display = 'block';
                     barcode.focus();
                 } else {
-                    alert('Bin Code Not Found!');
+                    sweetAlertMessage('warning', 'Invalid Bin', 'Bin Code Not Found!');
                     bin.value = '';
                     bin.readOnly = false;
                     bin.focus();
@@ -188,13 +188,13 @@
         console.log(barcode.value);
 
         if(bin.value ==''){
-            alert('Enter Bin!');
+            sweetAlertMessage('warning', 'Enter Bin', 'Please enter bin!');
             bin.focus();
             return false;
         }
 
         if(barcode.value ==''){
-            alert('Enter Barcode!');
+            sweetAlertMessage('warning', 'Enter Barcode', 'Please enter barcode!');
             barcode.focus();
             return false;
         }
@@ -227,8 +227,7 @@
                     $('#dataTable').prepend(row);
 
                     if(response.scan_complete){
-                        alert('Storage Scan Completed');
-                        window.location.href = "{{ route('storage-scan.index') }}";
+                        sweetAlertMessage('success', 'Success', 'Storage Scan Completed!', false, "{{ route('storage-scan.index') }}");
                     }
                 }
                 barcode.value = '';

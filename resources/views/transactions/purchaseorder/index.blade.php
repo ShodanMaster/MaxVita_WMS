@@ -265,23 +265,23 @@
 
         function checkData() {
             if ($('#purchase_number').val() == '') {
-                alert('Enter PO Number');
+                sweetAlertMessage('warning', 'Enter PO Number', 'Please enter PO number!');
                 return false;
             }
 
             if ($('#purchase_date').val() == '') {
-                alert('Select Purchase Date');
+                sweetAlertMessage('warning', 'Select Purchase Date', 'Please select purchase date!');
                 return false;
             }
 
             if ($('#vendor').val() == '') {
-                alert('Select Vendor');
+                sweetAlertMessage('warning', 'Select Vendor', 'Please select vendor!');
                 return false;
             }
 
 
             if (itemCount == 0) {
-                alert('Empty Grid');
+                sweetAlertMessage('warning', 'Empty Grid', 'Please add items to grid!');
                 return false;
             } else {
                 $("#purchaseOrder").submit();
@@ -293,7 +293,7 @@
             var spq=document.getElementById('spq').value;
             if((Number(qty)%Number(spq)) != '0'){
 
-                alert('Quantity Not Multiple of Spq!');
+                sweetAlertMessage('warning', 'Invalid Quantity', 'Quantity Not Multiple of Spq!');
                 document.getElementById('total_quantity').value='';
                 document.getElementById('total_quantity').focus();
                 return false;
@@ -334,14 +334,14 @@
             let totalQuantity = $('#total_quantity').val();
 
             if (!itemId || !totalQuantity) {
-                alert('Please fill out all fields before adding to the grid.');
+                sweetAlertMessage('warning', 'Fill The Fields', 'Please fill out all fields before adding to the grid!');
                 return;
             }
 
             if ($('#grngridbody').find('tr').filter(function() {
                 return $(this).find('td').eq(1).text() === itemName;
             }).length > 0) {
-                alert('This item has already been added.');
+                sweetAlertMessage('warning', 'Already Exists', 'This item has already been added!');
                 return;
             }
 

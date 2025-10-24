@@ -166,7 +166,7 @@
                     resetButton.style.display = 'block';
                     barcode.focus();
                 } else {
-                    alert('Bin Not Found!');
+                    sweetAlertMessage('warning', 'Invalid Bin code', 'Bin Not Found!');
                     bin.value = '';
                     bin.readOnly = false;
                     bin.focus();
@@ -193,27 +193,27 @@
         const barcode = document.getElementById('barcode');
 
         if(weight.value ==''){
-            alert('Enter Weight!');
+            sweetAlertMessage('warning', 'Enter Weight', 'Please enter weight!');
             weight.focus();
             barcode.value = '';
             return false;
         }
 
         if(planNumber.value == ''){
-            alert('Plan Number Not Found!');
+            sweetAlertMessage('warning', 'Invalide Plan Number', 'Plan Number Not Found!');
             window.location.href = "{{ route('production-storage-scan.index') }}";
             return false;
         }
 
 
         if(bin.value ==''){
-            alert('Enter Bin!');
+            sweetAlertMessage('warning', 'Enter Bin', 'Please enter bin!');
             bin.focus();
             return false;
         }
 
         if(barcode.value ==''){
-            alert('Enter Barcode!');
+            sweetAlertMessage('warning', 'Enter Barcode', 'Please enter barcode!');
             barcode.focus();
             return false;
         }
@@ -248,8 +248,7 @@
                     $('#dataTable').prepend(row);
 
                     if(response.scan_complete){
-                        alert('Production Storage Scan Completed');
-                        window.location.href = "{{ route('production-storage-scan.index') }}";
+                        sweetAlertMessage('success', 'Success', 'Production Storage Scan Completed!', false, "{{ route('production-storage-scan.index') }}");
                     }
                 }
                 weight.value = '';

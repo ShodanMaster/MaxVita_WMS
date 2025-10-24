@@ -142,20 +142,20 @@
         const barcode = document.getElementById('barcode');
 
         if(weight.value ==''){
-            alert('Enter Weight!');
+            sweetAlertMessage('warning', 'Enter Weight', 'You must enter weight!');
             weight.focus();
             barcode.value = '';
             return false;
         }
 
         if(planNumber.value == ''){
-            alert('Plan Number Not Found!');
+            sweetAlertMessage('warning', 'Invalid Plan Number', 'Plan Number Not Found!');
             window.location.href = "{{ route('production-issue.index') }}";
             return false;
         }
 
         if(barcode.value ==''){
-            alert('Enter Barcode!');
+            sweetAlertMessage('warning', 'Enter Barcode', 'You must enter barcode!');
             barcode.focus();
             return false;
         }
@@ -189,8 +189,7 @@
                     $('#dataTable').prepend(row);
 
                     if(response.scan_complete){
-                        alert('Production Storage Scan Completed');
-                        window.location.href = "{{ route('production-issue.index') }}";
+                        sweetAlertMessage('success', 'Success', 'Production Issue Scan Completed!', false, "{{ route('production-issue.index') }}");
                     }
                 }
                 weight.value = '';

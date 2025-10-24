@@ -20,6 +20,7 @@
     <link href="{{ asset('assets/fonts/feather-font/css/iconfont.css') }}" rel="stylesheet" />
     <link href="{{ asset('assets/plugins/flag-icon-css/css/flag-icon.min.css') }}" rel="stylesheet" />
     <link href="{{ asset('assets/plugins/perfect-scrollbar/perfect-scrollbar.css') }}" rel="stylesheet" />
+    <link href="{{ asset('assets/plugins/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet" />
     <!-- end plugin css -->
 
     @stack('plugin-styles')
@@ -64,6 +65,7 @@
     <script src="{{ asset('js/app.js') }}"></script>
     <script src="{{ asset('assets/plugins/feather-icons/feather.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/perfect-scrollbar/perfect-scrollbar.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/sweetalert2/sweetalert2.min.js') }}"></script>
     <!-- end base js -->
 
     <!-- plugin js -->
@@ -90,7 +92,7 @@
             $('#favicon').attr('href', '{{ asset('dist/img/') }}' + '/' + favicon);
             }
         });
-        
+
         const today = new Date().toISOString().split('T')[0];
         document.querySelectorAll('.date-field').forEach(function(input) {
             input.setAttribute('min', today);
@@ -102,6 +104,24 @@
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
     });
+
+    function sweetAlertMessage(type, title, message, autoClose = true, redirectUrl = null) {
+        Swal.fire({
+            icon: type,
+            title: title,
+            text: message,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'OK',
+            showConfirmButton: !autoClose,
+            timer: autoClose ? 2000 : null,
+            timerProgressBar: autoClose
+        }).then((result) => {
+            if (result.isConfirmed && redirectUrl) {
+                window.location.href = redirectUrl;
+            }
+        });
+    }
+
     </script>
 
     <!-- custom-scripts js -->

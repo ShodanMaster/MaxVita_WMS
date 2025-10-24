@@ -269,7 +269,7 @@
             let totalQuantity = $('#total_quantity').val();
 
             if (!itemId || !totalQuantity) {
-                alert('Please fill out all fields before adding to the grid.');
+                sweetAlertMessage('warning', 'Fill Fields', 'Please fill out all fields before adding to the grid!');
                 return;
             }
 
@@ -277,7 +277,7 @@
             if ($('#grngridbody').find('tr').filter(function() {
                 return $(this).find('td').eq(1).text() === itemName;
             }).length > 0) {
-                alert('This item has already been added.');
+                sweetAlertMessage('warning', 'Already Exists', 'This item has already been added!');
                 return;
             }
 
@@ -319,19 +319,19 @@
             var itemCount = document.getElementById('grngridbody').rows.length;
 
             if (!productionDate) {
-                alert('Please Select Production Date');
+                sweetAlertMessage('warning', 'Select Production Date', 'Please Select Production Date!');
                 return false;
             }
             else if (!fgItem) {
-                alert('Please Select FG Item');
+                sweetAlertMessage('warning', 'Select FG Item', 'Please Select FG Item!');
                 return false;
             }
             else if (!quantity) {
-                alert('Please Enter Quantity');
+                sweetAlertMessage('warning', 'Enter Quantity', 'Please Enter Quantity!');
                 return false;
             }
             else if (itemCount == 0) {
-                alert('Empty Grid: Please add items to the grid.');
+                sweetAlertMessage('warning', 'Empty Grid', 'Please add items to the grid!');
                 return false;
             }
             else {
