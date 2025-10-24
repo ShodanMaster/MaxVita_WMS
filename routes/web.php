@@ -14,6 +14,7 @@ use App\Http\Controllers\Master\SubCategoryController;
 use App\Http\Controllers\Master\UomController;
 use App\Http\Controllers\Master\UserController;
 use App\Http\Controllers\Master\VendorController;
+use App\Http\Controllers\Reports\PurchaseOrderReportController;
 use App\Http\Controllers\Transactions\Grn\GrnController;
 use App\Http\Controllers\Transactions\Production\ProductionIssueController;
 use App\Http\Controllers\Transactions\PurchaseEntry\PurchaseOrderController;
@@ -93,6 +94,10 @@ Route::group(['middleware' => ['auth']], function () {
 
         // Production Storage Scan
         Route::resource('production-storage-scan', ProductionStorageScanController::class);
+
+        //Reports
+        //Purchase Order Reports
+        Route::resource('purchase-order-report', PurchaseOrderReportController::class);
 
         // Utitlity
 
@@ -182,6 +187,12 @@ Route::group(['middleware' => ['auth']], function () {
 
     // Production Plan
     Route::post('production-plan-excel-upload', [ProductionPlanController::class, 'productionPlanExcelUpload'])->name('production-plan-excel-upload');
+
+    //Reports
+    //Purchase Order Reports
+    Route::post('get-purchase-orders', [PurchaseOrderReportController::class, 'getPurchaseOrders'])->name('get-purchase-orders');
+    Route::post('get-purchase-detailed', [PurchaseOrderReportController::class, 'getPurchaseDetailed'])->name('get-purchase-detailed');
+    Route::get('purchase-order-report/{id}', [PurchaseOrderReportController::class, 'show']) ->name('purchase-order-report.show');
 
     // Utitlity
 
