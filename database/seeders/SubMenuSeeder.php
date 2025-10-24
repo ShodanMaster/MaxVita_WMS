@@ -187,6 +187,16 @@ class SubMenuSeeder extends Seeder
                 'created_at' => now(),
             ],
 
+            //Reports
+            //Purchase Order Reports
+            [
+                'menu_id' => 6,
+                'title' => 'Purchase Order Report',
+                'link' => 'purchase-order-report',
+                'listing_order' => 0,
+                'created_at' => now(),
+            ],
+
             // Utility Submenus
             // Permission
             //21
