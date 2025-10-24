@@ -235,7 +235,7 @@
 
         $.ajax({
             type: "POST",
-            url: "{{ route('ajax.fetch-scan-details') }}",
+            url: "{{ route('ajax.fetch-storage-scan-details') }}",
             data: {
                 grn_id: {{$id}},
             },

@@ -161,7 +161,7 @@ class StorageScanAjaxController extends Controller
         }
     }
 
-    public function fetchScanDetails(Request $request){
+    public function fetchStorageScanDetails(Request $request){
         if($request->ajax()){
             $grnSubs = GrnSub::with('item')->where('grn_id', $request->grn_id)->get();
 
