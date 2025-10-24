@@ -160,4 +160,20 @@ class StorageScanAjaxController extends Controller
             ]);
         }
     }
+
+    public function fetchScanDetails(Request $request){
+        if($request->ajax()){
+            $grnSubs = GrnSub::with('item')->where('grn_id', $request->grn_id)->get();
+
+            $data = $grnSubs->map(function($sub){
+                return [
+                    'item' => $sub->item->item_code . "/" . $sub->item->name,
+                    'balance_quantity' => $sub->total_quantity - $sub->scanned_quantity,
+                    'scanned_quantity' => $sub->scanned_quantity,
+                ];
+            });
+
+            return response()->json( $data);
+        }
+    }
 }

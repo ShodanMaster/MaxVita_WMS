@@ -29,6 +29,7 @@ Route::prefix('ajax')
 
         // Storage Scan Ajax Functions
         Route::post('get-grn-details', [StorageScanAjaxController::class, 'getGrnDetails'])->name('getgrndetails');
+        Route::post('fetch-scan-details', [StorageScanAjaxController::class, 'fetchScanDetails'])->name('fetch-scan-details');
         Route::post('storage-scan', [StorageScanAjaxController::class, 'storageScan'])->name('storagescan');
 
         // Production Scan Ajax Functions

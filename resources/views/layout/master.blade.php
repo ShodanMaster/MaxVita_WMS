@@ -113,7 +113,7 @@
             confirmButtonColor: '#3085d6',
             confirmButtonText: 'OK',
             showConfirmButton: !autoClose,
-            timer: autoClose ? 2000 : null,
+            timer: autoClose ? 1000 : null,
             timerProgressBar: autoClose
         }).then((result) => {
             if (result.isConfirmed && redirectUrl) {

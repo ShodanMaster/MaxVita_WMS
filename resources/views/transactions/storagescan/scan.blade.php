@@ -55,7 +55,7 @@
                     </div>
                 </div>
                 <div class="card-footer d-flex justify-content-end">
-                    <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#detailsModal">
+                    <button type="button" class="btn btn-sm btn-primary" onclick="fetchScanDetails()">
                         View Details
                     </button>
                 </div>
@@ -97,13 +97,6 @@
                         </tr>
                     </thead>
                     <tbody id="balancegrid">
-                        @foreach($grn->grnSubs as $grnSub)
-                            <tr>
-                                <td>{{$grnSub->item->name}}</td>
-                                <td>{{$grnSub->total_quantity - $grnSub->scanned_quantity}}</td>
-                                <td>{{$grnSub->scanned_quantity}}</td>
-                            </tr>
-                        @endforeach
                     </tbody>
                 </table>
             </div>
@@ -218,8 +211,10 @@
                     var messageCell = $('<td>').text(response.message);
 
                     if (response.status === 200) {
+                        sweetAlertMessage('success', 'Scanned Successfully', response.message);
                         messageCell.css('color', 'green');
                     } else {
+                        sweetAlertMessage('error', 'Scan Unsuccessful', response.message);
                         messageCell.css('color', 'red');
                     }
 
@@ -231,6 +226,32 @@
                     }
                 }
                 barcode.value = '';
+            }
+        });
+    }
+
+    function fetchScanDetails(){
+
+
+        $.ajax({
+            type: "POST",
+            url: "{{ route('ajax.fetch-scan-details') }}",
+            data: {
+                grn_id: {{$id}},
+            },
+            dataType: "json",
+            success: function (response) {
+                var balancegrid = $('#balancegrid');
+                balancegrid.empty();
+                $('#detailsModal').modal('show');
+
+                response.forEach(function(item) {
+                    var row = $('<tr>');
+                    row.append('<td>' + item.item + '</td>');
+                    row.append('<td>' + item.balance_quantity + '</td>');
+                    row.append('<td>' + item.scanned_quantity + '</td>');
+                    balancegrid.append(row);
+                });
             }
         });
     }
