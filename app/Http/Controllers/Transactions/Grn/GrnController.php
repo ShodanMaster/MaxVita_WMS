@@ -198,15 +198,16 @@ class GrnController extends Controller
                 }
             }
 
-            $dataCheck = PurchaseOrderSub::where('purchase_order_id', $purchaseOrderExists->id)->where('status', '0')->count();
-            // dd($dataCheck);
-            if ($dataCheck == 0) {
+            if($purchaseOrderExists){
+                $dataCheck = PurchaseOrderSub::where('purchase_order_id', $purchaseOrderExists->id)->where('status', '0')->count();
+                // dd($dataCheck);
+                if ($dataCheck == 0) {
 
-                PurchaseOrder::where('id', $purchaseOrderExists->id)
-                    ->where('status', "0")
-                    ->update(['status' => '1']);
+                    PurchaseOrder::where('id', $purchaseOrderExists->id)
+                        ->where('status', "0")
+                        ->update(['status' => '1']);
+                }
             }
-
             // dd($purchaseOrderExists->purchase_number);
             if ($request->is_purchase != null) {
                 Grn::where('id', $grn->id)

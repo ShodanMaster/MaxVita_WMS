@@ -57,7 +57,7 @@ class ProductionIssueAjaxController extends Controller
                     'status' => 404,
                     'message' => 'Does not Exist!'
                 ]);
-            } elseif ($barcode->status != 1) {
+            } elseif ($barcode->status == -1) {
                 return response()->json([
                     'status' => 409,
                     'message' => 'Not In Stock!'
@@ -131,7 +131,7 @@ class ProductionIssueAjaxController extends Controller
             $productionPlanSubUpdated = ProductionPlanSub::where('item_id', $barcode->item_id)
                                                         ->where('status', 0)
                                                         ->first();
-                                                        
+
             if($productionPlanSubUpdated->total_quantity == $productionPlanSubUpdated->picked_quantity){
                 $productionPlanSubUpdated->update(['status' => 1]);
             }
@@ -160,6 +160,23 @@ class ProductionIssueAjaxController extends Controller
                 'scan_complete' => $scanComplete,
                 'message' => 'Production Scan Successful!',
             ]);
+        }
+    }
+
+    public function fetchProductionScanDetails(Request $request){
+        if($request->ajax()){
+
+            $productionPlanSubs = ProductionPlanSub::with('item')->where('production_plan_id', $request->production_plan_id)->get();
+
+            $data = $productionPlanSubs->map(function($sub){
+                return [
+                    'item' => $sub->item->item_code . "/" . $sub->item->name,
+                    'balance_quantity' => $sub->total_quantity - $sub->picked_quantity,
+                    'scanned_quantity' => $sub->picked_quantity,
+                ];
+            });
+
+            return response()->json( $data);
         }
     }
 }

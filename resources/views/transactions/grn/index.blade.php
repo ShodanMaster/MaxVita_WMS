@@ -596,36 +596,36 @@
 
         // Validate if DOM is before Best Before date
         if (dateom > bbv) {
-            alert("Date of Manufacture should be less than Best Before date");
+            sweetAlertMessage('warning', 'Invalid Date', 'Date of Manufacture should be less than Best Before date!');
             return;
         }
 
         // Validate required fields
         if (!itemId) {
-            alert("Please select an item");
+            sweetAlertMessage('warning', 'Select Item', 'Please select an item!');
             return;
         } else if (!batchNo) {
-            alert("Please enter batch number");
+            sweetAlertMessage('warning', 'Enter Batch Number', 'Please enter batch number!');
             return;
         }
         // else if (!price) {
-        //     alert("Please enter Price number");
+        //     sweetAlertMessage('warning', 'Enter Price', 'Please enter Price number!');
         //     return;
         // }
         else if (!dateom) {
-            alert("Please enter DOM");
+            sweetAlertMessage('warning', 'Enter DOM', 'Please enter DOM!');
             return;
         } else if (!bbv) {
-            alert("Please enter Best Before");
+            sweetAlertMessage('warning', 'Enter Best Before', 'Please enter Best Before!');
             return;
         } else if (!spq) {
-            alert("Please enter SPQ");
+            sweetAlertMessage('warning', 'Enter SPQ', 'Please enter SPQ!');
             return;
         } else if (!numberOfBarcodes) {
-            alert("Please enter the number of barcodes");
+            sweetAlertMessage('warning', 'Enter Number Of Barcodes', 'Please enter the number of barcodes!');
             return;
         } else if (!totalQuantity) {
-            alert("Please enter the number of Total Quantity");
+            sweetAlertMessage('warning', 'Enter Total Quantity', 'Please enter the Total Quantity!');
             return;
         }
 
@@ -633,7 +633,7 @@
         if ($('#grngridbody').find('tr').filter(function() {
             return $(this).find('td').eq(1).text() === itemName && $(this).find('td').eq(3).text() === batchNo;
         }).length > 0) {
-            alert("Item already added");
+            sweetAlertMessage('warning', 'Already Exists', 'Item already added!');
             return;
         }
 
@@ -649,7 +649,7 @@
         });
 
         if (totalPoQty + parseInt(totalQuantity) > parseInt(poQty)) {
-            alert("PO Quantity exceeded");
+            sweetAlertMessage('warning', 'Invalide PO Quantity', 'PO Quantity exceeded!');
             return;
         }
 

@@ -232,7 +232,6 @@
 
     function fetchScanDetails(){
 
-
         $.ajax({
             type: "POST",
             url: "{{ route('ajax.fetch-storage-scan-details') }}",
