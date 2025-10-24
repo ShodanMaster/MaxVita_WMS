@@ -27,7 +27,8 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class GrnController extends Controller
 {
-    public function index(){
+    public function index()
+    {
         $grnNumber = Grn::grnNumber();
         $batchNumber = 'B' . date("ymd");
         $vendors = Vendor::get(['id', 'name']);
@@ -36,9 +37,10 @@ class GrnController extends Controller
         return view('transactions.grn.index', compact('grnNumber', 'batchNumber', 'vendors', 'locations', 'categories'));
     }
 
-    public function store(Request $request){
+    public function store(Request $request)
+    {
 
-        try{
+        try {
 
             DB::beginTransaction();
 
@@ -46,7 +48,7 @@ class GrnController extends Controller
             $batchNumber = 'B' . date("ymd");
             $purchaseNumber = null;
 
-            if($request->purchase_number){
+            if ($request->purchase_number) {
                 $purchaseOrder = PurchaseOrder::select('purchase_number')->find($request->purchase_number);
                 $purchaseNumber = $purchaseOrder->purchase_number;
             }
@@ -67,12 +69,11 @@ class GrnController extends Controller
                 'branch_id' => $branchId,
             ]);
 
-            if($request->is_purchase == 1){
+            if ($request->is_purchase == 1) {
                 $grnPurchaseOrder = GrnPurchaseOrder::create([
                     'grn_id' => $grn->id,
                     'user_id' => $userid
                 ]);
-
             }
 
             $grnSubData = [];
@@ -80,15 +81,15 @@ class GrnController extends Controller
             $barcodeData = [];
             $purchaseOrderSubUpdates = [];
 
-            foreach($request->items as $item){
+            foreach ($request->items as $item) {
 
                 $purchaseOrderExists = PurchaseOrder::where('id', '=', $item["purchase_id"])->where('status', 0)->first();
 
-                if($purchaseOrderExists){
+                if ($purchaseOrderExists) {
                     $purchaseOrderSub = PurchaseOrderSub::where('purchase_order_id', $purchaseOrderExists->id)
-                    ->where('item_id', $item["item_id"])
-                    ->where('status', '0')
-                    ->first();
+                        ->where('item_id', $item["item_id"])
+                        ->where('status', '0')
+                        ->first();
 
                     $purchaseOrderSubUpdates[] = [
                         'id' => $purchaseOrderSub->id,
@@ -106,7 +107,7 @@ class GrnController extends Controller
                     'number_of_barcodes' => $item["number_of_barcodes"],
                 ];
 
-                if($purchaseOrderExists){
+                if ($purchaseOrderExists) {
                     $grnPurchaseOrderSubData[] = [
                         'grn_purchase_order_id' => $grnPurchaseOrder->id,
                         'purchase_number' => $purchaseOrderExists->purchase_number,
@@ -167,20 +168,9 @@ class GrnController extends Controller
                     ];
                 }
 
-                if($purchaseOrderExists){
-                    $purchaseOrderSubUpdates[] = [
-                        'id' => $purchaseOrderSub->id,
-                        'status' => '1'
-                    ];
-
-                    $dataCheck = PurchaseOrderSub::where('purchase_order_id', $purchaseOrderExists->id)->where('status', '0')->count();
-                    if ($dataCheck == 0) {
-
-                        PurchaseOrder::where('id', $purchaseOrderExists->id)
-                            ->where('status', "0")
-                            ->update(['status' => '1']);
-                    }
-
+                if ($purchaseOrderExists) {
+                    $lastIndex = count($purchaseOrderSubUpdates) - 1;
+                    $purchaseOrderSubUpdates[$lastIndex]['status'] = 1;
                 }
             }
             // dd($barcodeData);
@@ -198,12 +188,23 @@ class GrnController extends Controller
             if (!empty($barcodeData)) {
                 Barcode::insert($barcodeData);
             }
+            // dd($purchaseOrderSubUpdates);
+            if (!empty($purchaseOrderSubUpdates)) {
+                foreach ($purchaseOrderSubUpdates as $updateData) {
+                    PurchaseOrderSub::where('id', $updateData['id'])->update([
+                        'picked_quantity' => $updateData['picked_quantity'],
+                        'status' => $updateData['status'],
+                    ]);
+                }
+            }
 
-            foreach ($purchaseOrderSubUpdates as $updateData) {
-                PurchaseOrderSub::where('id', $updateData['id'])->update([
-                    'picked_quantity' => $updateData['picked_quantity'],
-                    'status' => $updateData['status']
-                ]);
+            $dataCheck = PurchaseOrderSub::where('purchase_order_id', $purchaseOrderExists->id)->where('status', '0')->count();
+            // dd($dataCheck);
+            if ($dataCheck == 0) {
+
+                PurchaseOrder::where('id', $purchaseOrderExists->id)
+                    ->where('status', "0")
+                    ->update(['status' => '1']);
             }
 
             // dd($purchaseOrderExists->purchase_number);
@@ -230,14 +231,14 @@ class GrnController extends Controller
                 return redirect()->back();
                 // return back()->with('print_barcode', $print_barcode);
             }
-
-        } catch(Exception $e){
+        } catch (Exception $e) {
             DB::rollBack();
             dd($e);
         }
     }
 
-    public function grnExcelUpload(Request $request){
+    public function grnExcelUpload(Request $request)
+    {
         // dd($request->all());
         $request->validate([
             'excel_file' => 'required|file|mimes:xlsx,xls'
@@ -245,7 +246,7 @@ class GrnController extends Controller
 
         $current = date('Y-m-d_H-i-s');
 
-        try{
+        try {
             DB::beginTransaction();
 
             $userid = Auth::user()->id;
@@ -264,7 +265,7 @@ class GrnController extends Controller
                 return redirect()->route('grn.index')->withErrors($errors);
             }
 
-            if(!empty($data["purchase_id"])){
+            if (!empty($data["purchase_id"])) {
                 $purchaseOrder = PurchaseOrder::select('purchase_number')->find($data["purchase_id"]);
                 $purchaseNumber = $purchaseOrder->purchase_number;
             }
@@ -284,22 +285,22 @@ class GrnController extends Controller
                 'branch_id' => $branchId,
             ]);
 
-            if($purchaseNumber){
+            if ($purchaseNumber) {
                 $grnPurchaseOrder = GrnPurchaseOrder::create([
                     'grn_id' => $grn->id,
                     'user_id' => $userid
                 ]);
             }
 
-            foreach($data["items"] as $item){
+            foreach ($data["items"] as $item) {
 
                 $purchaseOrderExists = PurchaseOrder::where('id', '=', $data["purchase_id"])->where('status', 0)->first();
 
-                if($purchaseOrderExists){
+                if ($purchaseOrderExists) {
                     $purchaseOrderSub = PurchaseOrderSub::where('purchase_order_id', $purchaseOrderExists->id)
-                    ->where('item_id', $item["item_id"])
-                    ->where('status', '0')
-                    ->first();
+                        ->where('item_id', $item["item_id"])
+                        ->where('status', '0')
+                        ->first();
 
                     $purchaseOrderSub->update([
                         'picked_quantity' => $purchaseOrderSub->picked_quantity + $item["total_quantity"]
@@ -317,7 +318,7 @@ class GrnController extends Controller
                     'number_of_barcodes' => $item["number_of_barcodes"],
                 ]);
 
-                if($purchaseOrderExists){
+                if ($purchaseOrderExists) {
                     $grnPurchaseOrderSub = GrnPurchaseOrderSub::create([
                         'grn_purchase_order_id' => $grnPurchaseOrder->id,
                         'purchase_number' => $purchaseOrderExists->purchase_number,
@@ -386,7 +387,6 @@ class GrnController extends Controller
                         }
                     }
                 }
-
             }
 
             $fileName = $current . '_' . $request->file('excel_file')->getClientOriginalName();
@@ -407,7 +407,8 @@ class GrnController extends Controller
         }
     }
 
-    private function getExcelData($file){
+    private function getExcelData($file)
+    {
         $sheet = Excel::toArray([], $file);
         $rows = $sheet[0] ?? [];
         // dd($rows);
@@ -446,31 +447,31 @@ class GrnController extends Controller
         $data['remarks'] = $grn['remarks'];
 
         $vendor = Vendor::where('name', $grn['vendor_name'])->where('vendor_code', $grn['vendor_code'])->first();
-        if(!$vendor){
+        if (!$vendor) {
             $data['error'] .= "Vendor does not exist|";
         } else {
             $data['vendor_id'] = $vendor->id;
         }
 
         $location = Location::where('name', $grn['location'])->first();
-        if(!$location){
+        if (!$location) {
             $data['error'] .= "Location does not exist|";
         } else {
             $data['location_id'] = $location->id;
         }
 
         $purchaseOrder = PurchaseOrder::where('purchase_number', $grn['purchase_number'])->first();
-        if($purchaseOrder){
-            if($purchaseOrder->vendor_id != $data["vendor_id"]){
+        if ($purchaseOrder) {
+            if ($purchaseOrder->vendor_id != $data["vendor_id"]) {
                 $data["error"] .= "This Purchase Number order does not belongs to Vendor.|";
-            }else{
+            } else {
                 $data['purchase_id'] = $purchaseOrder->id;
             }
         }
         // dd($data);
         if ($data['error'] !== '') return $data;
 
-        for($i = 4; $i < count($rows); $i++){
+        for ($i = 4; $i < count($rows); $i++) {
             $row = $rows[$i];
 
             if (!array_filter($row)) {
@@ -487,7 +488,7 @@ class GrnController extends Controller
                 'item_type' => null,
             ];
 
-            foreach(['item_name', 'date_of_manufacture', 'best_before_date', 'total_quantity'] as $key){
+            foreach (['item_name', 'date_of_manufacture', 'best_before_date', 'total_quantity'] as $key) {
                 if (empty($itemArray[$key])) {
                     $label = ucwords(str_replace('_', ' ', $key));
                     $data['error'] .= $label . " is required|";
@@ -498,7 +499,7 @@ class GrnController extends Controller
             $item = Item::where('name', $itemArray['item_name'])
                 ->first();
 
-            if(!$item){
+            if (!$item) {
                 $data['error'] .= 'Row ' . ($i + 1) . " : Item does not exist|";
                 return $data;
             }
@@ -508,7 +509,7 @@ class GrnController extends Controller
                 ->where('location_id', $location->id)
                 ->exists();
 
-            if(!$belongs){
+            if (!$belongs) {
                 $data['error'] .= 'Row ' . ($i + 1) . " : Item does not exist in this location|";
                 return $data;
             }
@@ -531,7 +532,6 @@ class GrnController extends Controller
                     $data['error'] .= 'Row ' . ($i + 1) . " : Not enough quantity in the purchase order|";
                     return $data;
                 }
-
             }
 
             $spqQuantity = null;
@@ -553,24 +553,23 @@ class GrnController extends Controller
             if ($data['error'] !== '') return $data;
 
             $data['items'][] = [
-                    'item_id' => $item->id,
-                    'date_of_manufacture' => $itemArray['date_of_manufacture'],
-                    'best_before_date' => $itemArray['best_before_date'],
-                    'total_quantity' => $itemArray['total_quantity'],
-                    'spq_quantity' => $itemArray['spq_quantity'],
-                    'number_of_barcodes' => $itemArray['number_of_barcodes'],
-                    'item_type' => $item->item_type,
-                ];
+                'item_id' => $item->id,
+                'date_of_manufacture' => $itemArray['date_of_manufacture'],
+                'best_before_date' => $itemArray['best_before_date'],
+                'total_quantity' => $itemArray['total_quantity'],
+                'spq_quantity' => $itemArray['spq_quantity'],
+                'number_of_barcodes' => $itemArray['number_of_barcodes'],
+                'item_type' => $item->item_type,
+            ];
         }
 
         return $data;
     }
 
-    public function edit(){
+    public function edit() {}
 
-    }
-
-    public function printBarcode(){
+    public function printBarcode()
+    {
         $contents = Session::pull('contents');
         // dd($contents);
         if (!$contents) {
