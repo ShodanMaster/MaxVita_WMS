@@ -14,11 +14,8 @@
           <div class="col-md-12">
             <div class="auth-form-wrapper px-4 py-5">
               <div class="text-center">
-                @if(isset($config->login_logo))
-                  <img src="{{ asset("dist/img/$config->login_logo") }}" alt="Login Logo" width="280px" />
-                @else
+                  <img src="{{ asset('assets/images/logo/maxvita-logo-small.png') }}" alt="Login Logo" width="100px" />
                   <a href="#" class="noble-ui-logo d-block mb-2">Warehouse Management System</a>
-                @endif
               </div>
 
               <form method="POST" action="{{ route('login.store') }}">

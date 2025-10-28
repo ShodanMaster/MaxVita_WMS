@@ -15,6 +15,7 @@ use App\Http\Controllers\Master\UomController;
 use App\Http\Controllers\Master\UserController;
 use App\Http\Controllers\Master\VendorController;
 use App\Http\Controllers\Reports\PurchaseOrderReportController;
+use App\Http\Controllers\Transactions\Dispatch\DispatchController;
 use App\Http\Controllers\Transactions\Grn\GrnController;
 use App\Http\Controllers\Transactions\Production\ProductionIssueController;
 use App\Http\Controllers\Transactions\PurchaseEntry\PurchaseOrderController;
@@ -94,6 +95,9 @@ Route::group(['middleware' => ['auth']], function () {
 
         // Production Storage Scan
         Route::resource('production-storage-scan', ProductionStorageScanController::class);
+
+        //Dispatch
+        Route::resource('dispatch-plan', DispatchController::class);
 
         //Reports
         //Purchase Order Reports

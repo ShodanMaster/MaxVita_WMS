@@ -10,6 +10,7 @@
   <meta name="_token" content="{{ csrf_token() }}">
 
 
+<link rel="icon" type="image/png" href="{{ asset('assets/images/logo/favicon.ico') }}">
   @if(isset($config->favi))
   <link rel="shortcut icon" href='{{ asset("dist/img/$config->favi") }}'>
   @else
