@@ -28,4 +28,7 @@ class Location extends Model
         return $this->belongsToMany(Item::class, 'item_location');
     }
 
+    public function dispatches(){
+        return $this->morphMany(Dipatch::class, 'dispatch_to');
+    }
 }

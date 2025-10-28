@@ -17,4 +17,8 @@ class Customer extends Model
         'zip_code',
         'gst_number',
     ];
+
+    public function dispatches(){
+        return $this->morphMany(Dipatch::class, 'dispatch_to');
+    }
 }

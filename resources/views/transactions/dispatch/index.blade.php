@@ -46,7 +46,7 @@
                                     </label>
                                     <div class="col-sm-8">
                                         <select
-                                            name="type"
+                                            name="dispatch_type"
                                             id="dispatch_type"
                                             class="js-example-basic-single form-select"
                                             onchange="dispatchType()"
@@ -81,12 +81,12 @@
                         <div class="row">
                             <div class="col-6">
                                 <div class="form-group row">
-                                    <label for="date" class="col-sm-4 control-label">
+                                    <label for="dispatch_date" class="col-sm-4 control-label">
                                         Date
                                         <font color="#FF0000">*</font>
                                     </label>
                                     <div class="col-sm-8">
-                                        <input type="date" name="date" id="date" class="form-control" required>
+                                        <input type="date" name="dispatch_date" id="dispatch_date" class="form-control" required>
                                     </div>
                                 </div>
                             </div>
