@@ -28,11 +28,11 @@ class DispatchController extends Controller
     public function store(Request $request){
         // dd($request->all());
         $request->validate([
-            'dispatch_type' => 'required|in:sales, transfer',
+            'dispatch_type' => 'required|in:sales,transfer',
             'dispatch_date' => 'required|date',
             'dispatch_number' => 'required|string|unique:dispatches,dispatch_number',
-            'location_id' => 'exists:locations,id',
-            'customer_id' => 'exists:customers,id',
+            'location_id' => 'nullable|exists:locations,id',
+            'customer_id' => 'nullable|exists:customers,id',
             'items_json' => 'required|string',
         ]);
 
@@ -85,5 +85,13 @@ class DispatchController extends Controller
             DB::rollBack();
             dd(vars: $e);
         }
+    }
+
+    public function dispatchExcelUpload(Request $request){
+        $request->validate([
+            'excel_file' => 'required|file|mimes:xlsx,xls'
+        ]);
+
+        $current = date('Y-m-d_H-i-s');
     }
 }

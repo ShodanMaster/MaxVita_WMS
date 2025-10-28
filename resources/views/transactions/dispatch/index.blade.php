@@ -250,14 +250,14 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('dispatch-excel-upload') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="excelFile" class="form-label"></label>
                         <input type="file" class="form-control" id="excelFile" name="excel_file" accept=".xls,.xlsx" required>
                     </div>
-                    <span class="mt-2">You can download excel in predefined format by <a href="{{ URL::to( '/excel_templates/transaction_templates/grn_template.xlsx')}}" class="text-primary ">Clicking Here</a></span>
+                    <span class="mt-2">You can download excel in predefined format by <a href="{{ URL::to( '/excel_templates/transaction_templates/dispatch_template.xlsx')}}" class="text-primary ">Clicking Here</a></span>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">Save</button>

@@ -192,6 +192,9 @@ Route::group(['middleware' => ['auth']], function () {
     // Production Plan
     Route::post('production-plan-excel-upload', [ProductionPlanController::class, 'productionPlanExcelUpload'])->name('production-plan-excel-upload');
 
+    // Dispatch
+    Route::post('dispatch-excel-upload', [DispatchController::class, 'dispatchExcelUpload'])->name('dispatch-excel-upload');
+
     //Reports
     //Purchase Order Reports
     Route::post('get-purchase-orders', [PurchaseOrderReportController::class, 'getPurchaseOrders'])->name('get-purchase-orders');
