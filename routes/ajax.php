@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Ajax\CommonAjaxController;
+use App\Http\Controllers\Ajax\DispatchAjaxController;
 use App\Http\Controllers\Ajax\ProductionBarcodeGenerationAJaxController;
 use App\Http\Controllers\Ajax\GrnAjaxController;
 use App\Http\Controllers\Ajax\ProductionIssueAjaxController;
@@ -42,4 +43,10 @@ Route::prefix('ajax')
 
         // Production Storage Scan Ajax Functions
         Route::post('production-storage-scan', [ProductionStorageScanAjaxController::class, 'productionStorageScan'])->name('productionstoragescan');
+
+        // Dispatch Scan Ajax Functions
+        Route::post('get-dispatch-details', [DispatchAjaxController::class, 'getDispatchDetails'])->name('get-dispatch-details');
+        Route::post('fetch-dispatch-details', [DispatchAjaxController::class, 'fetchDispatchDetails'])->name('fetch-dispatch-details');
+        Route::post('dispatch-scan', [DispatchAjaxController::class, 'dispatchScan'])->name('dispatchscan');
+
     });

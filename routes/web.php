@@ -16,6 +16,7 @@ use App\Http\Controllers\Master\UserController;
 use App\Http\Controllers\Master\VendorController;
 use App\Http\Controllers\Reports\PurchaseOrderReportController;
 use App\Http\Controllers\Transactions\Dispatch\DispatchController;
+use App\Http\Controllers\Transactions\Dispatch\DispatchScanController;
 use App\Http\Controllers\Transactions\Grn\GrnController;
 use App\Http\Controllers\Transactions\Production\ProductionIssueController;
 use App\Http\Controllers\Transactions\PurchaseEntry\PurchaseOrderController;
@@ -98,6 +99,9 @@ Route::group(['middleware' => ['auth']], function () {
 
         //Dispatch
         Route::resource('dispatch', DispatchController::class);
+
+        //Dispatch Scan
+        Route::resource('dispatch-scan', DispatchScanController::class);
 
         //Reports
         //Purchase Order Reports

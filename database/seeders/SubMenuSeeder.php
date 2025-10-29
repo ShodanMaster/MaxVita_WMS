@@ -186,7 +186,7 @@ class SubMenuSeeder extends Seeder
                 'listing_order' => 11,
                 'created_at' => now(),
             ],
-            //Dispatch Plan
+            //Dispatch Entry
             // 21
             [
                 'menu_id' => 6,
@@ -195,9 +195,19 @@ class SubMenuSeeder extends Seeder
                 'listing_order' => 11,
                 'created_at' => now(),
             ],
+            //Dispatch Scan
+            // 22
+            [
+                'menu_id' => 6,
+                'title' => 'Dispatch Scan',
+                'link' => 'dispatch-scan',
+                'listing_order' => 11,
+                'created_at' => now(),
+            ],
 
             //Reports
             //Purchase Order Reports
+            // 23
             [
                 'menu_id' => 7,
                 'title' => 'Purchase Order Report',
@@ -208,7 +218,7 @@ class SubMenuSeeder extends Seeder
 
             // Utility Submenus
             // Permission
-            //22
+            // 24
             [
                 'menu_id' => 8,
                 'title' => 'Permission',
@@ -218,7 +228,7 @@ class SubMenuSeeder extends Seeder
             ],
 
             // Change Password
-            // 23
+            // 25
             [
                 'menu_id' => 8,
                 'title' => 'Change Password',

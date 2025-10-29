@@ -20,9 +20,13 @@ class Dispatch extends Model
         'user_id',
         'status',
     ];
-    
+
     public function dispatchTo()
     {
         return $this->morphTo();
+    }
+
+    public function dispatchSubs(){
+        return $this->hasMany(DispatchSub::class);
     }
 }
