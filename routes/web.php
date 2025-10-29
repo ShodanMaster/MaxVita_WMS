@@ -97,7 +97,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::resource('production-storage-scan', ProductionStorageScanController::class);
 
         //Dispatch
-        Route::resource('dispatch-plan', DispatchController::class);
+        Route::resource('dispatch', DispatchController::class);
 
         //Reports
         //Purchase Order Reports

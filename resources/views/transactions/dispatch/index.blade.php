@@ -35,7 +35,7 @@
 
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('dispatch-plan.store') }}" method="POST" id="dispatchForm">
+                    <form action="{{ route('dispatch.store') }}" method="POST" id="dispatchForm">
                         @csrf
                         <div class="row">
                             <div class="col-6">
@@ -98,7 +98,7 @@
                                         <font color="#FF0000">*</font>
                                     </label>
                                     <div class="col-sm-8">
-                                        <select name="location_id" id="location_id" class="js-example-basic-single form-select mandatory" style="width:100%" required>
+                                        <select name="location_id" id="location_id" class="js-example-basic-single form-select mandatory" style="width:100%" required onchange="filterItem()">
                                             <option value="">--select--</option>
                                             @forelse ($locations as $location)
                                                 <option value="{{ $location->id }}">{{ $location->name }}</option>
@@ -164,11 +164,6 @@
                                     <div class="col-sm-8">
                                         <select name="item_id" id="item_id" class="js-example-basic-single form-control mandatory" style="width:100%" onchange="getItemSpq()">
                                             <option value="">--select--</option>
-                                            @forelse ($fgItems as $fgItem)
-                                                <option value="{{ $fgItem->id }}">{{ $fgItem->item_code }}/{{ $fgItem->name }}</option>
-                                            @empty
-                                                <option value="" disabled>No Items Found</option>
-                                            @endforelse
                                         </select>
                                     </div>
                                 </div>
@@ -317,6 +312,34 @@
             $('#customer, #location').hide();
             $('#customer, #location').find('select, input').removeAttr('required');
         }
+    }
+
+    function filterItem(){
+
+        var  locationId = $('#location_id').val();
+
+        $.ajax({
+            type: "POST",
+            url: "{{ route('ajax.getgrnitems') }}",
+            data: {
+                grn_type : 'FG',
+                location_id : locationId,
+            },
+            dataType: "json",
+            success: function (response) {
+                $('#item_id').empty();
+                $('#item_id').append('<option value="">--select--</option>');
+                if (response && response.length > 0) {
+                    response.forEach(function(item){
+
+                        $('#item_id').append(
+                            `<option value="${item.id}">${item.item_code}/${item.name}</option>`
+                        );
+                    });
+
+                }
+            }
+        });
     }
 
     function getItemSpq(){

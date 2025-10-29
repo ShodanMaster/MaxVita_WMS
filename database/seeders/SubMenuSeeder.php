@@ -190,8 +190,8 @@ class SubMenuSeeder extends Seeder
             // 21
             [
                 'menu_id' => 6,
-                'title' => 'Dispatch Plan',
-                'link' => 'dispatch-plan',
+                'title' => 'Dispatch Entry',
+                'link' => 'dispatch',
                 'listing_order' => 11,
                 'created_at' => now(),
             ],
