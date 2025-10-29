@@ -102,6 +102,13 @@ class DispatchAjaxController extends Controller
                 ]);
             }
 
+            if($barcode->uom->id != $dispatchSub->dispatch->uom->id){
+                return response()->json([
+                    'status' => 409,
+                    'message' => 'Uom Mismatch.'
+                ]);
+            }
+
             DB::beginTransaction();
 
             $dispatchScan = DispatchScan::create([
@@ -134,7 +141,7 @@ class DispatchAjaxController extends Controller
                                 ->where('item_id', $barcode->item_id)
                                 ->whereNot('status', 1)
                                 ->first();
-                                
+
             if($dispatchSubUpdated->dispatched_quantity == $dispatchSubUpdated->total_quantity){
                 $dispatchSubUpdated->update(['status' => 1]);
             }
