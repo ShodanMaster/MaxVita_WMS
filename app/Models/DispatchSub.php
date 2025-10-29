@@ -11,14 +11,18 @@ class DispatchSub extends Model
         'item_id',
         'uom_id',
         'total_quantity',
-        'dispatch_quantity',
+        'dispatched_quantity',
         'status',
     ];
+
+    public function dispatch(){
+        return $this->belongsTo(Dispatch::class);
+    }
 
     public function uom(){
         return $this->belongsTo(Uom::class);
     }
-    
+
     public function item(){
         return $this->belongsTo(Item::class);
     }

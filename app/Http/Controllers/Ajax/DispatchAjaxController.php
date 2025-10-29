@@ -3,8 +3,13 @@
 namespace App\Http\Controllers\Ajax;
 
 use App\Http\Controllers\Controller;
+use App\Models\Barcode;
 use App\Models\Dispatch;
+use App\Models\DispatchScan;
+use App\Models\DispatchSub;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class DispatchAjaxController extends Controller
 {
@@ -41,8 +46,8 @@ class DispatchAjaxController extends Controller
                 return [
                     'item'   => $d->item->item_code . '/' . $d->item->name,
                     'uom'         => $d->uom->name,
-                    'balance_quantity'    => $d->total_quantity - $d->dispatch_quantity,
-                    'scanned_quantity'    => round($d->dispatch_quantity),
+                    'balance_quantity'    => $d->total_quantity - $d->dispatched_quantity,
+                    'dispatched_quantity'    => round($d->dispatched_quantity),
                 ];
             });
 
@@ -51,6 +56,112 @@ class DispatchAjaxController extends Controller
     }
 
     public function dispatchScan(Request $request){
+        if($request->ajax()){
 
+            $user = Auth::user();
+            $barcode = Barcode::where('serial_number', $request->barcode)->first();
+
+            if(!$barcode){
+                return response()->json([
+                    'status' => 404,
+                    'message' => 'Barcode not found.'
+                ]);
+            }
+
+            switch ($barcode->status) {
+                case -1:
+                    return response()->json([
+                        'status' => 409,
+                        'message' => 'Not in Stock!'
+                    ]);
+                case 2:
+                    return response()->json([
+                        'status' => 409,
+                        'message' => 'Already Dispatched!'
+                    ]);
+                case 2:
+                    return response()->json([
+                        'status' => 409,
+                        'message' => 'Already Transfered!'
+                    ]);
+                case 8:
+                    return response()->json([
+                        'status' => 404,
+                        'message' => 'Does not Exist!'
+                    ]);
+            }
+
+            $dispatchSub = DispatchSub::where('dispatch_id', $request->dispatch_id)
+                                ->where('item_id', $barcode->item_id)
+                                ->first();
+
+            if (!$dispatchSub) {
+                return response()->json([
+                    'status' => 404,
+                    'message' => 'Dispatch data not found.'
+                ]);
+            }
+
+            DB::beginTransaction();
+
+            $dispatchScan = DispatchScan::create([
+                'dispatch_id' => $dispatchSub->dispatch_id,
+                'barcode' => $barcode->serial_number,
+                'item_id' => $barcode->item_id,
+                'bin_id' => $barcode->bin->id,
+                'uom_id' => $barcode->uom->id,
+                'dispatched_quantity' => 1,
+                'user_id' => $user->id,
+            ]);
+
+            $status = '';
+
+            if($dispatchSub->dispatch->dispatch_type === 'sales'){
+                $status = '2';
+            }else{
+                $status = '4';
+            }
+
+            $barcode->update([
+                'status' => $status,
+            ]);
+
+            $dispatchSub->update([
+                'dispatched_quantity' => $dispatchSub->dispatched_quantity + 1,
+            ]);
+
+            $dispatchSubUpdated = dispatchSub::where('dispatch_id', $request->dispatch_id)
+                                ->where('item_id', $barcode->item_id)
+                                ->whereNot('status', 1)
+                                ->first();
+                                
+            if($dispatchSubUpdated->dispatched_quantity == $dispatchSubUpdated->total_quantity){
+                $dispatchSubUpdated->update(['status' => 1]);
+            }
+
+            $dispatchSubStatus = dispatchSub::where('dispatch_id', $dispatchSub->dispatch_id)->where('status', 0)->exists();
+
+            $dispatch = Dispatch::find($dispatchSub->dispatch_id);
+
+            $scanComplete = false;
+            if($dispatchSubStatus){
+                $dispatch->update([
+                    'status' => 1
+                ]);
+            }else{
+                $dispatch->update([
+                    'status' => 2
+                ]);
+                $scanComplete = true;
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'status' => 200,
+                'scan_complete' => $scanComplete,
+                'message' => 'Dispatch Scan Successful',
+            ]);
+        }
     }
 }

@@ -75,4 +75,14 @@ class Barcode extends Model
     {
         return $this->belongsTo(Item::class);
     }
+
+    public function bin()
+    {
+        return $this->belongsTo(Bin::class);
+    }
+
+    public function uom()
+    {
+        return $this->belongsTo(Uom::class);
+    }
 }

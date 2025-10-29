@@ -37,12 +37,7 @@ class ProductionStorageScanAjaxController extends Controller
                     case 2:
                         return response()->json([
                             'status' => 409,
-                            'message' => 'Already Despatched!'
-                        ]);
-                    case 4:
-                        return response()->json([
-                            'status' => 409,
-                            'message' => 'Already Transfered!'
+                            'message' => 'Already Dispatched!'
                         ]);
                     case 8:
                         return response()->json([

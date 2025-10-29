@@ -25,9 +25,9 @@
                 <div class="card-body">
                     @csrf
                     <div class="form-group row">
-                        <label for="plan_number" class="col-md-4 control-label">Dispatch No</label>
+                        <label for="dispatch_number" class="col-md-4 control-label">Dispatch No</label>
                         <div class="col-sm-8">
-                            <input type="text" id="plan_number" name="plan_number" class="form-control form-control-sm" required readonly value="{{ $dispatch->dispatch_number }}">
+                            <input type="text" id="dispatch_number" name="dispatch_number" class="form-control form-control-sm" required readonly value="{{ $dispatch->dispatch_number }}">
                         </div>
                     </div>
 
@@ -52,11 +52,10 @@
                         <thead>
                             <tr>
                                 <th>Barcode</th>
-                                <th>Weight</th>
                                 <th>Message</th>
                             </tr>
                         </thead>
-                        <tbody id="dataTable">
+                        <tbody id="barcodeTable">
                         </tbody>
                     </table>
                 </div>
@@ -123,20 +122,12 @@
 <script>
 
     function dispatchScan(){
-        const planNumber = document.getElementById('plan_number');
-        const weight = document.getElementById('weight');
+        const planNumber = document.getElementById('dispatch_number');
         const barcode = document.getElementById('barcode');
-
-        if(weight.value ==''){
-            sweetAlertMessage('warning', 'Enter Weight', 'You must enter weight!');
-            weight.focus();
-            barcode.value = '';
-            return false;
-        }
 
         if(planNumber.value == ''){
             sweetAlertMessage('warning', 'Invalid Plan Number', 'Plan Number Not Found!');
-            window.location.href = "{{ route('production-issue.index') }}";
+            window.location.href = "{{ route('dispatch-scan.index') }}";
             return false;
         }
 
@@ -150,8 +141,7 @@
             type: "POST",
             url: "{{ route('ajax.dispatchscan') }}",
             data: {
-                production_plan_id : {{ $id }},
-                weight : weight.value,
+                dispatch_id : {{ $id }},
                 barcode : barcode.value,
             },
             dataType: "json",
@@ -161,7 +151,6 @@
                     var row = $('<tr>');
 
                     row.append('<td>' + barcode.value + '</td>');
-                    row.append('<td>' + weight.value + '</td>');
 
                     var messageCell = $('<td>').text(response.message);
 
@@ -174,13 +163,13 @@
                     }
 
                     row.append(messageCell);
-                    $('#dataTable').prepend(row);
+                    $('#barcodeTable').prepend(row);
 
                     if(response.scan_complete){
-                        sweetAlertMessage('success', 'Success', 'Production Issue Scan Completed!', false, "{{ route('production-issue.index') }}");
+                        sweetAlertMessage('success', 'Success', 'Dispatch Scan Completed!', false, "{{ route('dispatch-scan.index') }}");
                     }
                 }
-                weight.value = '';
+
                 barcode.value = '';
             }
         });
@@ -211,8 +200,6 @@
             }
         });
     }
-
-    fetchScanDetails();
 </script>
 
 @endpush

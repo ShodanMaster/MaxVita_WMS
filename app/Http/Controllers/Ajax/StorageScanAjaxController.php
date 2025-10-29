@@ -54,7 +54,7 @@ class StorageScanAjaxController extends Controller
                 case 2:
                     return response()->json([
                         'status' => 409,
-                        'message' => 'Already Despatched!'
+                        'message' => 'Already Dispatched!'
                     ]);
                 case 8:
                     return response()->json([

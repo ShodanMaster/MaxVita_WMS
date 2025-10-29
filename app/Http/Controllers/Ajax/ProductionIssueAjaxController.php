@@ -50,7 +50,7 @@ class ProductionIssueAjaxController extends Controller
             } elseif ($barcode->status == 2) {
                 return response()->json([
                     'status' => 409,
-                    'message' => 'Already Despatched!'
+                    'message' => 'Already Dispatched!'
                 ]);
             } elseif ($barcode->status == 8) {
                 return response()->json([
