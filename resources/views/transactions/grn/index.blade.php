@@ -629,14 +629,27 @@
             return;
         }
 
-        // Check for duplicates in grid
-        if ($('#grngridbody').find('tr').filter(function() {
-            return $(this).find('td').eq(1).text() === itemName && $(this).find('td').eq(3).text() === batchNo;
-        }).length > 0) {
+        let exist = false;
+
+        $('#grngridbody').find('tr').each(function() {
+            let gridItemName = $.trim($(this).find('td').eq(1).text());
+            let gridBatchNo = $.trim($(this).find('td').eq(2).text());
+
+            console.log("Grid Item Name: ", gridItemName);
+            console.log("Grid Batch No: ", gridBatchNo);
+            console.log("Current Item Name: ", itemName);
+            console.log("Current Batch No: ", batchNo);
+
+            if (gridItemName === itemName && gridBatchNo === batchNo) {
+                exist = true;
+            }
+        });
+
+        if(exist){
             sweetAlertMessage('warning', 'Already Exists', 'Item already added!');
             return;
         }
-
+        
         // Check PO quantity exceeds limit logic
         let totalPoQty = 0;
         $('#grngridbody tr').each(function() {
