@@ -11,15 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('dispatch_subs', function (Blueprint $table) {
+        Schema::create('receipt_scans', function (Blueprint $table) {
             $table->id();
             $table->foreignId('dispatch_id')->constrained();
+            $table->string('barcode');
             $table->foreignId('item_id')->constrained();
+            $table->foreignId('bin_id')->constrained();
+            $table->decimal('recieved_quantity', 11, 4);
             $table->foreignId('uom_id')->constrained();
-            $table->decimal('total_quantity', 15, 4);
-            $table->decimal('dispatched_quantity', 15, 4)->default(0);
-            $table->decimal('received_quantity', 15, 4)->default(0);
-            $table->integer('status')->default(0);
+            $table->dateTime('scan_time')->useCurrent();
+            $table->foreignId('user_id')->constrained();
             $table->timestamps();
         });
     }
@@ -29,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('dispatch_subs');
+        Schema::dropIfExists('receipt_scans');
     }
 };

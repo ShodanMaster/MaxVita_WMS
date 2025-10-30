@@ -20,22 +20,22 @@
         <div class="container-fluid">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">FG Storage Scan</h3>
+                    <h3 class="card-title">Receive Scan</h3>
                 </div>
                 <div class="card-body">
-                    <form method="POST" action="{{ route('production-storage-scan.store') }}" enctype="multipart/form-data">
+                    <form method="POST" action="{{ route('dispatch-scan.store') }}" enctype="multipart/form-data">
                         @csrf
                         <div class="form-group row">
-                            <label for="plan_number" class="col-md-4 control-label">
-                                Plan Number
+                            <label for="dispatch_number" class="col-md-4 control-label">
+                                Dispatch No
                             </label>
                             <div class="col-sm-8">
-                                <select name="plan_number" id="plan_number" class="form-control form-control-sm select2" required onchange="fetchGrnDetails()">
-                                    <option value="" disabled selected>--Select Plan Number--</option>
-                                    @forelse ($planNumbers as $planNumber)
-                                        <option value="{{ $planNumber->id }}">{{ $planNumber->plan_number }}</option>
+                                <select name="dispatch_number" id="dispatch_number" class="form-control form-control-sm select2" required onchange="fetchDispatchDetails()">
+                                    <option value="" disabled selected>--Select Grn Number--</option>
+                                    @forelse ($dispatchNumbers as $dispatchNumber)
+                                        <option value="{{ $dispatchNumber->id }}">{{ $dispatchNumber->dispatch_number }}</option>
                                     @empty
-                                        <option value="" disabled >No Plan Numbers Found</option>
+                                        <option value="" disabled >No Dispatch Numbers Found</option>
                                     @endforelse
                                 </select>
                             </div>
@@ -45,12 +45,13 @@
 
                     </form>
                 </div>
-                <div class="card-footer table-responsive" style="display: none" id="grnDetails">
-                    <table class="table" id="grngrid">
+                <div class="card-footer table-responsive" style="display: none" id="dispatchDetails">
+                    <table class="table" id="dispatchGrid">
                         <thead>
                             <tr>
-                                <th>FG Item</th>
+                                <th>Item</th>
                                 <th>Quantity</th>
+                                <th>uom</th>
                             </tr>
                         </thead>
                         <tbody id="grid-container">
@@ -89,38 +90,40 @@
 
 <script>
     $('.select2').select2();
-    function fetchGrnDetails(){
-        var planId = document.getElementById("plan_number").value;
-        console.log(planId);
+    function fetchDispatchDetails(){
+        var dispatchNumber = document.getElementById("dispatch_number").value;
+        console.log(dispatchNumber);
 
         $.ajax({
             type: "POST",
-            url: "{{ route('ajax.getplandetails') }}",
+            url: "{{ route('ajax.get-dispatch-details') }}",
             data: {
-                id : planId
+                id : dispatchNumber
             },
             dataType: "json",
             success: function (response) {
                 console.log(response);
                 const tbody = document.getElementById("grid-container");
                 tbody.innerHTML = "";
-                if(response && Object.keys(response).length > 0){
-                    // Display the table footer
-                    document.getElementById("grnDetails").style.display = "block";
 
-                    // Create and insert new row
-                    const tr = document.createElement("tr");
-                    tr.innerHTML = `
-                        <td>${response.fg_item ?? ''}</td>
-                        <td>${response.quantity ?? ''}</td>
-                    `;
-                    tbody.appendChild(tr);
+                if (Array.isArray(response) && response.length > 0) {
+                    document.getElementById("dispatchDetails").style.display = "block";
+
+                    response.forEach(item => {
+                        const tr = document.createElement("tr");
+                        tr.innerHTML = `
+                            <td>${item.item_code ? item.item_code + '/' + item.item_name : ''}</td>
+                            <td>${item.quantity ?? ''}</td>
+                            <td>${item.uom ?? ''}</td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
                 } else {
-                    // Hide if no valid response
-                    document.getElementById("grnDetails").style.display = "none";
+                    document.getElementById("dispatchDetails").style.display = "none";
                 }
             }
         });
     }
 </script>
+
 @endpush

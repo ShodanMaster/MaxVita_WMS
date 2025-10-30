@@ -124,7 +124,7 @@ class ProductionIssueAjaxController extends Controller
 
             // dd($productionPlanSub->scanned_quantity, $barcode->net_weight);
             $productionPlanSub->update([
-                'picked_quantity' => $productionPlanSub->picked_quantity + 1,
+                'picked_quantity' => $productionPlanSub->picked_quantity + $weight,
             ]);
 
             // dd($barcode->item_id);

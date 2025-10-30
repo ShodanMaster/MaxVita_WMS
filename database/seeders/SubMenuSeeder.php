@@ -186,6 +186,8 @@ class SubMenuSeeder extends Seeder
                 'listing_order' => 11,
                 'created_at' => now(),
             ],
+
+            //Dispatch
             //Dispatch Entry
             // 21
             [
@@ -201,6 +203,16 @@ class SubMenuSeeder extends Seeder
                 'menu_id' => 6,
                 'title' => 'Dispatch Scan',
                 'link' => 'dispatch-scan',
+                'listing_order' => 11,
+                'created_at' => now(),
+            ],
+
+            //Receipt
+            // Receipt Scan
+            [
+                'menu_id' => 6,
+                'title' => 'Receipt Scan',
+                'link' => 'receipt-scan',
                 'listing_order' => 11,
                 'created_at' => now(),
             ],

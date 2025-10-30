@@ -24,6 +24,7 @@ use App\Http\Controllers\Transactions\Grn\StorageScanController;
 use App\Http\Controllers\Transactions\Production\ProductionBarcodeGenerationController;
 use App\Http\Controllers\Transactions\Production\ProductionStorageScanController;
 use App\Http\Controllers\Transactions\Production\ProductionPlanController;
+use App\Http\Controllers\Transactions\Receipt\ReceiptScanController;
 use App\Http\Controllers\Utility\PasswordChangeController;
 use App\Http\Controllers\Utility\PermissionController;
 use Illuminate\Support\Facades\Route;
@@ -102,6 +103,9 @@ Route::group(['middleware' => ['auth']], function () {
 
         //Dispatch Scan
         Route::resource('dispatch-scan', DispatchScanController::class);
+
+        //Receipt
+        Route::resource('receipt', ReceiptScanController::class);
 
         //Reports
         //Purchase Order Reports

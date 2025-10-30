@@ -12,6 +12,7 @@ class DispatchSub extends Model
         'uom_id',
         'total_quantity',
         'dispatched_quantity',
+        'received_quantity',
         'status',
     ];
 
