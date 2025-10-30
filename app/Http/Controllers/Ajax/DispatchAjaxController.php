@@ -102,10 +102,10 @@ class DispatchAjaxController extends Controller
                 ]);
             }
 
-            if($barcode->uom->id != $dispatchSub->dispatch->uom->id){
+            if($barcode->uom->id != $dispatchSub->uom->id){
                 return response()->json([
                     'status' => 409,
-                    'message' => 'Uom Mismatch.'
+                    'message' => 'Uom Mismatch!'
                 ]);
             }
 
