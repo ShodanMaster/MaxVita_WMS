@@ -55,7 +55,7 @@ class ProductionIssueAjaxController extends Controller
             } elseif ($barcode->status == 8) {
                 return response()->json([
                     'status' => 404,
-                    'message' => 'Does not Exist!'
+                    'message' => 'Not In Stock!'
                 ]);
             } elseif ($barcode->status == -1) {
                 return response()->json([
@@ -141,16 +141,11 @@ class ProductionIssueAjaxController extends Controller
             $productionPlan = ProductionPlan::find($productionPlanSub->production_plan_id);
 
             $scanComplete = false;
-            if($productionPlanSubStatus){
+            if(!$productionPlanSubStatus){
                 $productionPlan->update([
                     'status' => 1
                 ]);
-            }else{
-                $productionPlan->update([
-                    'status' => 2
-                ]);
                 $scanComplete = true;
-
             }
 
             DB::commit();

@@ -63,7 +63,7 @@
                     </div>
                 </div>
                 <div class="card-footer d-flex justify-content-end">
-                    <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#detailsModal">
+                    <button type="button" class="btn btn-sm btn-primary" onclick="fetchScanDetails()">
                         View Details
                     </button>
                 </div>
@@ -101,14 +101,11 @@
                     <thead>
                         <tr>
                             <th>Item Name</th>
-                            <th>Quantity</th>
+                            <th>Total Quantity</th>
+                            <th>Scanned Quantity</th>
                         </tr>
                     </thead>
                     <tbody id="balancegrid">
-                        <tr>
-                            <td>{{$productionPlan->item->name}}</td>
-                            <td>{{$productionPlan->total_quantity}}</td>
-                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -239,8 +236,10 @@
                     var messageCell = $('<td>').text(response.message);
 
                     if (response.status === 200) {
+                        sweetAlertMessage('success', 'Scanned Successfully', response.message);
                         messageCell.css('color', 'green');
                     } else {
+                        sweetAlertMessage('success', 'Scanned Successfully', response.message);
                         messageCell.css('color', 'red');
                     }
 
@@ -256,6 +255,46 @@
             }
         });
     }
+
+    function fetchScanDetails() {
+        $.ajax({
+            type: "POST",
+            url: "{{ route('ajax.fetchfgstoragescandetails') }}",
+            data: {
+                id: {{ $id }}
+            },
+            dataType: "json",
+            success: function (response) {
+                console.log(response);
+
+                // Reference correct table body
+                var balancegrid = $('#balancegrid');
+                balancegrid.empty();
+
+                // Ensure response is valid and has data
+                if (response && response.fg_item) {
+
+                    var balancegrid = $('#balancegrid');
+                    balancegrid.empty();
+                    $('#detailsModal').modal('show');
+
+                    // Loop through each item returned
+                    var row = $('<tr>');
+                    row.append('<td>' + response.fg_item + '</td>');
+                    row.append('<td>' + response.total_quantity + '</td>');
+                    row.append('<td>' + response.scanned_quantity + '</td>');
+                    balancegrid.append(row);
+                } else {
+                    sweetAlertMessage('warning', "No data found.");
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("Error fetching data:", error);
+                sweetAlertMessage('error', 'Warning', "An error occurred while fetching details.");
+            }
+        });
+    }
+
 </script>
 
 @endpush

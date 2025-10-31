@@ -43,6 +43,7 @@ Route::prefix('ajax')
 
         // Production Storage Scan Ajax Functions
         Route::post('production-storage-scan', [ProductionStorageScanAjaxController::class, 'productionStorageScan'])->name('productionstoragescan');
+        Route::post('fetch-fg-storage-scan-details', [ProductionStorageScanAjaxController::class, 'fetchFgStorageScanDetails'])->name('fetchfgstoragescandetails');
 
         // Dispatch Scan Ajax Functions
         Route::post('get-dispatch-details', [DispatchAjaxController::class, 'getDispatchDetails'])->name('get-dispatch-details');

@@ -139,16 +139,11 @@ class StorageScanAjaxController extends Controller
             $grn = Grn::find($grnSub->grn_id);
 
             $scanComplete = false;
-            if($grnSubStatus){
+            if(!$grnSubStatus){
                 $grn->update([
                     'status' => 1
                 ]);
-            }else{
-                $grn->update([
-                    'status' => 2
-                ]);
                 $scanComplete = true;
-
             }
 
             DB::commit();

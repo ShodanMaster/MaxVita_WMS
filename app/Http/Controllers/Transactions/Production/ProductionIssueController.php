@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class ProductionIssueController extends Controller
 {
     public function index(){
-        $planNumbers = ProductionPlan::whereNot('status',2)->get(['id', 'plan_number']);
+        $planNumbers = ProductionPlan::where('status',0)->get(['id', 'plan_number']);
         return view('transactions.production.productionissue', compact('planNumbers'));
     }
 

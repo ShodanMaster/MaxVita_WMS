@@ -22,7 +22,7 @@
                 <div class="card-header">
                     <h3 class="card-title">Production Barcode Generation</h3>
                 </div>
-                <form action="{{ route('production-barcode-generation.store') }}", method="POST">
+                <form action="{{ route('production-barcode-generation.store') }}", method="POST" onsubmit="return check()">
                     @csrf
                 <div class="card-body">
                     <div class="form-group row">
@@ -95,13 +95,15 @@
                             </div>
                         </div>
                     </div>
+                        <input type="hidden" id="balance-quantity-input" name="balance-quantity-input">
+
                     <div class="d-flex justify-content-between">
                         <div class="form-inline">
                             <label for="prn" class="control-label">PRN Print</label>
                             <input type="checkbox" name="prn" id="prn" class="custom-class ml-2">
                         </div>
 
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="submit" class="btn btn-primary" onclick="check()">Submit</button>
                     </div>
                 </div>
                 </form>
@@ -153,6 +155,7 @@
                 const fgItem = document.getElementById("fg-item");
                 const totalQuanity = document.getElementById("item-quantity");
                 const balanceQuanity = document.getElementById("balance-quantity");
+                const balanceQuanityInput = document.getElementById("balance-quantity-input");
 
                 if (response) {
                     document.getElementById("planDetails").style.display = "block";
@@ -160,12 +163,28 @@
                     fgItem.innerText = response.fg_item;
                     totalQuanity.innerText = "Total Quantity: " +  response.total_quantity;
                     balanceQuanity.innerText = "Balance Quantity: " +  response.balance_quantity;
+                    balanceQuanityInput.value = response.balance_quantity;
 
                 } else {
                     document.getElementById("planDetails").style.display = "none";
                 }
             }
         });
+    }
+
+    function check(){
+        const balanceQuantityInput = document.getElementById("balance-quantity-input");
+        const numberOfBarcodeInput = document.getElementById("number_of_barcode");
+
+        const balanceQuantity = parseFloat(balanceQuantityInput.value) || 0;
+        const numberOfBarcode = parseFloat(numberOfBarcodeInput.value) || 0;
+
+        if(numberOfBarcode > balanceQuantity){
+            sweetAlertMessage('warning', 'Quantity Exceeded', 'Number of barcode Quantity can not be grater than Balance Quantity');
+            numberOfBarcodeInput.value = '';
+            return false;
+        }
+        return true;
     }
 </script>
 @endpush

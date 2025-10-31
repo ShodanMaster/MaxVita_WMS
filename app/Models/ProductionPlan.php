@@ -16,6 +16,7 @@ class ProductionPlan extends Model
         'plan_date',
         'total_quantity',
         'picked_quantity',
+        'scanned_quantity',
         'item_id',
         'user_id',
         'branch_id',

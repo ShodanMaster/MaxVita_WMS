@@ -22,7 +22,7 @@ return new class extends Migration
             $table->enum('grn_type', ['RM','FG']);
             $table->text('remarks')->nullable();
             $table->foreignId('branch_id')->constrained();
-            $table->integer('status')->default(0)->comment('0=>storage scan not completed; 1=>storage scan in progress; 2=>storage scan completed;');
+            $table->integer('status')->default(0)->comment('0=>storage scan pending; 1=>storage scan completed;');
             $table->softDeletes();
             $table->timestamps();
         });

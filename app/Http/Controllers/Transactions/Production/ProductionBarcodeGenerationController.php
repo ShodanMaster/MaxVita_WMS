@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Barcode;
 use App\Models\Item;
 use App\Models\Location;
+use App\Models\ProductionBarcode;
 use App\Models\ProductionPlan;
 use App\Models\Uom;
 use Exception;
@@ -20,7 +21,7 @@ use RealRashid\SweetAlert\Facades\Alert;
 class ProductionBarcodeGenerationController extends Controller
 {
     public function index(){
-        $planNumbers = ProductionPlan::where('status', 2)->get(['id', 'plan_number']);
+        $planNumbers = ProductionPlan::where('status', 1)->get(['id', 'plan_number']);
         $batch = 'F' . date('ymd');
         $uoms = Uom::wherein('name', ['Bag', 'Box'])->get(['id', 'name']);
         return view('transactions.production.productionbarcodegeneration', compact('planNumbers', 'batch', 'uoms'));
@@ -43,8 +44,18 @@ class ProductionBarcodeGenerationController extends Controller
 
             $balanceQuantity = $productionPlan->total_quantity - $productionPlan->picked_quantity;
 
-            $baseNumberOfBacodes = $request->number_of_barcodes > $balanceQuantity ? $balanceQuantity : $request->number_of_barcodes ;
-            $numberOfBacodes = $baseNumberOfBacodes;
+            if ($request->number_of_barcodes > $balanceQuantity) {
+                // dd('inside');
+            // Alert::toast('FG Barcode(s) has been Generated for ' . $productionPlan->plan_number, 'success')->autoClose(3000);
+
+                Alert::toast('The requested number of barcodes exceeds the remaining quantity.', 'error')->autoClose(3000);
+                return redirect()->route('production-barcode-generation.index');
+                // return redirect()->back();
+            }
+
+            $baseNumberOfBarcodes = $request->number_of_barcodes;
+            $numberOfBacodes = $baseNumberOfBarcodes;
+
             while($numberOfBacodes--){
 
                 $barcodeNumber = BarcodeGenerator::nextNumber($location->prefix);
@@ -75,13 +86,29 @@ class ProductionBarcodeGenerationController extends Controller
                                 'item_name' => $itemName,
                                 'spq_quantity' => $barcodeData[count($barcodeData) - 1]['spq_quantity']
                             ];
+
+                            $productionBarcodeData[] = [
+                                'production_plan_id' => $productionPlan->id,
+                                'barcode' => $barcodeNumber,
+                                'item_id' => $productionPlan->item_id,
+                                'total_quantity' => $productionPlan->total_quantity,
+                                'balance_quantity' => ($productionPlan->total_quantity - $productionPlan->picked_quantity) - 1,
+                                'generated_quantity' => 1,
+                                'date_of_manufacture' => $request->date_of_manufacture,
+                                'best_before_date' => $request->best_before_date,
+                                'uom_id' => $uomId,
+                                'user_id' => $user->id,
+                            ];
             }
+
             // dd($contents);
             if (!empty($barcodeData)) {
                 Barcode::insert($barcodeData);
 
+                ProductionBarcode::insert($productionBarcodeData);
+
                 $productionPlan->update([
-                    'picked_quantity' => $productionPlan->picked_quantity + $baseNumberOfBacodes,
+                    'picked_quantity' => $productionPlan->picked_quantity + $baseNumberOfBarcodes,
                 ]);
 
                 if($productionPlan->picked_quantity >= $productionPlan->total_quantity){
@@ -109,10 +136,5 @@ class ProductionBarcodeGenerationController extends Controller
             return redirect()->route('production-barcode-generation.index');
         }
     }
-    // public function producitonBarcodeGenerate(Request $request){
-    //     if($request->ajax()){
 
-    //     }
-    //     }
-    // }
 }

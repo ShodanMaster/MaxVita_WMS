@@ -105,7 +105,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::resource('dispatch-scan', DispatchScanController::class);
 
         //Receipt
-        Route::resource('receipt', ReceiptScanController::class);
+        Route::resource('receipt-scan', ReceiptScanController::class);
 
         //Reports
         //Purchase Order Reports

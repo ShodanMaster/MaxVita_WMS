@@ -50,7 +50,8 @@
                         <thead>
                             <tr>
                                 <th>FG Item</th>
-                                <th>Quantity</th>
+                                <th>Total Quantity</th>
+                                <th>Scanned Quantity</th>
                             </tr>
                         </thead>
                         <tbody id="grid-container">
@@ -112,7 +113,8 @@
                     const tr = document.createElement("tr");
                     tr.innerHTML = `
                         <td>${response.fg_item ?? ''}</td>
-                        <td>${response.quantity ?? ''}</td>
+                        <td>${response.total_quantity ?? ''}</td>
+                        <td>${response.scanned_quantity ?? 0}</td>
                     `;
                     tbody.appendChild(tr);
                 } else {

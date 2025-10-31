@@ -116,7 +116,7 @@
             timer: autoClose ? 1000 : null,
             timerProgressBar: autoClose
         }).then((result) => {
-            if (result.isConfirmed && redirectUrl) {
+            if (redirectUrl) {
                 window.location.href = redirectUrl;
             }
         });

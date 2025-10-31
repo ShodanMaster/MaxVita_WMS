@@ -66,7 +66,7 @@ class MenuSeeder extends Seeder
             [
                 'title' => 'Receipt',
                 'link' => 'receipt',
-                'icon' => 'truck',
+                'icon' => 'arrow-down',
                 'listing_order' => 6,
                 'created_at' => now(),
             ],

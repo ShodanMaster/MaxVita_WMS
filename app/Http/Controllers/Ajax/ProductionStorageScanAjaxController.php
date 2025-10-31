@@ -14,6 +14,22 @@ use Illuminate\Support\Facades\DB;
 
 class ProductionStorageScanAjaxController extends Controller
 {
+
+    public function fetchfGStorageScanDetails(Request $request){
+        if($request->ajax()){
+
+            $productionPlan = ProductionPlan::with('item')->find($request->id);
+
+            $data = [
+                'fg_item' => $productionPlan->item->item_code . '/' . $productionPlan->item->name,
+                'total_quantity' => $productionPlan->total_quantity,
+                'scanned_quantity' => $productionPlan->scanned_quantity,
+            ];
+
+            return response()->json($data);
+        }
+    }
+
     public function productionStorageScan(Request $request){
         try{
             if($request->ajax()){
@@ -64,8 +80,7 @@ class ProductionStorageScanAjaxController extends Controller
                     ]);
                 }
 
-                // dd($productionPlan->total_quantity, $productionPlan->picked_quantity);
-                if($productionPlan->total_quantity < $productionPlan->picked_quantity){
+                if($productionPlan->total_quantity < $productionPlan->scanned_quantity){
                     return response()->json([
                         'status' => 422,
                         'message' => 'Storage Quantity Exceeded!'
@@ -97,14 +112,14 @@ class ProductionStorageScanAjaxController extends Controller
                     'item_id' => $barcode->item_id,
                     'production_plan_id' => $productionPlan->id,
                     'bin_id' => $bin->id,
-                    'picked_quantity' => 1,
+                    'scanned_quantity' => 1,
                     'net_weight' => $weight,
                     'spq_quantity' => $barcode->spq_quantity,
                     'user_id' => $user->id,
                 ]);
 
                 $productionPlan->update([
-                    'picked_quantity' => $productionPlan->picked_quantity + 1,
+                    'scanned_quantity' => $productionPlan->scanned_quantity + 1,
                 ]);
 
                 $productionPlanUpdated = ProductionPlan::where('id', $request->production_plan_id)
@@ -112,7 +127,7 @@ class ProductionStorageScanAjaxController extends Controller
                                     ->whereNot('status', 1)
                                     ->first();
 
-                if($productionPlanUpdated->picked_quantity == $productionPlanUpdated->total_quantity){
+                if($productionPlanUpdated->scanned_quantity == $productionPlanUpdated->total_quantity){
                     $productionPlanUpdated->update(['status' => 1]);
                 }
 
