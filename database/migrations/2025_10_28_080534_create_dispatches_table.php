@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('driver_phone')->nullable();
             $table->string('vehicle_number')->nullable();
             $table->foreignId('user_id')->constrained();
-            $table->integer('status')->default(0)->comment("0 => prnding, 1 => closed, 3 => canceled");
+            $table->integer('status')->default(0)->comment("0 => pending, 1 => closed, 3 => canceled");
             $table->timestamps();
         });
     }

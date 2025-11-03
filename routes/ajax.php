@@ -7,6 +7,7 @@ use App\Http\Controllers\Ajax\GrnAjaxController;
 use App\Http\Controllers\Ajax\ProductionIssueAjaxController;
 use App\Http\Controllers\Ajax\ProductionStorageScanAjaxController;
 use App\Http\Controllers\Ajax\PurchaseOrderAjaxController;
+use App\Http\Controllers\Ajax\ReceiptAjaxController;
 use App\Http\Controllers\Ajax\StorageScanAjaxController;
 use Illuminate\Support\Facades\Route;
 
@@ -50,5 +51,11 @@ Route::prefix('ajax')
         Route::post('get-dispatch-details', [DispatchAjaxController::class, 'getDispatchDetails'])->name('get-dispatch-details');
         Route::post('fetch-dispatch-details', [DispatchAjaxController::class, 'fetchDispatchDetails'])->name('fetch-dispatch-details');
         Route::post('dispatch-scan', [DispatchAjaxController::class, 'dispatchScan'])->name('dispatchscan');
+
+        // Receipt Scan Ajax Functions
+        Route::post('receipt-scan', [ReceiptAjaxController::class, 'receiptScan'])->name('receipt-scan');
+        Route::post('fetch-receipt-scan-details', [ReceiptAjaxController::class, 'fetchReceiptScanDetails'])->name('fetch-receipt-scan-details');
+
+
 
     });

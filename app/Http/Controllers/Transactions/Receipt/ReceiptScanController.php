@@ -17,4 +17,14 @@ class ReceiptScanController extends Controller
                         ->get(['id', 'dispatch_number']);
         return view('transactions.receipt.index', compact('dispatchNumbers'));
     }
+
+    public function store(Request $request){
+        return redirect()->route('receipt-scan.show', $request->dispatch_number);
+    }
+
+    public function show($id){
+        $dispatch = Dispatch::with('dispatchSubs.item')->where('id', $id)->first(['dispatch_number']);
+        return view('transactions.receipt.scan', compact('id', 'dispatch'));
+    }
+
 }

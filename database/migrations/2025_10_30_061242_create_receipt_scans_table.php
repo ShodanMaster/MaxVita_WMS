@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('barcode');
             $table->foreignId('item_id')->constrained();
             $table->foreignId('bin_id')->constrained();
-            $table->decimal('recieved_quantity', 11, 4);
+            $table->decimal('scanned_quantity', 11, 4);
             $table->foreignId('uom_id')->constrained();
             $table->dateTime('scan_time')->useCurrent();
             $table->foreignId('user_id')->constrained();
