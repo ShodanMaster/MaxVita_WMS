@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('items', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('category_id')->constrained()->onDelete('restrict');
-            $table->foreignId('sub_category_id')->nullable()->constrained()->onDelete('restrict');
-            $table->foreignId('uom_id')->nullable()->constrained()->onDelete('restrict');
+            $table->foreignId('category_id')->constrained()->onDelete('cascade');
+            $table->foreignId('sub_category_id')->nullable()->constrained()->onDelete('cascade');
+            $table->foreignId('uom_id')->nullable()->constrained()->onDelete('cascade');
             $table->string('name')->unique();
             $table->string('item_code')->unique();
             $table->integer('in_stock')->nullable();

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('bins', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('location_id')->constrained('locations')->onDelete('restrict');
+            $table->foreignId('location_id')->constrained('locations')->onDelete('cascade');
             $table->string('name')->unique();
             $table->string('bin_code')->unique();
             $table->enum('bin_type', ['FG', 'RM']);
