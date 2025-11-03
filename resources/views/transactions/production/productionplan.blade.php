@@ -19,11 +19,10 @@
 
 @section('content')
 @include('sweetalert::alert')
-@include('messages')
-
-<div class="container">
-    <div class="row">
-        <div class="col-md-12 grid-margin">
+<div class="content-header">
+    @include('messages')
+    <section class="content">
+        <div class="container-fluid">
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
                     <h5 class="card-title">
@@ -180,7 +179,7 @@
 
             </div>
         </div>
-    </div>
+    </section>
 </div>
 
 <!-- Modal for Excel Upload -->

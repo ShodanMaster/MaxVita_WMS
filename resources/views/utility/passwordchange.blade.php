@@ -15,66 +15,69 @@
 @section('content')
 @include('sweetalert::alert')
 @include('messages')
-<section>
-    <form action="{{ route('change-password.store') }}" method="POST" class="form-horizontal validate" autocomplete="off">
-        @csrf
+<div class="content-header">
+    @include('messages')
+    <section class="content">
         <div class="container-fluid">
             <div class="card">
                 <div class="card-header">
-                    <h6 class="card-title">User Permission</h6>
-                    <div class="row">
-                        <div class="col-md-12 mb-3">
-                            <label for="currentPassword" class="col-sm-4 control-label">
-                                Current Password <font color="#FF0000">*</font>
-                            </label>
-                            <input
-                                type="password"
-                                name="currentPassword"
-                                id="currentPassword"
-                                class="form-control form-control-sm"
-                                required
-                            >
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <div class="form-group">
-                                <label for="password" class="col-sm-4 control-label">
-                                    Password <font color="#FF0000">*</font>
+                    <h6 class="card-title">Change Password</h6>
+                    <form action="{{ route('change-password.store') }}" method="POST" class="form-horizontal validate" autocomplete="off">
+                        @csrf
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <label for="currentPassword" class="col-sm-4 control-label">
+                                    Current Password <font color="#FF0000">*</font>
                                 </label>
                                 <input
                                     type="password"
-                                    name="password"
-                                    id="password"
+                                    name="currentPassword"
+                                    id="currentPassword"
                                     class="form-control form-control-sm"
                                     required
                                 >
                             </div>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <div class="form-group">
-                                <label for="permission_level" class="col-sm-4 control-label">
-                                    Confirm Password <font color="#FF0000">*</font>
-                                </label>
-                                <input
-                                    type="password"
-                                    name="password_confirmation"
-                                    id="password_confirmation"
-                                    class="form-control form-control-sm"
-                                    required
-                                >
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="form-group">
+                                    <label for="password" class="col-sm-4 control-label">
+                                        Password <font color="#FF0000">*</font>
+                                    </label>
+                                    <input
+                                        type="password"
+                                        name="password"
+                                        id="password"
+                                        class="form-control form-control-sm"
+                                        required
+                                    >
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="form-group">
+                                    <label for="permission_level" class="col-sm-4 control-label">
+                                        Confirm Password <font color="#FF0000">*</font>
+                                    </label>
+                                    <input
+                                        type="password"
+                                        name="password_confirmation"
+                                        id="password_confirmation"
+                                        class="form-control form-control-sm"
+                                        required
+                                    >
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <button type="submit" class="btn btn-primary">Save</button>
-                    <button type="reset" class="btn btn-default" onclick="resetall()">Cancel</button>
+                        <div class="card-body">
+                            <button type="submit" class="btn btn-primary">Save</button>
+                            <button type="reset" class="btn btn-default" onclick="resetall()">Cancel</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
-    </form>
-</section>
+    </section>
+</div>
 @endsection
 @push('plugin-scripts')
 <script src="{{ asset('assets/plugins/jquery-validation/jquery.validate.min.js') }}"></script>

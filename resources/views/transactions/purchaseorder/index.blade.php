@@ -19,11 +19,10 @@
 
 @section('content')
 @include('sweetalert::alert')
-@include('messages')
-
-<div class="container">
-    <div class="row">
-        <div class="col-md-12 grid-margin">
+<div class="content-header">
+    @include('messages')
+    <section class="content">
+        <div class="container-fluid">
             <div class="card">
                 <div class="card-body">
                     <div class="d-flex justify-content-between">
@@ -191,7 +190,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 </div>
 
 <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">

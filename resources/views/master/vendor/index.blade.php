@@ -14,52 +14,60 @@
 
 @section('content')
 @include('sweetalert::alert')
-<div class="card">
-    <div class="card-body">
-        <h6 class="card-title">Vendor Master</h6>
-        @include('messages')
-        <div class="row">
-            <div class="col-md-12 text-right">
-                <a class="btn " href="{{route('vendr.create')}}"> Add vendor
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" data-toggle="tooltip" data-placement="bottom" title="Add Vendor" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-toggle="tooltip" data-placement="bottom" title="Add Product" class="feather feather-plus-circle text-primary">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <line x1="12" y1="8" x2="12" y2="16">
+<div class="content-header">
+    @include('messages')
+    <section class="content">
+        <div class="container-fluid">
+            <div class="card">
+                <div class="card-body">
+                    <h6 class="card-title">Vendor Master</h6>
+                    @include('messages')
+                    <div class="row">
+                        <div class="col-md-12 text-right">
+                            <a class="btn " href="{{route('vendr.create')}}"> Add vendor
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" data-toggle="tooltip" data-placement="bottom" title="Add Vendor" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-toggle="tooltip" data-placement="bottom" title="Add Product" class="feather feather-plus-circle text-primary">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="12" y1="8" x2="12" y2="16">
 
-                        </line>
-                        <line x1="8" y1="12" x2="16" y2="12"></line>
-                    </svg>
-                </a>
+                                    </line>
+                                    <line x1="8" y1="12" x2="16" y2="12"></line>
+                                </svg>
+                            </a>
 
-                <!-- Button trigger modal -->
-                <button type="button" class="btn" data-toggle="modal" data-target="#uploadModal">
-                    <i data-feather="upload" class="text-primary" style="font-size: 24px;"></i><b> Upload </b>
-                </button>
+                            <!-- Button trigger modal -->
+                            <button type="button" class="btn" data-toggle="modal" data-target="#uploadModal">
+                                <i data-feather="upload" class="text-primary" style="font-size: 24px;"></i><b> Upload </b>
+                            </button>
 
-                <a href="{{ route("vendor-excel-export")}}" class="btn " data-toggle="tooltip" data-placement="bottom" title="Export Excel" type="button"><i class="mdi mdi-file-excel text-primary" style="font-size: 24px;"></i><b> Export </b> </a>
+                            <a href="{{ route("vendor-excel-export")}}" class="btn " data-toggle="tooltip" data-placement="bottom" title="Export Excel" type="button"><i class="mdi mdi-file-excel text-primary" style="font-size: 24px;"></i><b> Export </b> </a>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table id="vendorsTable" class="table">
+                            <thead>
+                                <tr>
+                                    <th align="center" style="width:80px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SI.No</th>
+                                    <th>Vendor Name</th>
+                                    <th>Vendor Code</th>
+                                    <th>Location</th>
+                                    <th>Address</th>
+                                    <th>City</th>
+                                    <th>State</th>
+                                    <th>Zip Code</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
-
-        <div class="table-responsive">
-            <table id="vendorsTable" class="table">
-                <thead>
-                    <tr>
-                        <th align="center" style="width:80px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SI.No</th>
-                        <th>Vendor Name</th>
-                        <th>Vendor Code</th>
-                        <th>Location</th>
-                        <th>Address</th>
-                        <th>City</th>
-                        <th>State</th>
-                        <th>Zip Code</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
-        </div>
-    </div>
+    </section>
 </div>
+
 
 <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">

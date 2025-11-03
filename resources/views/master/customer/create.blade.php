@@ -21,10 +21,10 @@
 
 @endpush
 @section('content')
-@include('messages')
-<div class="container">
-    <div class="row">
-        <div class="col-md-12 grid-margin">
+<div class="content-header">
+    @include('messages')
+    <section class="content">
+        <div class="container-fluid">
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">
@@ -147,7 +147,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 </div>
 
 

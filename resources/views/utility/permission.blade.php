@@ -14,49 +14,52 @@
 
 @section('content')
 @include('sweetalert::alert')
-@include('messages')
-<section class="content">
-    <form action="{{ route('permission.store') }}" method="POST" class="form-horizontal validate" autocomplete="off">
-        @csrf
+<div class="content-header">
+    @include('messages')
+    <section class="content">
         <div class="container-fluid">
             <div class="card">
                 <div class="card-header">
                     <h6 class="card-title">User Permission</h6>
-                    <div class="col-sm-6">
-                        <div class="card-body">
-                            <div class="row">
-                                <label for="user_id" class="col-sm-4 control-label">
-                                    User Name <font color="#FF0000">*</font>
-                                </label>
-                                <div class="col-sm-8">
-                                    <select name="user_id" id="user_id" class="form-control select2">
-                                        <option value="">--select--</option>
-                                        @forelse ($users as $user)
-                                            <option value="{{ $user->id }}" {{ $user->id == auth()->id() ? 'selected' : '' }}>
-                                                {{ $user->name }}
-                                            </option>
-                                        @empty
-                                            <option value="" disabled>No Users Found</option>
-                                        @endforelse
-                                    </select>
+                    <form action="{{ route('permission.store') }}" method="POST" class="form-horizontal validate" autocomplete="off">
+                        @csrf
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <label for="user_id" class="col-sm-4 control-label">
+                                            User Name <font color="#FF0000">*</font>
+                                        </label>
+                                        <div class="col-sm-8">
+                                            <select name="user_id" id="user_id" class="form-control select2">
+                                                <option value="">--select--</option>
+                                                @forelse ($users as $user)
+                                                    <option value="{{ $user->id }}" {{ $user->id == auth()->id() ? 'selected' : '' }}>
+                                                        {{ $user->name }}
+                                                    </option>
+                                                @empty
+                                                    <option value="" disabled>No Users Found</option>
+                                                @endforelse
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
 
-                <!-- Placeholder for permission checkboxes or other content -->
-                <div class="row m-auto" id="permissioncheck"></div>
+                        <!-- Placeholder for permission checkboxes or other content -->
+                        <div class="row m-auto" id="permissioncheck"></div>
 
-                <div class="card-body">
-                    <button type="submit" class="btn btn-primary">Save</button>
-                    <button type="reset" class="btn btn-default" onclick="resetall()">Cancel</button>
+                        <div class="card-body">
+                            <button type="submit" class="btn btn-primary">Save</button>
+                            <button type="reset" class="btn btn-default" onclick="resetall()">Cancel</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
-    </form>
-
-</section>
+    </section>
+</div>
 <script>
     $(function () {
 

@@ -17,12 +17,10 @@
     }
 </style>
 
-@section('content')
-@include('messages')
-<div class="container">
-    <div class="row">
-        <div class="col-md-12 grid-margin">
-            <div class="card">
+<div class="content-header">
+    @include('messages')
+    <section class="content">
+        <div class="container-fluid">
                 <div class="card-body">
                     <h5 class="card-title">
                         @if (isset($brand))
@@ -72,7 +70,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 </div>
 @endsection
 
