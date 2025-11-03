@@ -18,7 +18,9 @@ class ReceiptAjaxController extends Controller
         if($request->ajax()){
 
             $user = Auth::user();
-            $barcode = Barcode::where('serial_number', $request->barcode)->where('transaction_type', 2)->first();
+            $barcode = Barcode::where('serial_number', $request->barcode)
+                        ->where('transaction_type', 2)->first();
+
             $receiptScan = ReceiptScan::where('barcode', $request->barcode)->exists();
 
             if($receiptScan){

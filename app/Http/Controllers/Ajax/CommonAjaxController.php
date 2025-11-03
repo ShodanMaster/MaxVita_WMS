@@ -54,7 +54,10 @@ class CommonAjaxController extends Controller
 
     public function itemInStock(Request $request){
         if($request->ajax()){
-            $itemCount = Barcode::where('item_id', $request->item_id)->where('status', '1')->count();
+            $itemCount = Barcode::where('item_id', $request->item_id)
+                    ->where('status', '1')
+                    ->sum('grn_net_weight');
+
 
             $data = [];
             if($itemCount > 0){

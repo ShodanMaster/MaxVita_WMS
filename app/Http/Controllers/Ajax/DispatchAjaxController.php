@@ -59,7 +59,9 @@ class DispatchAjaxController extends Controller
         if($request->ajax()){
 
             $user = Auth::user();
-            $barcode = Barcode::where('serial_number', $request->barcode)->first();
+            $barcode = Barcode::where('serial_number', $request->barcode)
+                        ->where('location_id', $user->location_id)
+                        ->first();
 
             if(!$barcode){
                 return response()->json([

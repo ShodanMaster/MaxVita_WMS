@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class DispatchScanController extends Controller
 {
     public function index(){
-        $dispatchNumbers = Dispatch::whereNot('status', 2)->get(['id', 'dispatch_number']);
+        $dispatchNumbers = Dispatch::where('status', 0)->get(['id', 'dispatch_number']);
         return view('transactions.dispatch.dispatchscanindex', compact('dispatchNumbers'));
     }
 
