@@ -77,7 +77,7 @@
     <!-- end common js -->
 
     <script>
-    //   $(document).ready(function() {
+    $(document).ready(function() {
     //     $.ajax({
     //         headers: {
     //                     'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
@@ -93,11 +93,11 @@
     //         }
     //     });
 
-    //     const today = new Date().toISOString().split('T')[0];
-    //     document.querySelectorAll('.date-field').forEach(function(input) {
-    //         input.setAttribute('min', today);
-    //     });
-    // });
+        const today = new Date().toISOString().split('T')[0];
+        document.querySelectorAll('.expiry-date').forEach(function(input) {
+            input.setAttribute('min', today);
+        });
+    });
 
     $.ajaxSetup({
         headers: {

@@ -31,7 +31,7 @@
                             </label>
                             <div class="col-sm-8">
                                 <select name="dispatch_number" id="dispatch_number" class="form-control form-control-sm select2" required onchange="fetchDispatchDetails()">
-                                    <option value="" disabled selected>--Select Grn Number--</option>
+                                    <option value="" disabled selected>--Select Dispatch Number--</option>
                                     @forelse ($dispatchNumbers as $dispatchNumber)
                                         <option value="{{ $dispatchNumber->id }}">{{ $dispatchNumber->dispatch_number }}</option>
                                     @empty

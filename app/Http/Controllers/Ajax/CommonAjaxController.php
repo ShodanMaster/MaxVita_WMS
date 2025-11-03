@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Ajax;
 
 use App\Http\Controllers\Controller;
+use App\Models\Barcode;
 use App\Models\Bin;
 use App\Models\Item;
 use Illuminate\Http\Request;
@@ -48,6 +49,27 @@ class CommonAjaxController extends Controller
                 'status' => 404,
                 'message' => 'Bin Does Not Exists!'
             ]);
+        }
+    }
+
+    public function itemInStock(Request $request){
+        if($request->ajax()){
+            $itemCount = Barcode::where('item_id', $request->item_id)->where('status', '1')->count();
+
+            $data = [];
+            if($itemCount > 0){
+                $data = [
+                    'in_stock' => true,
+                    'count' => $itemCount
+                ];
+            }else{
+                $data = [
+                    'in_stock' => false,
+                    'count' => $itemCount
+                ];
+            }
+
+            return response()->json($data);
         }
     }
 }

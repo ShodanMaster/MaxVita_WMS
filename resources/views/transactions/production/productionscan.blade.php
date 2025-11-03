@@ -239,7 +239,7 @@
                         sweetAlertMessage('success', 'Scanned Successfully', response.message);
                         messageCell.css('color', 'green');
                     } else {
-                        sweetAlertMessage('success', 'Scanned Successfully', response.message);
+                        sweetAlertMessage('warning', 'Scan Unsuccessful', response.message);
                         messageCell.css('color', 'red');
                     }
 

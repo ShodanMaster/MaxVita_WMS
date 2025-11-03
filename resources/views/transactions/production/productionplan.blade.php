@@ -127,7 +127,9 @@
                                             @endforelse
                                         </select>
                                     </div>
-                                    <b><span id="item-uom" style="display: none" class="text-danger"></span></b>
+                                    <div id="item-details" style="display: none">
+                                        <b><span id="item-uom" class="text-danger"></span><span id="item-stock" class="text-danger"></span></b>
+                                    </div>
                                 </div>
 
                                 <div class="col-md-6 mb-3">
@@ -240,19 +242,41 @@
         // Initialize select2
         $('.select2').select2();
 
-        function getItemUOM(){
-            var itemId = $('#rmItem').val();
+        async function getInStock(itemId) {
+            return $.ajax({
+                type: "POST",
+                url: "{{ route('ajax.item-in-stock') }}",
+                data: { item_id: itemId },
+                dataType: "json"
+            });
+        }
+
+        async function getItemUOM() {
+            const itemId = $('#rmItem').val();
 
             $.ajax({
                 type: "POST",
-                url: "{{route('ajax.getitemuom')}}",
-                data: {
-                    item_id : itemId
-                },
+                url: "{{ route('ajax.getitemuom') }}",
+                data: { item_id: itemId },
                 dataType: "json",
-                success: function (response) {
+                success: async function (response) {
                     if (response) {
-                        $('#item-uom').text("Item UOM: " + response.uom_name).show();
+                        $('#item-details').show();
+                        $('#item-uom').text("Item UOM: " + response.uom_name + " | ");
+
+                        const inStock = await getInStock(itemId);
+
+                        if (inStock.in_stock) {
+                            $('#item-stock')
+                                .removeClass("text-danger")
+                                .addClass("text-success")
+                                .text("In Stock: " + inStock.count);
+                        } else {
+                            $('#item-stock')
+                                .removeClass("text-success")
+                                .addClass("text-danger")
+                                .text("Out Of Stock");
+                        }
                     }
                 }
             });

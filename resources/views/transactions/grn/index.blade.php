@@ -236,7 +236,7 @@
                                     <div class="form-group row">
                                         <label for="best_before_value" class="col-sm-4 control-label">Best Before <font color="#FF0000">*</font></label>
                                         <div class="col-sm-8">
-                                            <input type="date" id="best_before_value" class="form-control form-control-sm mandatory date-field" />
+                                            <input type="date" id="best_before_value" class="form-control form-control-sm mandatory expiry-date" />
                                         </div>
                                     </div>
                                 </div>
@@ -649,7 +649,7 @@
             sweetAlertMessage('warning', 'Already Exists', 'Item already added!');
             return;
         }
-        
+
         // Check PO quantity exceeds limit logic
         let totalPoQty = 0;
         $('#grngridbody tr').each(function() {
