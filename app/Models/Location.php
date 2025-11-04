@@ -29,6 +29,6 @@ class Location extends Model
     }
 
     public function dispatches(){
-        return $this->morphMany(Dipatch::class, 'dispatch_to');
+        return $this->morphMany(Dispatch::class, 'dispatch_to');
     }
 }

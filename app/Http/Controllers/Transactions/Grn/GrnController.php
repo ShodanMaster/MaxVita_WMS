@@ -91,10 +91,12 @@ class GrnController extends Controller
                         ->where('status', '0')
                         ->first();
 
-                    $purchaseOrderSubUpdates[] = [
-                        'id' => $purchaseOrderSub->id,
-                        'picked_quantity' => $purchaseOrderSub->picked_quantity + $item["total_quantity"]
-                    ];
+                    if ($purchaseOrderSub) {
+                        $purchaseOrderSubUpdates[] = [
+                            'id' => $purchaseOrderSub->id,
+                            'picked_quantity' => $purchaseOrderSub->picked_quantity + $item["total_quantity"]
+                        ];
+                    }
                 }
 
                 $grnSubData[] = [
@@ -167,11 +169,6 @@ class GrnController extends Controller
                         'spq_quantity' => $quantityPerBarcode
                     ];
                 }
-
-                if ($purchaseOrderExists) {
-                    $lastIndex = count($purchaseOrderSubUpdates) - 1;
-                    $purchaseOrderSubUpdates[$lastIndex]['status'] = 1;
-                }
             }
             // dd($barcodeData);
             // dd($grnSubData, $grnPurchaseOrderSubData, $barcodeData);
@@ -191,18 +188,27 @@ class GrnController extends Controller
             // dd($purchaseOrderSubUpdates);
             if (!empty($purchaseOrderSubUpdates)) {
                 foreach ($purchaseOrderSubUpdates as $updateData) {
+
                     PurchaseOrderSub::where('id', $updateData['id'])->update([
-                        'picked_quantity' => $updateData['picked_quantity'],
-                        'status' => $updateData['status'],
+                        'picked_quantity' => $updateData['picked_quantity']
                     ]);
+
+                    // Re-fetch the record to verify if it's now fully picked
+                    $updatedSub = PurchaseOrderSub::find($updateData['id']);
+
+                    if ($updatedSub->picked_quantity >= $updatedSub->quantity) {
+                        $updatedSub->update(['status' => 1]);
+                    }
                 }
             }
 
-            if($purchaseOrderExists){
-                $dataCheck = PurchaseOrderSub::where('purchase_order_id', $purchaseOrderExists->id)->where('status', '0')->count();
-                // dd($dataCheck);
-                if ($dataCheck == 0) {
+            if ($purchaseOrderExists) {
+                $dataCheck = PurchaseOrderSub::where('purchase_order_id', $purchaseOrderExists->id)
+                    ->where('status', '0')
+                    ->count();
 
+                if ($dataCheck == 0) {
+                    // If there are no PurchaseOrderSub with status 0, update the PurchaseOrder status to 1
                     PurchaseOrder::where('id', $purchaseOrderExists->id)
                         ->where('status', "0")
                         ->update(['status' => '1']);
