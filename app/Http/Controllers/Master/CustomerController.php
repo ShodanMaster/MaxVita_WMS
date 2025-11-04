@@ -183,7 +183,7 @@ class CustomerController extends Controller
             Alert::toast('Customer Excel file imported successfully.', 'success')->autoClose(3000);
             return redirect()->route('customer.index');
         } catch (Exception $e) {
-            dd($e);
+            // dd($e);
             Log::error('Customer Excel Import Error: ' . $e->getMessage());
             Alert::toast('An error occurred while customer excel importing.', 'error')->autoClose(3000);
             $errors = $e->validator->errors();

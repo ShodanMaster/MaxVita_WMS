@@ -21,7 +21,6 @@
             <div class="card">
                 <div class="card-body">
                     <h6 class="card-title">Customer Master</h6>
-                    @include('messages')
                     <div class="row">
                         <div class="col-md-12 text-right">
                             <a class="btn " href="{{route('customer.create')}}"> Add Customer
