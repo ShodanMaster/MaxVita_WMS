@@ -259,8 +259,9 @@ class ItemController extends Controller
         } catch(Exception $e){
             dd($e);
             Log::error('Item Excel Import Error: ' . $e->getMessage());
-            Alert::toast('An error occurred while item excel importin: .'. $e->getMessage(), 'error')->autoClose(3000);
-            return redirect()->route('item.index');
+            Alert::toast('An error occurred while item excel importing', 'error')->autoClose(3000);
+            $errors = $e->validator->errors();
+            return redirect()->route('item.index')->withErrors($errors);
         }
     }
 }

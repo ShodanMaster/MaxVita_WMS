@@ -198,7 +198,8 @@ class VendorController extends Controller
             dd($e);
             Log::error('Vendor Excel Import Error: ' . $e->getMessage());
             Alert::toast('An error occurred while vendor excel importing.', 'error')->autoClose(3000);
-            return redirect()->route('vendr.index');
+            $errors = $e->validator->errors();
+            return redirect()->route('vendr.index')->withErrors($errors);
         }
     }
 }

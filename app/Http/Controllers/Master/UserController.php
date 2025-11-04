@@ -207,7 +207,8 @@ class UserController extends Controller
              dd($e);
             Log::error('User Excel Uplaod Error: ' . $e->getMessage());
             Alert::toast('An error occurred while users to Excel uplaod.', 'error')->autoClose(3000);
-            return redirect()->route('user.index');
+            $errors = $e->validator->errors();
+            return redirect()->route('user.index')->withErrors($errors);
         }
     }
 }

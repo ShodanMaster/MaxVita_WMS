@@ -206,8 +206,9 @@ class BranchController extends Controller
         } catch(Exception $e){
             // dd($e);
             Log::error('Branch Excel Import Error: ' . $e->getMessage());
-            Alert::toast('An error occurred while branch excel importin: .'. $e->getMessage(), 'error')->autoClose(3000);
-            return redirect()->route('branch.index');
+            Alert::toast('An error occurred while branch excel importing', 'error')->autoClose(3000);
+            $errors = $e->validator->errors();
+            return redirect()->route('branch.index')->withErrors($errors);
         }
     }
 

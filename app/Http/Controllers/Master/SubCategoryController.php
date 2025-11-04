@@ -193,7 +193,8 @@ class SubCategoryController extends Controller
             dd($e);
             Log::error('Subcategory Excel Import Error: ' . $e->getMessage());
             Alert::toast('An error occurred while Subcategory excel importing.', 'error')->autoClose(3000);
-            return redirect()->route('sub-category.index');
+            $errors = $e->validator->errors();
+            return redirect()->route('sub-category.index')->withErrors($errors);
         }
     }
 

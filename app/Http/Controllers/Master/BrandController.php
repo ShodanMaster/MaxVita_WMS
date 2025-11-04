@@ -159,8 +159,9 @@ class BrandController extends Controller
         } catch(Exception $e){
             // dd($e);
             Log::error('Brand Excel Import Error: ' . $e->getMessage());
-            Alert::toast('An error occurred while brand excel importin: .'. $e->getMessage(), 'error')->autoClose(3000);
-            return redirect()->route('brand.index');
+            Alert::toast('An error occurred while brand excel importing', 'error')->autoClose(3000);
+            $errors = $e->validator->errors();
+            return redirect()->route('brand.index')->withErrors($errors);
         }
     }
 }

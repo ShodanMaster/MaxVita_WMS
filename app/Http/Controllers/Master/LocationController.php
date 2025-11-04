@@ -221,8 +221,9 @@ class LocationController extends Controller
         {
             dd($e);
             Log::error('Location Excel Import Error: ' . $e->getMessage());
-            Alert::toast('An error occurred while location excel importing: .'. $e->getMessage(), 'error')->autoClose(3000);
-            return redirect()->route('location.index');
+            Alert::toast('An error occurred while location excel importing', 'error')->autoClose(3000);
+            $errors = $e->validator->errors();
+            return redirect()->route('location.index')->withErrors($errors);
         }
     }
 }

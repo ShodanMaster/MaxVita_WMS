@@ -179,7 +179,8 @@ class CategoryController extends Controller
             dd($e);
             Log::error('Category Excel Import Error: ' . $e->getMessage());
             Alert::toast('An error occurred while bin excel importing.', 'error')->autoClose(3000);
-            return redirect()->route('category.index');
+            $errors = $e->validator->errors();
+            return redirect()->route('category.index')->withErrors($errors);
         }
     }
 }

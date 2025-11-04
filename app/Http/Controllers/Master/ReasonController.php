@@ -171,8 +171,9 @@ class ReasonController extends Controller
         } catch(Exception $e){
             // dd($e);
             Log::error('reason Excel Import Error: ' . $e->getMessage());
-            Alert::toast('An error occurred while reason excel importin: .'. $e->getMessage(), 'error')->autoClose(3000);
-            return redirect()->route('reason.index');
+            Alert::toast('An error occurred while reason excel importing', 'error')->autoClose(3000);
+            $errors = $e->validator->errors();
+            return redirect()->route('reason.index')->withErrors($errors);
         }
     }
 }

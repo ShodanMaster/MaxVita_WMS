@@ -177,7 +177,8 @@ class UomController extends Controller
             dd($e);
             Log::error('Uom Excel Import Error: ' . $e->getMessage());
             Alert::toast('An error occurred while uom excel importing.', 'error')->autoClose(3000);
-            return redirect()->route('uom.index');
+            $errors = $e->validator->errors();
+            return redirect()->route('uom.index')->withErrors($errors);
         }
     }
 }
