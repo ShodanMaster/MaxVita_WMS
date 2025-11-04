@@ -6,7 +6,7 @@ $(function() {
       rules: {
         branch: {
           required: true,
-          
+
         },
         customer: {
           required: true,
@@ -14,7 +14,7 @@ $(function() {
         },
         category: {
           required: true,
-          
+
         },
         serial_no: {
           required: true,
@@ -22,15 +22,15 @@ $(function() {
         },
         qc_type: {
           required: true,
-          
+
         },
-        grn_no: {
+        grn_number: {
           required: true,
-          
+
         },
         contact_no: {
           required: true,
-          
+
         },
         problem: {
           required: true,
@@ -38,7 +38,7 @@ $(function() {
         },
         grn_id: {
           required: true,
-          
+
         },
         agree: "required"
       },
@@ -53,7 +53,7 @@ $(function() {
         },
         category: {
           required: "Please select a category",
-         
+
         },
         qc_type: {
           required: "Please select any  Qc type",
@@ -65,7 +65,7 @@ $(function() {
           required: "Please enter valid serial number",
           minlength: "serial no must consist of at least 3 characters"
         },
-        grn_no: {
+        grn_number: {
           required: "Please select a GRN Number "
         },
         contact_name: {
@@ -92,14 +92,14 @@ $(function() {
 $(function() {
   'use strict';
 
-  
+
   $(function() {
     // validate signup form on keyup and submit
     $("#addcustomer").validate({
       rules: {
         branch_1: {
           required: true,
-          
+
         },
         cname: {
           required: true,
@@ -108,12 +108,12 @@ $(function() {
         },
         address: {
           required: true
-          
+
         },
         cntperson: {
           required: true,
           minlength: 5
-          
+
         },
         mobile: {
           required: true,
@@ -149,4 +149,4 @@ $(function() {
       }
     });
   });
-}); 
+});

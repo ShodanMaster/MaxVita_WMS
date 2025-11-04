@@ -14,6 +14,7 @@ use App\Http\Controllers\Master\SubCategoryController;
 use App\Http\Controllers\Master\UomController;
 use App\Http\Controllers\Master\UserController;
 use App\Http\Controllers\Master\VendorController;
+use App\Http\Controllers\Reports\GrnReportController;
 use App\Http\Controllers\Reports\PurchaseOrderReportController;
 use App\Http\Controllers\Transactions\Dispatch\DispatchController;
 use App\Http\Controllers\Transactions\Dispatch\DispatchScanController;
@@ -110,6 +111,9 @@ Route::group(['middleware' => ['auth']], function () {
         //Reports
         //Purchase Order Reports
         Route::resource('purchase-order-report', PurchaseOrderReportController::class);
+
+        //GRN Reports
+        Route::resource('grn-report', GrnReportController::class);
 
         // Utitlity
 
@@ -208,6 +212,22 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('get-purchase-orders', [PurchaseOrderReportController::class, 'getPurchaseOrders'])->name('get-purchase-orders');
     Route::post('get-purchase-detailed', [PurchaseOrderReportController::class, 'getPurchaseDetailed'])->name('get-purchase-detailed');
     Route::get('purchase-order-report/{id}', [PurchaseOrderReportController::class, 'show']) ->name('purchase-order-report.show');
+
+    //GRN Reports
+    //Grn Report
+    Route::post('get-grn-summary', [GrnReportController::class, 'getGrnSummary'])->name('get-grn-summary');
+    // For Item-wise details
+    Route::get('grn-report/itemwise/{id}/{item_id}', [GrnReportController::class, 'itemwise'])
+        ->name('grn-report.itemwise');
+
+    // For PO-wise details
+    Route::get('grn-report/powise/{id}/{item_id}', [GrnReportController::class, 'poWise'])
+        ->name('grn-report.powise');
+
+    Route::post('get-grn-po', [GrnReportController::class, 'getGrnPo'])->name('get-grn-po');
+    Route::post('get-grn-itemwise', [GrnReportController::class, 'grnItemWise'])->name('get-grn-itemwise');
+
+    Route::post('get-grn-detailed', [GrnReportController::class, 'grnDetailed'])->name('get-grn-detailed');
 
     // Utitlity
 

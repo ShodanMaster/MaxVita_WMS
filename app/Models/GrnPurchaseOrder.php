@@ -13,4 +13,15 @@ class GrnPurchaseOrder extends Model
         'grn_id',
         'user_id',
     ];
+
+    public function grn()
+    {
+        return $this->belongsTo(Grn::class, 'grn_id');
+    }
+
+
+    public function grnWithPosubs()
+    {
+        return $this->hasMany(GrnPurchaseOrderSub::class, 'grn_with_po_id');
+    }
 }

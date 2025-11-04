@@ -25,4 +25,14 @@ class GrnSub extends Model
     public function item(){
         return $this->belongsTo(Item::class);
     }
+
+    public function grn()
+    {
+        return $this->belongsTo(Grn::class, 'grn_id');
+    }
+
+    public function barcodes()
+    {
+        return $this->hasMany(Barcode::class, 'item_id', 'item_id');
+    }
 }
