@@ -209,6 +209,7 @@ class SubMenuSeeder extends Seeder
 
             //Receipt
             // Receipt Scan
+            // 23
             [
                 'menu_id' => 7,
                 'title' => 'Receipt Scan',
@@ -219,7 +220,7 @@ class SubMenuSeeder extends Seeder
 
             //Reports
             //Purchase Order Reports
-            // 23
+            // 24
             [
                 'menu_id' => 8,
                 'title' => 'Purchase Order Report',
@@ -228,9 +229,18 @@ class SubMenuSeeder extends Seeder
                 'created_at' => now(),
             ],
 
+            // 25
+            [
+                'menu_id' => 8,
+                'title' => 'grn-report',
+                'link' => 'GRN Report',
+                'listing_order' => 0,
+                'created_at' => now(),
+            ],
+
             // Utility Submenus
             // Permission
-            // 24
+            // 26
             [
                 'menu_id' => 9,
                 'title' => 'Permission',
@@ -240,7 +250,7 @@ class SubMenuSeeder extends Seeder
             ],
 
             // Change Password
-            // 25
+            // 27
             [
                 'menu_id' => 9,
                 'title' => 'Change Password',
