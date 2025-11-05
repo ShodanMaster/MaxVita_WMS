@@ -211,6 +211,9 @@ Route::group(['middleware' => ['auth']], function () {
     // Dispatch
     Route::post('dispatch-excel-upload', [DispatchController::class, 'dispatchExcelUpload'])->name('dispatch-excel-upload');
 
+    // Opening Stock
+    Route::post('opening-stock-excel-upload', [OpeningStockController::class, 'excelUpload'])->name('opening-stock-excel-upload');
+
     //Reports
     //Purchase Order Reports
     Route::post('get-purchase-orders', [PurchaseOrderReportController::class, 'getPurchaseOrders'])->name('get-purchase-orders');

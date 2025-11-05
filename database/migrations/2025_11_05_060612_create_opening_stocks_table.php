@@ -13,6 +13,13 @@ return new class extends Migration
     {
         Schema::create('opening_stocks', function (Blueprint $table) {
             $table->id();
+            $table->string('opening_number')->unique();
+            $table->string('file_path');
+            $table->foreignId('user_id')->constrained();
+            $table->foreignId('location_id')->constrained();
+            $table->foreignId('branch_id')->constrained();
+            $table->integer('status')->default(0);
+            $table->softDeletes();
             $table->timestamps();
         });
     }
