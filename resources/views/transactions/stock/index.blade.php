@@ -87,9 +87,17 @@
                         </div>
                     </div>
                     <!-- Buttons -->
-                    <div class="card-body">
-                        <button type="submit" class="btn btn-primary">Save</button>
-                        <input type="reset" class="btn btn-default" value="Clear">
+                    <div class="card-body d-flex justify-content-between align-items-center">
+                        <div class="form-group mb-0">
+                            <div class="form-check">
+                                <input type="checkbox" name="prn" id="prn" class="form-check-input custom-class">
+                                <label class="form-check-label" for="prn">PRN Print</label>
+                            </div>
+                        </div>
+                        <div>
+                            <button type="submit" class="btn btn-primary">Save</button>
+                            <input type="reset" class="btn btn-secondary" value="Clear">
+                        </div>
                     </div>
                 </form>
             </div>
@@ -140,6 +148,8 @@
                 $select.empty();
                 $select.append('<option value="">--select--</option>');
 
+                console.log(response.length);
+
                 if(response.length > 0){
                     $.each(response, function (index, item) {
                         $select.append(`<option value="${item.item_id}">${item.item_name}</option>`);
@@ -159,4 +169,11 @@
         });
     }
 </script>
+@if (!is_null(session()->get('contents')))
+    <script>
+        console.log('qwertyuiop');
+
+        window.open("{{ route('printbarcode') }}");
+    </script>
+@endif
 @endpush

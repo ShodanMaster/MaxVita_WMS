@@ -29,4 +29,16 @@ class OpeningStock extends Model
     public function openingStockSubs(){
         return $this->hasMany(OpeningStockSub::class);
     }
+
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
+
+    public function location(){
+        return $this->belongsTo(Location::class);
+    }
+
+    public function branch(){
+        return $this->belongsTo(Branch::class);
+    }
 }

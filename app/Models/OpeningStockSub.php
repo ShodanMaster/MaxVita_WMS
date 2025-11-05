@@ -18,8 +18,15 @@ class OpeningStockSub extends Model
         'status',
     ];
 
+    public function openingStock(){
+        return $this->belongsTo(OpeningStock::class);
+    }
 
     public function item(){
         return $this->belongsTo(Item::class);
+    }
+
+    public function bin(){
+        return $this->belongsTo(Bin::class);
     }
 }

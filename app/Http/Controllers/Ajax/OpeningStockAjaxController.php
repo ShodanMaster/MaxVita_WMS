@@ -13,13 +13,13 @@ class OpeningStockAjaxController extends Controller
 
             $openingStock = OpeningStock::findOrFail($request->id);
 
-            $data = $openingStock->openingStockSubs->map(function($o){
+            $data = $openingStock->openingStockSubs->where('status', 0)->map(function($sub){
 
                         return [
-                            'item_id' => $o->item->id,
-                            'item_name' => $o->item->item_code . '/' . $o->item->name
+                            'item_id' => $sub->item->id,
+                            'item_name' => $sub->item->item_code . '/' . $sub->item->name
                         ];
-                    });
+                    })->values();;
 
             return response()->json($data);
         }

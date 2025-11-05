@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Transactions\Stock;
 
+use App\Helpers\BarcodeGenerator;
 use App\Http\Controllers\Controller;
+use App\Models\Barcode;
 use App\Models\Bin;
 use App\Models\Item;
 use App\Models\Location;
@@ -12,8 +14,10 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class OpeningStockController extends Controller
 {
@@ -23,10 +27,110 @@ class OpeningStockController extends Controller
     }
 
     public function store(Request $request){
+        // dd($request->all());
+        $request->validate([
+            'opening_number' => 'required|exists:opening_stocks,id',
+            'item' => 'required|exists:items,id',
+        ]);
+
         try{
+
+            $userid =Auth::id();
+
+            $openingStockSub = OpeningStockSub::where('opening_stock_id', $request->opening_number)
+                                            ->where('item_id', $request->item)->first();
+            $item = $openingStockSub->item;
+            $barcodeData = [];
+            $totalQuantity = $openingStockSub->total_quantity;
+            $spq = $item->spq_quantity;
+
+            $remainder = fmod((float)$totalQuantity, (float)$spq);
+            $numberOfBarcodes = $openingStockSub->number_of_barcodes;
+            $quantityPerBarcode = $item->item_type == "FG" ? $spq : ($totalQuantity / $numberOfBarcodes);
+            $itemPrice = $item->price;
+            $baseQuantity = $item->item_type === "RM" ? $totalQuantity / $numberOfBarcodes : $spq;
+
+            $prefix = $openingStockSub->openingStock->location->prefix;
+            $branchId = $openingStockSub->openingStock->branch->id;
+            $binId = $openingStockSub->bin->id;
+            $batchNumber = $openingStockSub->batch;
+
+            for ($i = 0; $i < $numberOfBarcodes; $i++) {
+
+                $barcode = BarcodeGenerator::nextNumber($prefix);
+
+                if ($item->item_type === "FG") {
+                    $quantityPerBarcode = ($i == $numberOfBarcodes - 1 && $remainder > 0) ? $remainder : $spq;
+                } else {
+                    $quantityPerBarcode = ($i == $numberOfBarcodes - 1)
+                        ? ($totalQuantity - ($baseQuantity * ($numberOfBarcodes - 1)))
+                        : $baseQuantity;
+                }
+
+                $barcodeData[] = [
+                    'serial_number' => $barcode,
+                    'transaction_id' => $openingStockSub->opening_stock_id,
+                    'transaction_type' => '3',
+                    'branch_id' => $branchId,
+                    'location_id' => $openingStockSub->openingStock->location->id,
+                    'bin_id' => $binId,
+                    'item_id' => $item->id,
+                    'date_of_manufacture' => $openingStockSub->manufacture_date,
+                    'best_before_date' => $openingStockSub->best_before,
+                    'batch_number' => $batchNumber,
+                    'price' => $itemPrice,
+                    // 'total_price' => $totalPrice,
+                    'net_weight' => $quantityPerBarcode,
+                    'grn_net_weight' => $quantityPerBarcode,
+                    'spq_quantity' => $quantityPerBarcode,
+                    'grn_spq_quantity' => $quantityPerBarcode,
+                    'uom_id' => $item->uom_id,
+                    'status' => '1',
+                    'user_id' => $userid,
+                    'qc_approval_status' => '0',
+                ];
+
+                $itemName = $item->name;
+
+                $contents[] = [
+                    'transaction_number' => $openingStockSub->openingStock->opening_number,
+                    'barcode' => $barcode,
+                    'item_name' => $itemName,
+                    'spq_quantity' => $quantityPerBarcode
+                ];
+            }
+            // dd($openingStockSub);
+            $openingStockSub->update([
+                'status' => 1,
+            ]);
+
+            $remainingSubs = OpeningStockSub::where('opening_stock_id', $request->opening_number)
+                ->where('status', 0)
+                ->exists();
+            if(!$remainingSubs){
+                $openingStockSub->openingStock->update([
+                    'status' => 1,
+                ]);
+            }
+
+            if (!empty($barcodeData)) {
+                Barcode::insert($barcodeData);
+            }
+
+            DB::commit();
+
+            Alert::toast('Opening Stock saved with Number ' . $openingStockSub->openingStock->opening_number, 'success')->autoClose(3000);
+            if ($request->has('prn')) {
+                Session::put('contents', $contents);
+                return redirect()->back();
+            } else {
+                return redirect()->back();
+                // return back()->with('print_barcode', $print_barcode);
+            }
 
         } catch (Exception $e) {
             DB::rollBack();
+            dd($e);
             return back()->withErrors(['Excel upload failed: ' . $e->getMessage()]);
         }
     }
