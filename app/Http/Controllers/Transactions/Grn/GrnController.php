@@ -117,15 +117,17 @@ class GrnController extends Controller
                     ];
                 }
 
+                $item = Item::find($item["item_id"]);
+
                 $totalQuantity = $item["total_quantity"];
                 $spq = $item["spq"];
                 $fullBarcodes = $totalQuantity / $spq;
                 $remainder = fmod((float)$totalQuantity, (float)$spq);
                 $numberOfBarcodes = $item["number_of_barcodes"];
                 $quantityPerBarcode = $item["item_type"] == "FG" ? $spq : ($totalQuantity / $numberOfBarcodes);
-                $itemPrice = Item::find($item["item_id"])->price;
+                $itemPrice = $item->price;
                 $baseQuantity = $item["item_type"] === "RM" ? $totalQuantity / $numberOfBarcodes : $spq;
-                $itemUom = Item::find($item["item_id"])->uom_id;
+                $itemUom = $item->uom_id;
                 for ($i = 0; $i < $numberOfBarcodes; $i++) {
 
                     $barcode = BarcodeGenerator::nextNumber($prefix);
@@ -160,7 +162,7 @@ class GrnController extends Controller
                         'qc_approval_status' => '0',
                     ];
 
-                    $itemName = Item::find($item["item_id"])->name;
+                    $itemName = $item->name;
 
                     $contents[] = [
                         'transaction_number' => $grn->grn_number,
