@@ -162,12 +162,14 @@
                                         <font color="#FF0000">*</font>
                                     </label>
                                     <div class="col-sm-8">
-                                        <select name="item_id" id="item_id" class="js-example-basic-single form-control mandatory" style="width:100%" onchange="getItemSpq()">
+                                        <select name="item_id" id="item_id" class="js-example-basic-single form-control mandatory" style="width:100%" onchange="getItemUOM()">
                                             <option value="">--select--</option>
                                         </select>
                                     </div>
                                 </div>
-                                <b><span id="item-spq" style="display: none" class="text-danger"></span></b>
+                                <div id="item-details" style="display: none">
+                                    <b><span id="item-uom" class="text-danger"></span><span id="item-stock" class="text-danger"></span></b>
+                                </div>
                             </div>
 
                             <div class="col-6">
@@ -342,27 +344,42 @@
         });
     }
 
-    function getItemSpq(){
-        var itemId = $('#item_id').val();
+    async function getInStock(itemId) {
+        return $.ajax({
+            type: "POST",
+            url: "{{ route('ajax.item-in-stock') }}",
+            data: { item_id: itemId },
+            dataType: "json"
+        });
+    }
+
+    async function getItemUOM() {
+        const itemId = $('#item_id').val();
 
         $.ajax({
             type: "POST",
-            url: "{{route('ajax.getspqquantity')}}",
-            data: {
-                item_id : itemId
-            },
+            url: "{{ route('ajax.getitemuom') }}",
+            data: { item_id: itemId },
             dataType: "json",
-            success: function (response) {
-                console.log("response: " + response);
+            success: async function (response) {
+                if (response) {
+                    $('#item-details').show();
+                    $('#item-uom').text("Item UOM: " + response.uom_name + " | ");
 
-                if (response.spq_quantity) {
-                    $('#item-spq').text("Item SPQ: " + response.spq_quantity).show();
-                } else {
-                    console.log("SPQ Quantity not found for this item.");
+                    const inStock = await getInStock(itemId);
+
+                    if (inStock.in_stock) {
+                        $('#item-stock')
+                            .removeClass("text-danger")
+                            .addClass("text-success")
+                            .text("In Stock: " + inStock.count);
+                    } else {
+                        $('#item-stock')
+                            .removeClass("text-success")
+                            .addClass("text-danger")
+                            .text("Out Of Stock");
+                    }
                 }
-            },
-            error: function (xhr, status, error) {
-                console.log("An error occurred: " + error);
             }
         });
     }
