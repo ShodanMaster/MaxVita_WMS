@@ -9,6 +9,7 @@ use App\Models\Customer;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
 use Maatwebsite\Excel\Facades\Excel;
 use RealRashid\SweetAlert\Facades\Alert;
 use Yajra\DataTables\Facades\DataTables;
@@ -182,12 +183,17 @@ class CustomerController extends Controller
 
             Alert::toast('Customer Excel file imported successfully.', 'success')->autoClose(3000);
             return redirect()->route('customer.index');
+        } catch (ValidationException $e) {
+
+            Log::error('Customer Excel Validation Error: ' . json_encode($e->errors()));
+            Alert::toast('Validation failed while importing customer Excel.', 'error')->autoClose(3000);
+            return redirect()->route('customer.index')->withErrors($e->errors());
+
         } catch (Exception $e) {
-            // dd($e);
+
             Log::error('Customer Excel Import Error: ' . $e->getMessage());
-            Alert::toast('An error occurred while customer excel importing.', 'error')->autoClose(3000);
-            $errors = $e->validator->errors();
-            return redirect()->route('customer.index')->withErrors($errors);
+            Alert::toast('An unexpected error occurred while importing.', 'error')->autoClose(3000);
+            return redirect()->route('customer.index');
         }
     }
 }

@@ -12,6 +12,7 @@ use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
 use Maatwebsite\Excel\Facades\Excel;
 use RealRashid\SweetAlert\Facades\Alert;
 use Yajra\DataTables\Facades\DataTables;
@@ -203,12 +204,17 @@ class UserController extends Controller
 
             Alert::toast("User Excel file imported successfully. Users password: 'example@123'.", 'success')->autoClose(3000);
             return redirect()->route('user.index');
+        } catch (ValidationException $e) {
+
+            Log::error('User Excel Validation Error: ' . json_encode($e->errors()));
+            Alert::toast('Validation failed while importing user Excel.', 'error')->autoClose(3000);
+            return redirect()->route('user.index')->withErrors($e->errors());
+
         } catch (Exception $e) {
-             dd($e);
-            Log::error('User Excel Uplaod Error: ' . $e->getMessage());
-            Alert::toast('An error occurred while users to Excel uplaod.', 'error')->autoClose(3000);
-            $errors = $e->validator->errors();
-            return redirect()->route('user.index')->withErrors($errors);
+
+            Log::error('User Excel Import Error: ' . $e->getMessage());
+            Alert::toast('An unexpected error occurred while importing.', 'error')->autoClose(3000);
+            return redirect()->route('user.index');
         }
     }
 }

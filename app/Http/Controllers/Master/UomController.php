@@ -9,6 +9,7 @@ use App\Models\Uom;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
 use Maatwebsite\Excel\Facades\Excel;
 use RealRashid\SweetAlert\Facades\Alert;
 use Yajra\DataTables\Facades\DataTables;
@@ -173,12 +174,17 @@ class UomController extends Controller
 
             Alert::toast('Uom Excel file imported successfully.', 'success')->autoClose(3000);
             return redirect()->route('uom.index');
+        } catch (ValidationException $e) {
+
+            Log::error('Uom Excel Validation Error: ' . json_encode($e->errors()));
+            Alert::toast('Validation failed while importing uom Excel.', 'error')->autoClose(3000);
+            return redirect()->route('uom.index')->withErrors($e->errors());
+
         } catch (Exception $e) {
-            dd($e);
+
             Log::error('Uom Excel Import Error: ' . $e->getMessage());
-            Alert::toast('An error occurred while uom excel importing.', 'error')->autoClose(3000);
-            $errors = $e->validator->errors();
-            return redirect()->route('uom.index')->withErrors($errors);
+            Alert::toast('An unexpected error occurred while importing.', 'error')->autoClose(3000);
+            return redirect()->route('uom.index');
         }
     }
 }

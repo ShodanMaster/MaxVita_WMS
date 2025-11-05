@@ -10,6 +10,7 @@ use App\Models\SubCategory;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
 use Maatwebsite\Excel\Facades\Excel;
 use NunoMaduro\Collision\Adapters\Phpunit\Subscribers\Subscriber;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -189,12 +190,17 @@ class SubCategoryController extends Controller
 
             Alert::toast('Subcategory Excel file imported successfully.', 'success')->autoClose(3000);
             return redirect()->route('sub-category.index');
+        } catch (ValidationException $e) {
+
+            Log::error('sub-category Excel Validation Error: ' . json_encode($e->errors()));
+            Alert::toast('Validation failed while importing sub-category Excel.', 'error')->autoClose(3000);
+            return redirect()->route('sub-category.index')->withErrors($e->errors());
+
         } catch (Exception $e) {
-            dd($e);
-            Log::error('Subcategory Excel Import Error: ' . $e->getMessage());
-            Alert::toast('An error occurred while Subcategory excel importing.', 'error')->autoClose(3000);
-            $errors = $e->validator->errors();
-            return redirect()->route('sub-category.index')->withErrors($errors);
+
+            Log::error('sub-category Excel Import Error: ' . $e->getMessage());
+            Alert::toast('An unexpected error occurred while importing.', 'error')->autoClose(3000);
+            return redirect()->route('sub-category.index');
         }
     }
 

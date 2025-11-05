@@ -9,6 +9,7 @@ use App\Models\Branch;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
 use Maatwebsite\Excel\Facades\Excel;
 use RealRashid\SweetAlert\Facades\Alert;
 use Yajra\DataTables\Facades\DataTables;
@@ -203,12 +204,17 @@ class BranchController extends Controller
             Alert::toast('Branch Excel file imported successfully.', 'success')->autoClose(3000);
             return redirect()->route('branch.index');
 
-        } catch(Exception $e){
-            // dd($e);
+        } catch (ValidationException $e) {
+
+            Log::error('Branch Excel Validation Error: ' . json_encode($e->errors()));
+            Alert::toast('Validation failed while importing branch Excel.', 'error')->autoClose(3000);
+            return redirect()->route('branch.index')->withErrors($e->errors());
+
+        } catch (Exception $e) {
+
             Log::error('Branch Excel Import Error: ' . $e->getMessage());
-            Alert::toast('An error occurred while branch excel importing', 'error')->autoClose(3000);
-            $errors = $e->validator->errors();
-            return redirect()->route('branch.index')->withErrors($errors);
+            Alert::toast('An unexpected error occurred while importing.', 'error')->autoClose(3000);
+            return redirect()->route('branch.index');
         }
     }
 

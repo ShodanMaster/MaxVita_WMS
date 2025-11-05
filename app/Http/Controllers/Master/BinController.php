@@ -10,6 +10,7 @@ use App\Models\Location;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
 use Maatwebsite\Excel\Facades\Excel;
 use RealRashid\SweetAlert\Facades\Alert;
 use Yajra\DataTables\Facades\DataTables;
@@ -186,28 +187,36 @@ class BinController extends Controller
         }
     }
 
-    public function binExcelUpload(Request $request){
+    public function binExcelUpload(Request $request)
+    {
         $request->validate([
-            'excel_file' => 'required|file|mimes:xlsx,xls'
+            'excel_file' => 'required|file|mimes:xlsx,xls',
         ]);
 
-        $current = date('Y-m-d_H-i-s');
-        try{
-            Excel::import(new BinImport, $request->file('excel_file'));
+        $current = now()->format('Y-m-d_H-i-s');
+        $file = $request->file('excel_file');
+        $fileName = "{$current}_{$file->getClientOriginalName()}";
 
-            $fileName = $current . '_' . $request->file('excel_file')->getClientOriginalName();
+        try {
 
-            $request->file('excel_file')->storeAs('excel_uploads/master_uploads/bin_uploads', $fileName, 'public');
+            Excel::import(new BinImport, $file);
+
+            $file->storeAs('excel_uploads/master_uploads/bin_uploads', $fileName, 'public');
 
             Alert::toast('Bin Excel file imported successfully.', 'success')->autoClose(3000);
             return redirect()->route('bin.index');
 
-        } catch(Exception $e){
-            // dd($e);
+        } catch (ValidationException $e) {
+
+            Log::error('Bin Excel Validation Error: ' . json_encode($e->errors()));
+            Alert::toast('Validation failed while importing bin Excel.', 'error')->autoClose(3000);
+            return redirect()->route('bin.index')->withErrors($e->errors());
+
+        } catch (Exception $e) {
+
             Log::error('Bin Excel Import Error: ' . $e->getMessage());
-            $errors = $e->validator->errors();
-            Alert::toast('An error occurred while bin excel importing.', 'error')->autoClose(3000);
-            return redirect()->route('bin.index')->withErrors($errors);
+            Alert::toast('An unexpected error occurred while importing.', 'error')->autoClose(3000);
+            return redirect()->route('bin.index');
         }
     }
 }
