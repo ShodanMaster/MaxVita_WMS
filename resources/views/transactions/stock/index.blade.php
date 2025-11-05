@@ -63,8 +63,12 @@
 
                                     <div class="col-sm-8">
                                         <select name="opening_number" id="opening_number" class="js-example-basic-single form-control"
-                                            style="width:100%" required onchange="getItem()">
+                                            style="width:100%" required onchange="getItems()"
+                                            required>
                                             <option value="">--select--</option>
+                                            @foreach ($openingNumbers as $openingNumber)
+                                                <option value="{{ $openingNumber->id }}">{{ $openingNumber->opening_number }}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
@@ -73,11 +77,9 @@
                             <div class="col-6">
                                 <div class="form-group row">
                                     <label for="item" class="col-sm-4 control-label">Item</label>
-
                                     <div class="col-sm-8">
-                                        <select name="item" id="item" class="js-example-basic-single form-control">
+                                        <select name="item" id="item" class="js-example-basic-single form-control" required>
                                             <option value="">--select--</option>
-                                            <!-- Options will be populated dynamically via JS -->
                                         </select>
                                     </div>
                                 </div>
@@ -120,4 +122,41 @@
 <script src="{{ asset('assets/js/dropify.js') }}"></script>
 <script src="{{ asset('assets/js/data-table.js') }}"></script>
 
+<script>
+    function getItems(){
+
+        openingId = $('#opening_number').val();
+
+        $.ajax({
+            type: "POST",
+            url: "{{ route('ajax.get-opening-stock-items') }}",
+            data: {
+                id : openingId,
+            },
+            dataType: "json",
+            success: function (response) {
+
+                let $select = $('#item');
+                $select.empty();
+                $select.append('<option value="">--select--</option>');
+
+                if(response.length > 0){
+                    $.each(response, function (index, item) {
+                        $select.append(`<option value="${item.item_id}">${item.item_name}</option>`);
+                    });
+                } else {
+                    $select.append('<option value="">No items found</option>');
+                }
+
+                $select.trigger('change');
+            },
+            error: function(xhr) {
+                console.error(xhr.responseText);
+                let $select = $('#item');
+                $select.empty();
+                $select.append('<option value="">No items found</option>');
+            }
+        });
+    }
+</script>
 @endpush

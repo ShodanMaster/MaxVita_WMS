@@ -4,6 +4,7 @@ use App\Http\Controllers\Ajax\CommonAjaxController;
 use App\Http\Controllers\Ajax\DispatchAjaxController;
 use App\Http\Controllers\Ajax\ProductionBarcodeGenerationAJaxController;
 use App\Http\Controllers\Ajax\GrnAjaxController;
+use App\Http\Controllers\Ajax\OpeningStockAjaxController;
 use App\Http\Controllers\Ajax\ProductionIssueAjaxController;
 use App\Http\Controllers\Ajax\ProductionStorageScanAjaxController;
 use App\Http\Controllers\Ajax\PurchaseOrderAjaxController;
@@ -56,6 +57,7 @@ Route::prefix('ajax')
         Route::post('receipt-scan', [ReceiptAjaxController::class, 'receiptScan'])->name('receipt-scan');
         Route::post('fetch-receipt-scan-details', [ReceiptAjaxController::class, 'fetchReceiptScanDetails'])->name('fetch-receipt-scan-details');
 
-
+        // Receipt Scan Ajax Functions
+        Route::post('get-opening-stock-items', [OpeningStockAjaxController::class, 'getItems'])->name('get-opening-stock-items');
 
     });

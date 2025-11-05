@@ -18,11 +18,17 @@ use PhpOffice\PhpSpreadsheet\Shared\Date;
 class OpeningStockController extends Controller
 {
     public function index(){
-        return view('transactions.stock.index');
+        $openingNumbers = OpeningStock::where('status', 0)->get(['id', 'opening_number']);
+        return view('transactions.stock.index', compact('openingNumbers'));
     }
 
     public function store(Request $request){
+        try{
 
+        } catch (Exception $e) {
+            DB::rollBack();
+            return back()->withErrors(['Excel upload failed: ' . $e->getMessage()]);
+        }
     }
 
     public function excelUpload(Request $request){

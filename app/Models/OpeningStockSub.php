@@ -17,4 +17,9 @@ class OpeningStockSub extends Model
         'batch',
         'status',
     ];
+
+
+    public function item(){
+        return $this->belongsTo(Item::class);
+    }
 }

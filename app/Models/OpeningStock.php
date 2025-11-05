@@ -26,4 +26,7 @@ class OpeningStock extends Model
         return $openingNumber[0]->opening_number;
     }
 
+    public function openingStockSubs(){
+        return $this->hasMany(OpeningStockSub::class);
+    }
 }
