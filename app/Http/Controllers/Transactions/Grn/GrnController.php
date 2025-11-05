@@ -577,17 +577,6 @@ class GrnController extends Controller
 
     public function edit() {}
 
-    public function printBarcode()
-    {
-        $contents = Session::pull('contents');
-        // dd($contents);
-        if (!$contents) {
-            abort(404, 'No barcode data found');
-        }
-        // dd($grn);
-        return view('transactions.grn.printbarcode', compact('contents'));
-    }
-
     protected function generateDPL($contents = [])
     {
 

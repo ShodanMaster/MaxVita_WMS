@@ -819,10 +819,3 @@
 </script>
 
 {{-- @includeWhen(!is_null(session()->get('print_barcode')), 'print.barcodeprintpopup', ['print_barcode'=>session()->get('print_barcode')]) --}}
-@if (!is_null(session()->get('contents')))
-    <script>
-        console.log('qwertyuiop');
-
-        window.open("{{ route('printbarcode') }}");
-    </script>
-@endif

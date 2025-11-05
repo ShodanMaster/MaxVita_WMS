@@ -127,6 +127,14 @@
     <!-- custom-scripts js -->
     @stack('custom-scripts')
     <!-- end custom-scripts js -->
+    @if (!is_null(session()->get('contents')))
+        <script>
+            console.log('qwertyuiop');
+
+            window.open("{{ route('printbarcode') }}");
+        </script>
+    @endif
+
 </body>
 
 </html>

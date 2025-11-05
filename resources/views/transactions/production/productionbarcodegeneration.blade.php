@@ -188,11 +188,3 @@
     }
 </script>
 @endpush
-
-@if (!is_null(session()->get('contents')))
-    <script>
-        console.log("qwertyu: ", @json(session()->all()));
-
-        window.open("{{ route('printbarcode') }}");
-    </script>
-@endif
