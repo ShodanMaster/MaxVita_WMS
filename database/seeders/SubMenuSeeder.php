@@ -207,11 +207,22 @@ class SubMenuSeeder extends Seeder
                 'created_at' => now(),
             ],
 
-            //Receipt
-            // Receipt Scan
+            //Stock Management
+            //Opening Stock
             // 23
             [
                 'menu_id' => 7,
+                'title' => 'Opening Stock',
+                'link' => 'opening-stock',
+                'listing_order' => 11,
+                'created_at' => now(),
+            ],
+
+            //Receipt
+            // Receipt Scan
+            // 24
+            [
+                'menu_id' => 8,
                 'title' => 'Receipt Scan',
                 'link' => 'receipt-scan',
                 'listing_order' => 11,
@@ -220,29 +231,29 @@ class SubMenuSeeder extends Seeder
 
             //Reports
             //Purchase Order Reports
-            // 24
+            // 25
             [
-                'menu_id' => 8,
+                'menu_id' => 9,
                 'title' => 'Purchase Order Report',
                 'link' => 'purchase-order-report',
                 'listing_order' => 0,
                 'created_at' => now(),
             ],
 
-            // 25
+            // 26
             [
-                'menu_id' => 8,
-                'title' => 'grn-report',
-                'link' => 'GRN Report',
+                'menu_id' => 9,
+                'title' => 'GRN Report',
+                'link' => 'grn-report',
                 'listing_order' => 0,
                 'created_at' => now(),
             ],
 
             // Utility Submenus
             // Permission
-            // 26
+            // 27
             [
-                'menu_id' => 9,
+                'menu_id' => 10,
                 'title' => 'Permission',
                 'link' => 'permission',
                 'listing_order' => 0,
@@ -250,9 +261,9 @@ class SubMenuSeeder extends Seeder
             ],
 
             // Change Password
-            // 27
+            // 28
             [
-                'menu_id' => 9,
+                'menu_id' => 10,
                 'title' => 'Change Password',
                 'link' => 'change-password',
                 'listing_order' => 0,

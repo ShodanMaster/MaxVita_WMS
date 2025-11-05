@@ -26,6 +26,7 @@ use App\Http\Controllers\Transactions\Production\ProductionBarcodeGenerationCont
 use App\Http\Controllers\Transactions\Production\ProductionStorageScanController;
 use App\Http\Controllers\Transactions\Production\ProductionPlanController;
 use App\Http\Controllers\Transactions\Receipt\ReceiptScanController;
+use App\Http\Controllers\Transactions\Stock\OpeningStockController;
 use App\Http\Controllers\Utility\PasswordChangeController;
 use App\Http\Controllers\Utility\PermissionController;
 use Illuminate\Support\Facades\Route;
@@ -108,6 +109,10 @@ Route::group(['middleware' => ['auth']], function () {
         //Receipt
         Route::resource('receipt-scan', ReceiptScanController::class);
 
+        //Stock Management
+        //Opening Stock
+        Route::resource('opening-stock', OpeningStockController::class);
+
         //Reports
         //Purchase Order Reports
         Route::resource('purchase-order-report', PurchaseOrderReportController::class);
@@ -116,7 +121,6 @@ Route::group(['middleware' => ['auth']], function () {
         Route::resource('grn-report', GrnReportController::class);
 
         // Utitlity
-
         // Permission
         Route::resource('permission', PermissionController::class);
 

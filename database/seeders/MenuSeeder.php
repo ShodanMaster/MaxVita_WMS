@@ -72,18 +72,26 @@ class MenuSeeder extends Seeder
             ],
             // 8
             [
-                'title' => 'Reports',
-                'link' => 'reports',
-                'icon' => 'layout',
+                'title' => 'Stock Management',
+                'link' => 'stock-management',
+                'icon' => 'pie-chart',
                 'listing_order' => 7,
                 'created_at' => now(),
             ],
             // 9
             [
+                'title' => 'Reports',
+                'link' => 'reports',
+                'icon' => 'layout',
+                'listing_order' => 8,
+                'created_at' => now(),
+            ],
+            // 10
+            [
                 'title' => 'Utilities',
                 'link' => 'utilities',
                 'icon' => 'settings',
-                'listing_order' => 8,
+                'listing_order' => 9,
                 'created_at' => now(),
             ],
         ]);
