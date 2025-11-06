@@ -285,7 +285,7 @@
 
         // Define the addToGrid function
         function addToGrid() {
-            $('#item-uom').hide();
+            $('#item-details').hide();
 
             let itemId = $('#rmItem').val();
             let itemName = $('#rmItem option:selected').text();

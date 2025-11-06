@@ -28,7 +28,7 @@
                             Reason<font color="#FF0000" size="">*</font>
                         </label>
                         <div class="col-sm-8">
-                            <select name="reason" id="reason" class="js-example-basic-single form-select2 mandatory'">
+                            <select name="reason" id="reason" class="js-example-basic-single form-select2 mandatory">
                                 <option value="" disabled selected>-- Select Reson --</option>
                                 @forelse ($reasons as $reason)
                                     <option value="{{ $reason->id }}">{{ $reason->reason }}</option>

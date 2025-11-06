@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Ajax\BarcodeReprintAjaxController;
 use App\Http\Controllers\Ajax\CommonAjaxController;
 use App\Http\Controllers\Ajax\DispatchAjaxController;
 use App\Http\Controllers\Ajax\ProductionBarcodeGenerationAJaxController;
@@ -59,5 +60,8 @@ Route::prefix('ajax')
 
         // Receipt Scan Ajax Functions
         Route::post('get-opening-stock-items', [OpeningStockAjaxController::class, 'getItems'])->name('get-opening-stock-items');
+
+        //Barcode Reprint Ajax Functions
+        Route::post('get-reprint-numbers', [BarcodeReprintAjaxController::class, 'getReprintNumbers'])->name('get-reprint-numbers');
 
     });
