@@ -27,6 +27,7 @@ use App\Http\Controllers\Transactions\Production\ProductionStorageScanController
 use App\Http\Controllers\Transactions\Production\ProductionPlanController;
 use App\Http\Controllers\Transactions\Receipt\ReceiptScanController;
 use App\Http\Controllers\Transactions\Stock\OpeningStockController;
+use App\Http\Controllers\Transactions\Stock\StockOutController;
 use App\Http\Controllers\Utility\PasswordChangeController;
 use App\Http\Controllers\Utility\PermissionController;
 use Illuminate\Support\Facades\Route;
@@ -112,6 +113,9 @@ Route::group(['middleware' => ['auth']], function () {
         //Stock Management
         //Opening Stock
         Route::resource('opening-stock', OpeningStockController::class);
+
+        //Stock Out
+        Route::resource('stock-out', StockOutController::class);
 
         //Reports
         //Purchase Order Reports

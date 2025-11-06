@@ -207,31 +207,41 @@ class SubMenuSeeder extends Seeder
                 'created_at' => now(),
             ],
 
-            //Stock Management
-            //Opening Stock
+            //Receipt
+            // Receipt Scan
             // 23
             [
                 'menu_id' => 7,
-                'title' => 'Opening Stock',
-                'link' => 'opening-stock',
-                'listing_order' => 11,
-                'created_at' => now(),
-            ],
-
-            //Receipt
-            // Receipt Scan
-            // 24
-            [
-                'menu_id' => 8,
                 'title' => 'Receipt Scan',
                 'link' => 'receipt-scan',
                 'listing_order' => 11,
                 'created_at' => now(),
             ],
 
+            //Stock Management
+            //Opening Stock
+            // 24
+            [
+                'menu_id' => 8,
+                'title' => 'Opening Stock',
+                'link' => 'opening-stock',
+                'listing_order' => 11,
+                'created_at' => now(),
+            ],
+
+            //Stock Out
+            // 25
+            [
+                'menu_id' => 8,
+                'title' => 'Stock Out',
+                'link' => 'stock-out',
+                'listing_order' => 11,
+                'created_at' => now(),
+            ],
+
             //Reports
             //Purchase Order Reports
-            // 25
+            // 26
             [
                 'menu_id' => 9,
                 'title' => 'Purchase Order Report',
@@ -240,7 +250,7 @@ class SubMenuSeeder extends Seeder
                 'created_at' => now(),
             ],
 
-            // 26
+            // 27
             [
                 'menu_id' => 9,
                 'title' => 'GRN Report',
@@ -251,7 +261,7 @@ class SubMenuSeeder extends Seeder
 
             // Utility Submenus
             // Permission
-            // 27
+            // 28
             [
                 'menu_id' => 10,
                 'title' => 'Permission',
@@ -261,7 +271,7 @@ class SubMenuSeeder extends Seeder
             ],
 
             // Change Password
-            // 28
+            // 29
             [
                 'menu_id' => 10,
                 'title' => 'Change Password',
