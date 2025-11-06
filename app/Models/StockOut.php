@@ -8,7 +8,7 @@ class StockOut extends Model
 {
     protected $fillable = [
         'barcode',
-        'reason_id;',
+        'reason_id',
         'user_id',
     ];
 }

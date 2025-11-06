@@ -43,9 +43,23 @@
                             Barcode<font color="#FF0000" size="">*</font>
                         </label>
                         <div class="col-sm-8">
-                            <input type="text" id="barcode" name="barcode" class="form-control form-control-sm" required>
+                            <input type="text" id="barcode" name="barcode" class="form-control form-control-sm" oninput="stockOutScan()" required>
                         </div>
                     </div>
+                </div>
+            </div>
+            <div class="card" style="display: none" id="barcode-card">
+                <div class="card-body mt-2">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Barcode</th>
+                                <th>Message</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-body">
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -76,5 +90,60 @@
 <script src="{{ asset('assets/js/dropzone.js') }}"></script>
 <script src="{{ asset('assets/js/dropify.js') }}"></script>
 <script src="{{ asset('assets/js/data-table.js') }}"></script>
+<script>
+    function stockOutScan(){
+        const reason = document.getElementById('reason');
+        const barcode = document.getElementById('barcode');
 
+        if(reason.value ==''){
+            sweetAlertMessage('warning', 'Enter Reason', 'Please enter reason!');
+            reason.focus();
+            return false;
+        }
+
+        if(barcode.value ==''){
+            sweetAlertMessage('warning', 'Enter Barcode', 'Please enter barcode!');
+            barcode.focus();
+            return false;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "{{ route('stock-out.store') }}",
+            data: {
+                reason_id : reason.value,
+                barcode : barcode.value,
+            },
+            dataType: "json",
+            success: function (response) {
+                document.getElementById('barcode-card').style.display = 'block';
+                if(response){
+                    var row = $('<tr>');
+
+                    row.append('<td>' + barcode.value + '</td>');
+
+                    var messageCell = $('<td>').text(response.message);
+
+                    if (response.status === 200) {
+                        sweetAlertMessage('success', 'Scanned Successfully', response.message);
+                        messageCell.css('color', 'green');
+                    } else {
+                        sweetAlertMessage('error', 'Scan Unsuccessful', response.message);
+                        messageCell.css('color', 'red');
+                    }
+
+                    row.append(messageCell);
+                    $('#table-body').prepend(row);
+                }
+
+                barcode.value = '';
+
+            },
+            error: function (xhr) {
+                console.error(xhr.responseText);
+                sweetAlertMessage('error', 'Error', 'Something went wrong!');
+            }
+        });
+    }
+</script>
 @endpush
