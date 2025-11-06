@@ -10,6 +10,8 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
+use function Illuminate\Log\log;
+
 class BarcodeReprintController extends Controller
 {
     public function index(){
@@ -61,13 +63,13 @@ class BarcodeReprintController extends Controller
             if(empty($contents)){
                 return redirect()->back()->with('error', 'No Data Found');
             }
-            
+
             Session::put('contents', $contents);
 
             return redirect()->back()->with('success', 'Reprint Successful');
 
         } catch(Exception $e){
-
+            return redirect()->back()->with('error', 'Something Went Wrong!');
         }
     }
 }
