@@ -260,8 +260,18 @@ class SubMenuSeeder extends Seeder
             ],
 
             // Utility Submenus
-            // Permission
+            // Barcode Reprint
             // 28
+            [
+                'menu_id' => 10,
+                'title' => 'Barcode Reprint',
+                'link' => 'barcode-reprint',
+                'listing_order' => 0,
+                'created_at' => now(),
+            ],
+
+            // Permission
+            // 29
             [
                 'menu_id' => 10,
                 'title' => 'Permission',
@@ -271,7 +281,7 @@ class SubMenuSeeder extends Seeder
             ],
 
             // Change Password
-            // 29
+            // 30
             [
                 'menu_id' => 10,
                 'title' => 'Change Password',

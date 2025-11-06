@@ -28,6 +28,7 @@ use App\Http\Controllers\Transactions\Production\ProductionPlanController;
 use App\Http\Controllers\Transactions\Receipt\ReceiptScanController;
 use App\Http\Controllers\Transactions\Stock\OpeningStockController;
 use App\Http\Controllers\Transactions\Stock\StockOutController;
+use App\Http\Controllers\Utility\BarcodeReprintController;
 use App\Http\Controllers\Utility\PasswordChangeController;
 use App\Http\Controllers\Utility\PermissionController;
 use Illuminate\Support\Facades\Route;
@@ -125,6 +126,10 @@ Route::group(['middleware' => ['auth']], function () {
         Route::resource('grn-report', GrnReportController::class);
 
         // Utitlity
+
+        //Barcode Reprint
+        Route::resource('barcode-reprint', BarcodeReprintController::class);
+
         // Permission
         Route::resource('permission', PermissionController::class);
 
