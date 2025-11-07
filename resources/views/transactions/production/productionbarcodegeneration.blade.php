@@ -67,7 +67,7 @@
                             <div class="form-group row">
                                 <label for="best_before_value" class="col-sm-4 control-label">Best Before <font color="#FF0000">*</font></label>
                                 <div class="col-sm-8">
-                                    <input type="date" name="best_before_date" id="best_before_value" class="form-control form-control-sm mandatory date-field" required/>
+                                    <input type="date" name="best_before_date" id="best_before_value" class="form-control form-control-sm mandatory expiry-date" required/>
                                 </div>
                             </div>
                         </div>
