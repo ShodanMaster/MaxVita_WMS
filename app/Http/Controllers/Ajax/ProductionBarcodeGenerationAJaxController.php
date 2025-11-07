@@ -10,7 +10,7 @@ class ProductionBarcodeGenerationAJaxController extends Controller
 {
     public function getPlanDetails(Request $request){
         if($request->ajax()){
-            $productionPlan = ProductionPlan::find($request->plan_number);
+            $productionPlan = ProductionPlan::with('productionPlanSubs.item')->find($request->plan_number);
 
             $data = [
                 'fg_item' => $productionPlan->item->item_code.'/'. $productionPlan->item->name,

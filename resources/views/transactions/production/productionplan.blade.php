@@ -245,7 +245,10 @@
             return $.ajax({
                 type: "POST",
                 url: "{{ route('ajax.item-in-stock') }}",
-                data: { item_id: itemId },
+                data: {
+                    type : 'production',
+                    item_id: itemId
+                },
                 dataType: "json"
             });
         }

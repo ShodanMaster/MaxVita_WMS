@@ -42,11 +42,24 @@
                         </div>
                     </div>
                     <div class="form-group row">
+                        <label for="bin" class="col-sm-4 control-label">
+                            Bin <font color="#FF0000">*</font>
+                        </label>
+                        <div class="col-sm-8">
+                            <div class="input-group">
+                                <input type="text" id="bin" name="bin" class="form-control form-control-sm" required oninput="binExists()" value="{{ isset($bin) ? $bin : '' }}">
+                                <button type="button" class="btn btn-sm" id="reset-button" title="Reset Bin" style="display: none" onclick="resetButton()">
+					                <i class="link-icon" data-feather="refresh-ccw"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
                         <label for="barcode" class="col-sm-4 control-label">
                             Barcode<font color="#FF0000" size="">*</font>
                         </label>
                         <div class="col-sm-8">
-                            <input type="text" id="barcode" name="barcode" class="form-control form-control-sm" oninput="stockOutScan()" required>
+                            <input type="text" id="barcode" name="barcode" class="form-control form-control-sm" oninput="withBarcode()" required>
                         </div>
                     </div>
                 </div>
@@ -102,6 +115,146 @@
         }
     }
 
-    
+    function binExists() {
+        const bin = document.getElementById('bin');
+        const binValue = bin.value.trim();
+        const resetButton = document.getElementById('reset-button');
+        const barcode = document.getElementById('barcode');
+
+        $.ajax({
+            type: "POST",
+            url: "{{ route('ajax.bin-exists') }}",
+            data: {
+                bin : binValue
+            },
+            dataType: "json",
+            success: function (response) {
+                console.log(response);
+
+                if (response.status === 200) {
+                    bin.readOnly = true;
+                    resetButton.style.display = 'block';
+                    barcode.focus();
+                } else {
+                    sweetAlertMessage('warning', 'Invalid Bin', 'Bin Code Not Found!');
+                    bin.value = '';
+                    bin.readOnly = false;
+                    bin.focus();
+                    resetButton.style.display = 'none';
+                }
+            }
+        });
+    }
+
+    async function withBarcode() {
+        let customer = document.getElementById('customer');
+        let bin = document.getElementById('bin');
+        let barcode = document.getElementById('barcode');
+
+        if (customer.value === '') {
+            sweetAlertMessage('warning', 'Select Customer', 'Please select customer!');
+            customer.focus();
+            return;
+        }
+
+        if (bin.value === '') {
+            sweetAlertMessage('warning', 'Enter Bin', 'Please enter bin!');
+            bin.focus();
+            return;
+        }
+
+        if (barcode.value === '') {
+            sweetAlertMessage('warning', 'Enter Barcode', 'Please enter barcode!');
+            barcode.focus();
+            return;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "{{ route('ajax.with-barcode-data') }}",
+            data: {
+                customer_id: customer.value,
+                bin: bin.value,
+                barcode: barcode.value,
+            },
+            dataType: "json",
+            success: function (response) {
+                console.log(response);
+
+                if (response.status === 200) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Details Found',
+                        html: `
+                            <b>Customer Name:</b> ${response.data.customer_name} <br>
+                            <b>Dispatch Number:</b> ${response.data.dispatch_number} <br>
+                            <b>Item Name:</b> ${response.data.item_name} <br><br>
+                            <b>Would you like to return this item?</b>
+                        `,
+                        showCancelButton: true,
+                        confirmButtonText: 'Return',
+                        cancelButtonText: 'Cancel',
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            let customer_id = response.data.input_data.customer_id;
+                            let dispatch_id = response.data.input_data.dispatch_id;
+                            let item_id = response.data.input_data.item_id;
+                            let bin_id = response.data.input_data.bin_id;
+                            let barcode_value = barcode.value;
+
+                            returnItem(barcode_value, customer_id, dispatch_id, item_id, bin_id);
+                        }
+                    });
+                } else {
+                    sweetAlertMessage('error', 'Barcode not found');
+                    barcode.value = '';
+                    barcode.focus();
+                }
+            },
+            error: function () {
+                sweetAlertMessage('error', 'Server Error', 'Unable to process request.');
+            }
+        });
+    }
+
+    async function returnItem(barcode, customer_id, dispatch_id, item_id, bin_id) {
+        $.ajax({
+            type: "POST",
+            url: "{{ route('ajax.item-return') }}",
+            data: {
+                barcode: barcode,
+                customer_id: customer_id,
+                dispatch_id: dispatch_id,
+                item_id: item_id,
+                bin_id: bin_id,
+            },
+            dataType: "json",
+            success: function (response2) {
+                if (response2.status === 200) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Item Returned',
+                        text: response2.message || 'Item successfully returned!'
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: response2.message || 'Unable to return item.'
+                    });
+                }
+            },
+            error: function () {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Server Error',
+                    text: 'Something went wrong while returning item.'
+                });
+            }
+        });
+    }
+
 </script>
 @endpush

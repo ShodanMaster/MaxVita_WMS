@@ -348,7 +348,10 @@
         return $.ajax({
             type: "POST",
             url: "{{ route('ajax.item-in-stock') }}",
-            data: { item_id: itemId },
+            data: {
+                type : 'dispatch',
+                item_id: itemId,
+            },
             dataType: "json"
         });
     }
@@ -390,7 +393,7 @@
     // Add to Grid
     $('#addtogrid').on('click', function () {
 
-        $('#item-spq').hide();
+        $('#item-details').hide();
 
         const itemId = $('#item_id').val();
         const itemText = $('#item_id option:selected').text();

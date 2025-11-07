@@ -54,25 +54,35 @@ class CommonAjaxController extends Controller
 
     public function itemInStock(Request $request){
         if($request->ajax()){
-            $itemCount = Barcode::where('item_id', $request->item_id)
-                    ->where('status', '1')
-                    ->sum('grn_net_weight');
+            $barcodes = Barcode::where('item_id', $request->item_id)
+                    ->where('status', '1');
 
-
-            $data = [];
-            if($itemCount > 0){
-                $data = [
-                    'in_stock' => true,
-                    'count' => $itemCount
-                ];
-            }else{
-                $data = [
-                    'in_stock' => false,
-                    'count' => $itemCount
-                ];
+            $itemCount = 0;
+            if($request->type == 'dispatch'){
+                $itemCount = $barcodes->count();
+            }elseif($request->type == 'production'){
+                $itemCount = $barcodes->sum('net_weight');
             }
 
-            return response()->json($data);
+            if ($request->type === 'dispatch') {
+                $itemCount = $barcodes->count();
+            } elseif ($request->type === 'production') {
+                $itemCount = $barcodes->sum('net_weight');
+            } else {
+                return response()->json([
+                    'in_stock' => false,
+                    'count' => 0,
+                    'message' => 'Invalid type parameter.'
+                ], 400);
+            }
+
+            // Determine stock status
+            $inStock = $itemCount > 0;
+
+            return response()->json([
+                'in_stock' => $inStock,
+                'count' => $itemCount
+            ]);
         }
     }
 }

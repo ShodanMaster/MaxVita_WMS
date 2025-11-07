@@ -15,4 +15,8 @@ class DispatchScan extends Model
         'dispatched_quantity',
         'user_id',
     ];
+
+    public function dispatch(){
+        return $this->belongsTo(Dispatch::class);
+    }
 }

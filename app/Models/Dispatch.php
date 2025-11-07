@@ -29,4 +29,8 @@ class Dispatch extends Model
     public function dispatchSubs(){
         return $this->hasMany(DispatchSub::class);
     }
+
+    public function dispatchScans(){
+        return $this->hasMany(DispatchScan::class);
+    }
 }

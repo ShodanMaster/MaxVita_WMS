@@ -98,7 +98,7 @@
             type: "POST",
             url: "{{ route('ajax.getplandetails') }}",
             data: {
-                id : planId
+                plan_number : planId
             },
             dataType: "json",
             success: function (response) {

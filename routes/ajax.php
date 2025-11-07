@@ -10,6 +10,7 @@ use App\Http\Controllers\Ajax\ProductionIssueAjaxController;
 use App\Http\Controllers\Ajax\ProductionStorageScanAjaxController;
 use App\Http\Controllers\Ajax\PurchaseOrderAjaxController;
 use App\Http\Controllers\Ajax\ReceiptAjaxController;
+use App\Http\Controllers\Ajax\SalesReturnAjaxController;
 use App\Http\Controllers\Ajax\StorageScanAjaxController;
 use Illuminate\Support\Facades\Route;
 
@@ -61,7 +62,11 @@ Route::prefix('ajax')
         // Receipt Scan Ajax Functions
         Route::post('get-opening-stock-items', [OpeningStockAjaxController::class, 'getItems'])->name('get-opening-stock-items');
 
-        //Barcode Reprint Ajax Functions
+        // Barcode Reprint Ajax Functions
         Route::post('get-reprint-numbers', [BarcodeReprintAjaxController::class, 'getReprintNumbers'])->name('get-reprint-numbers');
+
+        // Sales Return Ajax Functions
+        Route::post('with-barcode-data', [SalesReturnAjaxController::class, 'withBarcodeData'])->name('with-barcode-data');
+        Route::post('item-return', [SalesReturnAjaxController::class, 'itemReturn'])->name('item-return');
 
     });
