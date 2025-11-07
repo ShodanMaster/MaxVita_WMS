@@ -19,21 +19,24 @@
     <section class="content">
         <div class="container-fluid">
             <div class="card">
-                <div class="card-header mt-2">
-                    <h3 class="card-title">Stock Out Scan</h3>
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <div class="btn-group" role="group" aria-label="Barcode Options">
+                        <button type="button" class="btn btn-outline-primary active" onclick="toggleForm('with')">With Barcode</button>
+                        <button type="button" class="btn btn-outline-primary" onclick="toggleForm('without')">Without Barcode</button>
+                    </div>
                 </div>
-                <div class="card-body">
+                <div class="card-body" id="with-barcode" style="display: block">
                     <div class="form-group row">
-                        <label for="reason" class="col-sm-4 control-label">
-                            Reason<font color="#FF0000" size="">*</font>
+                        <label for="customer" class="col-sm-4 control-label">
+                            Customer<font color="#FF0000" size="">*</font>
                         </label>
                         <div class="col-sm-8">
-                            <select name="reason" id="reason" class="js-example-basic-single form-select2 mandatory">
-                                <option value="" disabled selected>-- Select Reson --</option>
-                                @forelse ($reasons as $reason)
-                                    <option value="{{ $reason->id }}">{{ $reason->reason }}</option>
+                            <select name="customer" id="customer" class="js-example-basic-single form-select2 mandatory">
+                                <option value="" selected disabled>-- Select Customer</option>
+                                @forelse ($customers as $customer)
+                                    <option value="{{ $customer->id }}">{{ $customer->name }}</option>
                                 @empty
-                                    <option value="" disabled>-- No Reson Found --</option>
+                                    <option value="" disabled>No Customers Found</option>
                                 @endforelse
                             </select>
                         </div>
@@ -47,19 +50,8 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="card" style="display: none" id="barcode-card">
-                <div class="card-body mt-2">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Barcode</th>
-                                <th>Message</th>
-                            </tr>
-                        </thead>
-                        <tbody id="table-body">
-                        </tbody>
-                    </table>
+                <div class="card-body" id="without-barcode" style="display: none">
+
                 </div>
             </div>
         </div>
@@ -90,60 +82,26 @@
 <script src="{{ asset('assets/js/dropzone.js') }}"></script>
 <script src="{{ asset('assets/js/dropify.js') }}"></script>
 <script src="{{ asset('assets/js/data-table.js') }}"></script>
+
 <script>
-    function stockOutScan(){
-        const reason = document.getElementById('reason');
-        const barcode = document.getElementById('barcode');
+    function toggleForm(type) {
+        const withBarcode = document.getElementById('with-barcode');
+        const withoutBarcode = document.getElementById('without-barcode');
+        const buttons = document.querySelectorAll('.btn-group .btn');
 
-        if(reason.value ==''){
-            sweetAlertMessage('warning', 'Select Reason', 'Please select reason!');
-            reason.focus();
-            return false;
+        buttons.forEach(btn => btn.classList.remove('active'));
+
+        if (type === 'with') {
+            withBarcode.style.display = 'block';
+            withoutBarcode.style.display = 'none';
+            buttons[0].classList.add('active');
+        } else {
+            withBarcode.style.display = 'none';
+            withoutBarcode.style.display = 'block';
+            buttons[1].classList.add('active');
         }
-
-        if(barcode.value ==''){
-            sweetAlertMessage('warning', 'Enter Barcode', 'Please enter barcode!');
-            barcode.focus();
-            return false;
-        }
-
-        $.ajax({
-            type: "POST",
-            url: "{{ route('stock-out.store') }}",
-            data: {
-                reason_id : reason.value,
-                barcode : barcode.value,
-            },
-            dataType: "json",
-            success: function (response) {
-                document.getElementById('barcode-card').style.display = 'block';
-                if(response){
-                    var row = $('<tr>');
-
-                    row.append('<td>' + barcode.value + '</td>');
-
-                    var messageCell = $('<td>').text(response.message);
-
-                    if (response.status === 200) {
-                        sweetAlertMessage('success', 'Scanned Successfully', response.message);
-                        messageCell.css('color', 'green');
-                    } else {
-                        sweetAlertMessage('error', 'Scan Unsuccessful', response.message);
-                        messageCell.css('color', 'red');
-                    }
-
-                    row.append(messageCell);
-                    $('#table-body').prepend(row);
-                }
-
-                barcode.value = '';
-
-            },
-            error: function (xhr) {
-                console.error(xhr.responseText);
-                sweetAlertMessage('error', 'Error', 'Something went wrong!');
-            }
-        });
     }
+
+    
 </script>
 @endpush

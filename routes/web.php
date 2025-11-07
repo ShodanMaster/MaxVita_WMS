@@ -18,6 +18,7 @@ use App\Http\Controllers\Reports\GrnReportController;
 use App\Http\Controllers\Reports\PurchaseOrderReportController;
 use App\Http\Controllers\Transactions\Dispatch\DispatchController;
 use App\Http\Controllers\Transactions\Dispatch\DispatchScanController;
+use App\Http\Controllers\Transactions\Dispatch\SalesReturnController;
 use App\Http\Controllers\Transactions\Grn\GrnController;
 use App\Http\Controllers\Transactions\Production\ProductionIssueController;
 use App\Http\Controllers\Transactions\PurchaseEntry\PurchaseOrderController;
@@ -103,10 +104,14 @@ Route::group(['middleware' => ['auth']], function () {
         Route::resource('production-storage-scan', ProductionStorageScanController::class);
 
         //Dispatch
+        //Dispatch Entry
         Route::resource('dispatch', DispatchController::class);
 
         //Dispatch Scan
         Route::resource('dispatch-scan', DispatchScanController::class);
+
+        //Sales Return
+        Route::resource('sales-return', SalesReturnController::class);
 
         //Receipt
         Route::resource('receipt-scan', ReceiptScanController::class);
