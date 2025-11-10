@@ -113,7 +113,7 @@ class ProductionBarcodeGenerationController extends Controller
 
                 if($productionPlan->picked_quantity >= $productionPlan->total_quantity){
                     $productionPlan->update([
-                        'status' => 3,
+                        'status' => 2,
                     ]);
                 }
             }

@@ -131,14 +131,14 @@ class ProductionStorageScanAjaxController extends Controller
                     $productionPlanUpdated->update(['status' => 1]);
                 }
 
-                $productionPlanStatus = ProductionPlan::where('id', $productionPlan->id)->where('status', 3)->exists();
+                $productionPlanStatus = ProductionPlan::where('id', $productionPlan->id)->where('status', 2)->exists();
 
                 $productionPlan = ProductionPlan::find($productionPlan->id);
 
                 $scanComplete = false;
                 if(!$productionPlanStatus){
                     $productionPlan->update([
-                        'status' => 4
+                        'status' => 3
                     ]);
                     $scanComplete = true;
                 }
