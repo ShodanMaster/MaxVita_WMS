@@ -20,4 +20,9 @@ class Branch extends Model
     {
         return $this->hasMany(Location::class);
     }
+
+    public function barcodes()
+    {
+        return $this->hasMany(Barcode::class, 'branch_id', 'id');
+    }
 }

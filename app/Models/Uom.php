@@ -12,4 +12,9 @@ class Uom extends Model
         'name',
         'uom_code',
     ];
+
+    public function barcodes()
+    {
+        return $this->hasMany(Barcode::class, 'uom_id', 'id');
+    }
 }

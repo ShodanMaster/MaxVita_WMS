@@ -269,9 +269,19 @@ class SubMenuSeeder extends Seeder
                 'created_at' => now(),
             ],
 
+            //Stock Report
+            //29
+            [
+                'menu_id' => 6,
+                'title' => 'Stock Report',
+                'link' => 'stock-report',
+                'listing_order' => 7,
+                'created_at' => now(),
+            ],
+
             // Utility Submenus
             // Barcode Reprint
-            // 29
+            // 30
             [
                 'menu_id' => 10,
                 'title' => 'Barcode Reprint',
@@ -281,7 +291,7 @@ class SubMenuSeeder extends Seeder
             ],
 
             // Permission
-            // 30
+            // 31
             [
                 'menu_id' => 10,
                 'title' => 'Permission',
@@ -291,7 +301,7 @@ class SubMenuSeeder extends Seeder
             ],
 
             // Change Password
-            // 31
+            // 32
             [
                 'menu_id' => 10,
                 'title' => 'Change Password',

@@ -31,4 +31,9 @@ class Location extends Model
     public function dispatches(){
         return $this->morphMany(Dispatch::class, 'dispatch_to');
     }
+
+    public function barcodes()
+    {
+        return $this->hasMany(Barcode::class, 'location_id');
+    }
 }

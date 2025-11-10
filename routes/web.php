@@ -16,6 +16,7 @@ use App\Http\Controllers\Master\UserController;
 use App\Http\Controllers\Master\VendorController;
 use App\Http\Controllers\Reports\GrnReportController;
 use App\Http\Controllers\Reports\PurchaseOrderReportController;
+use App\Http\Controllers\Reports\StockReportController;
 use App\Http\Controllers\Transactions\Dispatch\DispatchController;
 use App\Http\Controllers\Transactions\Dispatch\DispatchScanController;
 use App\Http\Controllers\Transactions\Dispatch\SalesReturnController;
@@ -129,6 +130,9 @@ Route::group(['middleware' => ['auth']], function () {
 
         //GRN Reports
         Route::resource('grn-report', GrnReportController::class);
+
+        //Stock Report
+        Route::resource('stock-report', StockReportController::class);
 
         // Utitlity
 
@@ -249,6 +253,16 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('get-grn-itemwise', [GrnReportController::class, 'grnItemWise'])->name('get-grn-itemwise');
 
     Route::post('get-grn-detailed', [GrnReportController::class, 'grnDetailed'])->name('get-grn-detailed');
+
+    //Stock Report
+    Route::post('get-stock-report-summary', [StockReportController::class, 'getstockReportSummaries'])->name('get-stock-report-summary');
+    Route::get('stock-report/{branch_id}/{location_id}/{item_id}', [StockReportController::class, 'show'])
+        ->name('stock-report.show1');
+    Route::post('get-stock-bin-wise', [StockReportController::class, 'getstockBinWises'])->name('get-stock-bin-wise');
+    Route::get('stock-report/{branch_id}/{location_id}/{bin_id}/{item_id}', [StockReportController::class, 'showExpireWises'])
+        ->name('stock-report.showExpireWises');
+    Route::post('get-stock-detailed', [StockReportController::class, 'getstockDetailed'])->name('get-stock-detailed');
+    Route::post('get-stock-expirewise', [StockReportController::class, 'getStockExpireWises'])->name('get-stock-expirewise');
 
     // Utitlity
 

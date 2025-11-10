@@ -46,4 +46,9 @@ class Bin extends Model
 
         return $binCode[0]->bin_code;
     }
+
+    public function barcodes()
+    {
+        return $this->hasMany(Barcode::class, 'bin_id');
+    }
 }

@@ -24,6 +24,7 @@ Route::prefix('ajax')
         Route::post('get-item-uom', [CommonAjaxController::class, 'getItemUom'])->name('getitemuom');
         Route::post('bin-exists', [CommonAjaxController::class, 'binExists'])->name('bin-exists');
         Route::post('item-in-stock', [CommonAjaxController::class, 'itemInStock'])->name('item-in-stock');
+        Route::post('get-locations', [CommonAjaxController::class, 'getLocations'])->name('getlocations');
 
         // PurchaseOrder Ajax Functions
         Route::post('get-purchase-order', [PurchaseOrderAjaxController::class, 'getPurchaseOrder'])->name('getpurchaseorder');

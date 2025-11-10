@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Barcode;
 use App\Models\Bin;
 use App\Models\Item;
+use App\Models\Location;
 use Illuminate\Http\Request;
 
 class CommonAjaxController extends Controller
@@ -84,5 +85,22 @@ class CommonAjaxController extends Controller
                 'count' => $itemCount
             ]);
         }
+    }
+
+    public function getLocations(Request $request)
+    {
+        if ($request->ajax()) {
+            $branch_id = $request->branch_id;
+
+
+            $locations = Location::select('id', 'name', 'location_code')
+                ->where('branch_id', $branch_id)
+                ->get();
+
+
+            return response()->json($locations);
+        }
+
+        return response()->json(['error' => 'Invalid request'], 400);
     }
 }
