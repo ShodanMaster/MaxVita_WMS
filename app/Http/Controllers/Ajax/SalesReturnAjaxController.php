@@ -142,9 +142,15 @@ class SalesReturnAjaxController extends Controller
 
     public function fetchBins(Request $request){
         if($request->ajax()){
-            $bins = Bin::where('location_id', $request->location_id)->get(['id', 'name']);
+            $bins = Bin::where('location_id', $request->location_id)->get(['id', 'bin_code', 'name']);
 
-            return response()->json($bins);
+            $data = $bins->map(function($bin){
+                return [
+                    'id' => $bin->id,
+                    'name' => $bin->bin_code . '/' . $bin->name
+                ];
+            });
+            return response()->json($data);
         }
     }
 }
