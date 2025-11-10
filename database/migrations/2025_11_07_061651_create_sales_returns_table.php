@@ -13,9 +13,11 @@ return new class extends Migration
     {
         Schema::create('sales_returns', function (Blueprint $table) {
             $table->id();
+            $table->string('return_number');
             $table->string('barcode');
+            $table->decimal('spq', 10, 4);
             $table->foreignId('customer_id')->constrained();
-            $table->foreignId('dispatch_id')->constrained();
+            $table->foreignId('dispatch_id')->nullable()->constrained();
             $table->foreignId('item_id')->constrained();
             $table->foreignId('bin_id')->constrained();
             $table->foreignId('user_id');

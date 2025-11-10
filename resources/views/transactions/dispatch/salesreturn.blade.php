@@ -20,6 +20,9 @@
         <div class="container-fluid">
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="card-title">
+                        Sales Return
+                    </h5>
                     <div class="btn-group" role="group" aria-label="Barcode Options">
                         <button type="button" class="btn btn-outline-primary active" onclick="toggleForm('with')">With Barcode</button>
                         <button type="button" class="btn btn-outline-primary" onclick="toggleForm('without')">Without Barcode</button>
@@ -55,15 +58,23 @@
                         </div>
                     </div>
                     <div class="form-group row">
+                        <label for="spq" class="col-sm-4 control-label">
+                            spq<font color="#FF0000" size="">*</font>
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="text" id="spq" name="spq" class="form-control form-control-sm">
+                        </div>
+                    </div>
+                    <div class="form-group row">
                         <label for="barcode" class="col-sm-4 control-label">
                             Barcode<font color="#FF0000" size="">*</font>
                         </label>
                         <div class="col-sm-8">
-                            <input type="text" id="barcode" name="barcode" class="form-control form-control-sm" oninput="withBarcode()" required>
+                            <input type="text" id="barcode" name="barcode" class="form-control form-control-sm" oninput="withBarcode()" >
                         </div>
                     </div>
                 </div>
-                <div class="card-body" id="without-barcode" style="display: none">
+                <div class="card-body" id="without-barcode">
 
                     <form id="returnForm" action="{{ route('sales-return.store') }}" method="POST">
                         @csrf
@@ -75,7 +86,7 @@
                                         Customer <font color="#FF0000">*</font>
                                     </label>
                                     <div class="col-sm-8">
-                                        <select name="customer2" id="customer2" class="select2 form-control-sm mandatory form-control" required>
+                                        <select name="customer" id="customer2" class="select2 form-control-sm mandatory form-control" required>
                                             <option value="" selected disabled>-- Select Customer --</option>
                                             @forelse ($customers as $customer)
                                                 <option value="{{ $customer->id }}">{{ $customer->name }}</option>
@@ -175,11 +186,44 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group row">
-                                    <label for="spq" class="col-sm-4 control-label">
+                                    <label for="spq1" class="col-sm-4 control-label">
                                         Spq Quantity <font color="#FF0000">*</font>
                                     </label>
                                     <div class="col-sm-8">
-                                        <input type="number" class="form-control form-control-sm" id="spq" min="1" name="spq"  onchange="totalBarcode()" required>
+                                        <input type="number" class="form-control form-control-sm" id="spq1" min="1" name="spq"  onchange="totalBarcode()" required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label for="location" class="col-sm-4 control-label">
+                                        Location <font color="#FF0000">*</font>
+                                    </label>
+                                    <div class="col-sm-8">
+                                        <select name="location" id="location" class="select2 form-control-sm mandatory form-control" onchange="fetchBins()" required>
+                                            <option value="" selected disabled>-- Select Location --</option>
+                                            @forelse ($locations as $location)
+                                                <option value="{{ $location->id }}">{{ $location->name }}</option>
+                                            @empty
+                                                <option value="" disabled>No Locations Found</option>
+                                            @endforelse
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label for="bin1" class="col-sm-4 control-label">
+                                        Bin <font color="#FF0000">*</font>
+                                    </label>
+                                    <div class="col-sm-8">
+                                        <select name="bin" id="bin1" class="select2 form-control-sm mandatory form-control" required>
+                                            <option value="" selected disabled>-- Select Bin --</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -226,6 +270,10 @@
 
 <script>
     $('.select2').select2();
+
+    window.onload = function() {
+        document.getElementById('without-barcode').style.display = 'none';
+    };
 
     function toggleForm(type) {
         const withBarcode = document.getElementById('with-barcode');
@@ -279,6 +327,7 @@
     async function withBarcode() {
         let customer = document.getElementById('customer');
         let bin = document.getElementById('bin');
+        let spq = document.getElementById('spq');
         let barcode = document.getElementById('barcode');
 
         if (customer.value === '') {
@@ -290,6 +339,12 @@
         if (bin.value === '') {
             sweetAlertMessage('warning', 'Enter Bin', 'Please enter bin!');
             bin.focus();
+            return;
+        }
+
+        if (spq.value === '') {
+            sweetAlertMessage('warning', 'Enter SPQ', 'Please enter spq!');
+            spq.focus();
             return;
         }
 
@@ -305,6 +360,7 @@
             data: {
                 customer_id: customer.value,
                 bin: bin.value,
+                spq: spq.value,
                 barcode: barcode.value,
             },
             dataType: "json",
@@ -333,18 +389,21 @@
                             let item_id = response.data.input_data.item_id;
                             let bin_id = response.data.input_data.bin_id;
                             let barcode_value = barcode.value;
+                            let spq = response.data.input_data.spq;
 
-                            returnItem(barcode_value, customer_id, dispatch_id, item_id, bin_id);
+                            returnItem(barcode_value, customer_id, dispatch_id, item_id, bin_id, spq);
                         }
 
                         barcode.value = '';
-                        barcode.focus();
+                        spq.value = '';
+                        spq.focus();
                     });
 
                 } else {
                     sweetAlertMessage('error', 'Barcode not found');
                     barcode.value = '';
-                    barcode.focus();
+                    spq.value = '';
+                    spq.focus();
                 }
             },
             error: function () {
@@ -353,7 +412,7 @@
         });
     }
 
-    async function returnItem(barcode, customer_id, dispatch_id, item_id, bin_id) {
+    async function returnItem(barcode, customer_id, dispatch_id, item_id, bin_id, spq) {
         $.ajax({
             type: "POST",
             url: "{{ route('ajax.item-return') }}",
@@ -363,6 +422,7 @@
                 dispatch_id: dispatch_id,
                 item_id: item_id,
                 bin_id: bin_id,
+                spq: spq,
             },
             dataType: "json",
             success: function (response2) {
@@ -405,7 +465,7 @@
     function totalBarcode() {
         if (!ifItem()) return;
 
-        var spq = parseFloat($('#spq').val());
+        var spq = parseFloat($('#spq1').val());
         var totalQuantity = parseFloat($('#total_quantity').val());
 
         if (isNaN(spq) || spq <= 0) {
@@ -432,6 +492,32 @@
         $('#number_of_barcodes').val(totalBarcodes);
     }
 
+    function fetchBins(){
+        let locationId = document.getElementById('location').value;
+
+        $.ajax({
+            type: "POST",
+            url: "{{ route('ajax.fetch-bins') }}",
+            data: {
+                location_id : locationId
+            },
+            dataType: "json",
+            success: function (response) {
+                $('#bin1').empty().append('<option value="" selected disabled>-- Select Bin --</option>');
+                if(response && response.length > 0){
+                    response.forEach(function(bin){
+
+                        $('#bin1').append(
+                            `<option value="${bin.id}">${bin.name}</option>`
+                        );
+                    });
+                } else {
+                    $('#bin1').append('<option value="" disabled>No bins found</option>');
+                }
+            }
+        });
+    }
+
     function check(){
         var customer = $('#customer2').val();
         var item = $('#item').val();
@@ -439,7 +525,9 @@
         let bbv = $('#best_before_value').val();
         let uom = $('#uom').val();
         let total_quantity = $('#total_quantity').val();
-        let spq = $('#spq').val();
+        let spq = $('#spq1').val();
+        let location = $('#location').val();
+        let bin = $('#bin1').val();
 
         if (!customer) {
             sweetAlertMessage('warning', 'Select Customer', 'You must select a Customer!');
@@ -469,12 +557,22 @@
 
 
         if (!total_quantity) {
-            sweetAlertMessage('warning', 'Select Enter Before', 'You must select Enter Total Quantity!');
+            sweetAlertMessage('warning', 'Select Enter Total Quantity', 'You must select Enter Total Quantity!');
             return false;
         }
 
         if (!spq) {
-            sweetAlertMessage('warning', 'Select Enter Before', 'You must select Enter SPQ!');
+            sweetAlertMessage('warning', 'Select Enter SPQ', 'You must enter SPQ!');
+            return false;
+        }
+
+        if (!location) {
+            sweetAlertMessage('warning', 'Select Location', 'You must select Location!');
+            return false;
+        }
+
+        if (!bin) {
+            sweetAlertMessage('warning', 'Select Bin', 'You must select Bin!');
             return false;
         }
 

@@ -76,13 +76,14 @@ class SalesReturnAjaxController extends Controller
                 'customer_name' => $customer->name,
                 'dispatch_number' => $dispatchScan->dispatch->dispatch_number,
                 'item_name' => $barcode->item->name,
-                
+
                 'input_data' => [
                     'barcode' => $barcode->serial_barcode,
                     'customer_id' => $customer->id,
                     'dispatch_id' => $dispatchScan->dispatch_id,
                     'item_id' => $barcode->item_id,
                     'bin_id' => $bin->id,
+                    'spq' => $request->spq,
                 ],
             ];
 
@@ -97,7 +98,7 @@ class SalesReturnAjaxController extends Controller
 
     public function itemReturn(Request $request){
         if($request->ajax()){
-
+            // dd($request->spq);
             $barcode = Barcode::where('serial_number', $request->barcode)->where('status', '2')->first();
 
             if(!$barcode){
@@ -112,7 +113,9 @@ class SalesReturnAjaxController extends Controller
             DB::beginTransaction();
 
             $salesReturn = SalesReturn::Create([
+                'return_number' => SalesReturn::withNumber(),
                 'barcode' => $request->barcode,
+                'spq' => $request->spq,
                 'customer_id' => $request->customer_id,
                 'dispatch_id' => $request->dispatch_id,
                 'item_id' => $request->item_id,
@@ -121,6 +124,7 @@ class SalesReturnAjaxController extends Controller
             ]);
 
             $barcode->update([
+                'spq' => $request->spq,
                 'branch_id' => $user->branch_id,
                 'location_id' => $user->location_id,
                 'bin_id' => $request->bin_id,
@@ -133,6 +137,14 @@ class SalesReturnAjaxController extends Controller
                 'status' => 200,
                 'message' => 'Return Scan Successful',
             ]);
+        }
+    }
+
+    public function fetchBins(Request $request){
+        if($request->ajax()){
+            $bins = Bin::where('location_id', $request->location_id)->get(['id', 'name']);
+
+            return response()->json($bins);
         }
     }
 }

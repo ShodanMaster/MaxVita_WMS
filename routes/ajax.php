@@ -68,5 +68,6 @@ Route::prefix('ajax')
         // Sales Return Ajax Functions
         Route::post('with-barcode-data', [SalesReturnAjaxController::class, 'withBarcodeData'])->name('with-barcode-data');
         Route::post('item-return', [SalesReturnAjaxController::class, 'itemReturn'])->name('item-return');
+        Route::post('fetch-bins', [SalesReturnAjaxController::class, 'fetchBins'])->name('fetch-bins');
 
     });
