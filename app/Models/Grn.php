@@ -24,15 +24,32 @@ class Grn extends Model
         'status',
     ];
 
-    public static function grnNumber(){
+    public static function grnNumber()
+    {
         $yr = 'GRN' . date("y");
         $len = strlen($yr);
 
-        $grnNumber = DB::select("SELECT CONCAT('$yr',LPAD(max_grn_number+1,GREATEST(5,LENGTH(max_grn_number+1)),'0')) grn_number FROM
-        (SELECT IFNULL( MAX(SUBSTRING(`grn_number`, $len+1)),'0') max_grn_number FROM grns WHERE grn_number LIKE '$yr%') p2");
+        return DB::transaction(function () use ($yr, $len) {
+            // Lock the table to prevent concurrent access
+            DB::statement('LOCK TABLES grns WRITE');
 
-        return $grnNumber[0]->grn_number;
+            $result = DB::select("
+                SELECT CONCAT('$yr', LPAD(max_grn_number + 1, GREATEST(5, LENGTH(max_grn_number + 1)), '0')) grn_number
+                FROM (
+                    SELECT IFNULL(MAX(SUBSTRING(`grn_number`, $len + 1)), '0') AS max_grn_number
+                    FROM grns
+                    WHERE grn_number LIKE '$yr%'
+                ) p2
+            ");
+
+            $grnNumber = $result[0]->grn_number;
+
+            DB::statement('UNLOCK TABLES');
+
+            return $grnNumber;
+        });
     }
+
 
     public function vendor(){
         return $this->belongsTo(Vendor::class);

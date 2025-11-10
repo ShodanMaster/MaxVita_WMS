@@ -18,7 +18,7 @@ return new class extends Migration
             $table->date('manufacture_date');
             $table->date('best_before');
             $table->foreignId('bin_id')->constrained();
-            $table->decimal('total_quantity', 8, 4);
+            $table->decimal('total_quantity',15, 4);
             $table->integer('number_of_barcodes');
             $table->string('batch');
             $table->integer('status')->default(0);
