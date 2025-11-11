@@ -288,9 +288,29 @@ class SubMenuSeeder extends Seeder
                 'created_at' => now(),
             ],
 
+            //Storage Scan Report
+            //31
+            [
+                'menu_id' => 9,
+                'title' => 'Storage Scan Report',
+                'link' => 'storage-scan-report',
+                'listing_order' => 7,
+                'created_at' => now(),
+            ],
+
+            //Production Plan Report
+            //32
+            [
+                'menu_id' => 9,
+                'title' => 'Production Plan Report',
+                'link' => 'production-plan-report',
+                'listing_order' => 7,
+                'created_at' => now(),
+            ],
+
             // Utility Submenus
             // Barcode Reprint
-            // 31
+            // 33
             [
                 'menu_id' => 10,
                 'title' => 'Barcode Reprint',
@@ -300,7 +320,7 @@ class SubMenuSeeder extends Seeder
             ],
 
             // Permission
-            // 32
+            // 34
             [
                 'menu_id' => 10,
                 'title' => 'Permission',
@@ -310,7 +330,7 @@ class SubMenuSeeder extends Seeder
             ],
 
             // Change Password
-            // 33
+            // 35
             [
                 'menu_id' => 10,
                 'title' => 'Change Password',

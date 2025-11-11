@@ -172,7 +172,7 @@ class ProductionPlan extends Model
                     ? $plan->item->item_code . ' - ' . $plan->item->name
                     : '-',
                 'planned_qty' => $plan->total_quantity ?? 0,
-                'picked_qty' => $plan->picked_qty ?? 0,
+                'picked_qty' => $plan->picked_quantity ?? 0,
                 'entry_user' => $plan->user->username ?? '-',
                 'status' => $status ?? '-',
 

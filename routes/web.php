@@ -15,6 +15,7 @@ use App\Http\Controllers\Master\UomController;
 use App\Http\Controllers\Master\UserController;
 use App\Http\Controllers\Master\VendorController;
 use App\Http\Controllers\Reports\GrnReportController;
+use App\Http\Controllers\Reports\ProductionPlanReportController;
 use App\Http\Controllers\Reports\PurchaseOrderReportController;
 use App\Http\Controllers\Reports\StockReportController;
 use App\Http\Controllers\Reports\StorageScanReportController;
@@ -140,6 +141,9 @@ Route::group(['middleware' => ['auth']], function () {
 
         // StorageScan Report
         Route::resource('storage-scan-report', StorageScanReportController::class);
+
+        //Production Plan Controller
+        Route::resource('production-plan-report', ProductionPlanReportController::class);
 
         // Utitlity
 
@@ -273,6 +277,14 @@ Route::group(['middleware' => ['auth']], function () {
 
     //Storage Scan
     Route::post('get-storage-scan-views', [StorageScanReportController::class, 'getStorageScanViews'])->name('get-storage-scan-views');
+
+    // Production Plan Report
+    Route::post('get-ProductionPlanViews', [ProductionPlanReportController::class, 'getProductionPlanViews'])->name('get-ProductionPlanViews');
+    Route::post('get-ProductionDetailViews', [ProductionPlanReportController::class, 'getProductionDetailViews'])->name('get-ProductionDetailViews');
+    Route::get('production-plan-report/{id}', [PurchaseOrderReportController::class, 'show1'])->name('production-plan-report.show1');
+    Route::post('get-ProductionBarcodeDetails', [ProductionPlanReportController::class, 'getProductionBarcodeDetails'])->name('get-ProductionBarcodeDetails');
+    Route::get('production-plan-report/barcodewise/{id}', [ProductionPlanReportController::class, 'barcodeWise'])
+        ->name('production-plan-report.barcodewise');
 
     // Utitlity
 

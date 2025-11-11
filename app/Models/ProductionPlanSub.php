@@ -20,4 +20,14 @@ class ProductionPlanSub extends Model
     public function item(){
         return $this->belongsTo(Item::class);
     }
+
+    public function productionPlan()
+    {
+        return $this->belongsTo(ProductionPlan::class, 'production_plan_id', 'id');
+    }
+
+    public function productionIssues()
+    {
+        return $this->hasMany(ProductionIssue::class, 'production_plan_id');
+    }
 }

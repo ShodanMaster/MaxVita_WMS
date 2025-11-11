@@ -19,4 +19,19 @@ class ProductionIssue extends Model
         'user_id',
         'scan_time',
     ];
+
+    public function productionPlanSub()
+    {
+        return $this->belongsTo(ProductionPlanSub::class, 'production_plan_sub_id');
+    }
+
+    public function item()
+    {
+        return $this->belongsTo(Item::class, 'item_id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }
