@@ -17,6 +17,7 @@ use App\Http\Controllers\Master\VendorController;
 use App\Http\Controllers\Reports\GrnReportController;
 use App\Http\Controllers\Reports\PurchaseOrderReportController;
 use App\Http\Controllers\Reports\StockReportController;
+use App\Http\Controllers\Reports\StorageScanReportController;
 use App\Http\Controllers\Transactions\Dispatch\DispatchController;
 use App\Http\Controllers\Transactions\Dispatch\DispatchScanController;
 use App\Http\Controllers\Transactions\Dispatch\SalesReturnController;
@@ -136,6 +137,9 @@ Route::group(['middleware' => ['auth']], function () {
 
         //Stock Report
         Route::resource('stock-report', StockReportController::class);
+
+        // StorageScan Report
+        Route::resource('storage-scan-report', StorageScanReportController::class);
 
         // Utitlity
 
@@ -266,6 +270,9 @@ Route::group(['middleware' => ['auth']], function () {
         ->name('stock-report.showExpireWises');
     Route::post('get-stock-detailed', [StockReportController::class, 'getstockDetailed'])->name('get-stock-detailed');
     Route::post('get-stock-expirewise', [StockReportController::class, 'getStockExpireWises'])->name('get-stock-expirewise');
+
+    //Storage Scan
+    Route::post('get-storage-scan-views', [StorageScanReportController::class, 'getStorageScanViews'])->name('get-storage-scan-views');
 
     // Utitlity
 
