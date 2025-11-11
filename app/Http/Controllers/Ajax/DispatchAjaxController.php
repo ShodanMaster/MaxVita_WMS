@@ -84,6 +84,7 @@ class DispatchAjaxController extends Controller
                 return [
                     'item'   => $d->item->item_code . '/' . $d->item->name,
                     'uom'         => $d->uom->name,
+                    'total_quantity'    => round($d->total_quantity),
                     'balance_quantity'    => $d->total_quantity - $d->dispatched_quantity,
                     'dispatched_quantity'    => round($d->dispatched_quantity),
                 ];
@@ -191,14 +192,11 @@ class DispatchAjaxController extends Controller
             $dispatch = Dispatch::find($dispatchSub->dispatch_id);
 
             $scanComplete = false;
-            if($dispatchSubStatus){
+            if(!$dispatchSubStatus){
                 $dispatch->update([
                     'status' => 1
                 ]);
-            }else{
-                $dispatch->update([
-                    'status' => 2
-                ]);
+
                 $scanComplete = true;
             }
 

@@ -80,7 +80,8 @@
                             <th>Item</th>
                             <th>UOM</th>
                             <th>Total Quantity</th>
-                            <th>Picked Quantity</th>
+                            <th>Balance Quantity</th>
+                            <th>Dispatched Quantity</th>
                         </tr>
                     </thead>
                     <tbody id="balancegrid">
@@ -193,8 +194,9 @@
                     var row = $('<tr>');
                     row.append('<td>' + item.item + '</td>');
                     row.append('<td>' + item.uom + '</td>');
+                    row.append('<td>' + item.total_quantity + '</td>');
                     row.append('<td>' + item.balance_quantity + '</td>');
-                    row.append('<td>' + (item.scanned_quantity ?? 0) + '</td>');
+                    row.append('<td>' + (item.dispatched_quantity ?? 0) + '</td>');
                     balancegrid.append(row);
                 });
             }
