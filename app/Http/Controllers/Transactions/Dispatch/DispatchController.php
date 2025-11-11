@@ -8,6 +8,7 @@ use App\Models\Dispatch;
 use App\Models\DispatchSub;
 use App\Models\Item;
 use App\Models\Location;
+use App\Models\TransactionEditLog;
 use App\Models\Uom;
 use Exception;
 use Illuminate\Http\Request;
@@ -320,6 +321,8 @@ class DispatchController extends Controller
         try {
             DB::beginTransaction();
 
+            $userId = Auth::id();
+
             $location = Location::find($request->location_id, ['id', 'branch_id']);
 
             $dispatchTo = match($request->dispatch_type) {
@@ -334,7 +337,7 @@ class DispatchController extends Controller
                 'from_branch_id' => $location->branch_id,
                 'from_location_id' => $location->id,
                 'dispatch_type' => $request->dispatch_type,
-                'user_id' => Auth::id(),
+                'user_id' => $userId,
             ]);
 
             $dispatch->dispatchTo()->associate($dispatchTo);
@@ -358,6 +361,13 @@ class DispatchController extends Controller
             if (!empty($dispatchSubs)) {
                 DispatchSub::insert($dispatchSubs);
             }
+
+            TransactionEditLog::create([
+                'transaction_type' => 'dispatch',
+                'transaction_id' => $dispatch->id,
+                'document_number' => $request->dispatch_number,
+                'user_id' => $userId,
+            ]);
 
             DB::commit();
 
