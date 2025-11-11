@@ -278,9 +278,7 @@ class DispatchController extends Controller
     }
 
     public function dispatchEdit(){
-        $dispatchNumbers = Dispatch::whereHas('dispatchSubs', function ($query) {
-                            $query->where('status', 0);
-                        })->get(['id', 'dispatch_number']);
+        $dispatchNumbers = Dispatch::whereDoesntHave('dispatchScans')->get(['id', 'dispatch_number']);
 
         return view('transactions.dispatch.dispatchedit', compact('dispatchNumbers'));
     }
