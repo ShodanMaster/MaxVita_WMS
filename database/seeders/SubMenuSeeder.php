@@ -197,8 +197,17 @@ class SubMenuSeeder extends Seeder
                 'listing_order' => 11,
                 'created_at' => now(),
             ],
-            //Dispatch Scan
+            //Dispatch Edit
             // 22
+            [
+                'menu_id' => 6,
+                'title' => 'Dispatch Edit',
+                'link' => 'dispatch-edit',
+                'listing_order' => 11,
+                'created_at' => now(),
+            ],
+            //Dispatch Scan
+            // 23
             [
                 'menu_id' => 6,
                 'title' => 'Dispatch Scan',
@@ -208,7 +217,7 @@ class SubMenuSeeder extends Seeder
             ],
 
             //Sales Return
-            // 23
+            // 24
             [
                 'menu_id' => 6,
                 'title' => 'Sales Return',
@@ -219,7 +228,7 @@ class SubMenuSeeder extends Seeder
 
             //Receipt
             // Receipt Scan
-            // 24
+            // 25
             [
                 'menu_id' => 7,
                 'title' => 'Receipt Scan',
@@ -230,7 +239,7 @@ class SubMenuSeeder extends Seeder
 
             //Stock Management
             //Opening Stock
-            // 25
+            // 26
             [
                 'menu_id' => 8,
                 'title' => 'Opening Stock',
@@ -240,7 +249,7 @@ class SubMenuSeeder extends Seeder
             ],
 
             //Stock Out
-            // 26
+            // 27
             [
                 'menu_id' => 8,
                 'title' => 'Stock Out',
@@ -251,7 +260,7 @@ class SubMenuSeeder extends Seeder
 
             //Reports
             //Purchase Order Reports
-            // 27
+            // 28
             [
                 'menu_id' => 9,
                 'title' => 'Purchase Order Report',
@@ -260,7 +269,7 @@ class SubMenuSeeder extends Seeder
                 'created_at' => now(),
             ],
 
-            // 28
+            // 29
             [
                 'menu_id' => 9,
                 'title' => 'GRN Report',
@@ -270,9 +279,9 @@ class SubMenuSeeder extends Seeder
             ],
 
             //Stock Report
-            //29
+            //30
             [
-                'menu_id' => 6,
+                'menu_id' => 9,
                 'title' => 'Stock Report',
                 'link' => 'stock-report',
                 'listing_order' => 7,
@@ -281,7 +290,7 @@ class SubMenuSeeder extends Seeder
 
             // Utility Submenus
             // Barcode Reprint
-            // 30
+            // 31
             [
                 'menu_id' => 10,
                 'title' => 'Barcode Reprint',
@@ -291,7 +300,7 @@ class SubMenuSeeder extends Seeder
             ],
 
             // Permission
-            // 31
+            // 32
             [
                 'menu_id' => 10,
                 'title' => 'Permission',
@@ -301,7 +310,7 @@ class SubMenuSeeder extends Seeder
             ],
 
             // Change Password
-            // 32
+            // 33
             [
                 'menu_id' => 10,
                 'title' => 'Change Password',

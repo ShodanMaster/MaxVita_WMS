@@ -108,6 +108,9 @@ Route::group(['middleware' => ['auth']], function () {
         //Dispatch Entry
         Route::resource('dispatch', DispatchController::class);
 
+        //Dispatch Edit
+        Route::get('dispatch-edit', [DispatchController::class, 'dispatchEdit'])->name('dispatch-edit');
+
         //Dispatch Scan
         Route::resource('dispatch-scan', DispatchScanController::class);
 

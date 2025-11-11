@@ -53,6 +53,7 @@ Route::prefix('ajax')
 
         // Dispatch Scan Ajax Functions
         Route::post('get-dispatch-details', [DispatchAjaxController::class, 'getDispatchDetails'])->name('get-dispatch-details');
+        Route::post('get-dispatch-items', [DispatchAjaxController::class, 'getDispatchItems'])->name('get-dispatch-items');
         Route::post('fetch-dispatch-details', [DispatchAjaxController::class, 'fetchDispatchDetails'])->name('fetch-dispatch-details');
         Route::post('dispatch-scan', [DispatchAjaxController::class, 'dispatchScan'])->name('dispatchscan');
 

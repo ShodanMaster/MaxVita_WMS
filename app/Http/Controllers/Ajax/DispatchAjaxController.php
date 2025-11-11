@@ -13,7 +13,45 @@ use Illuminate\Support\Facades\DB;
 
 class DispatchAjaxController extends Controller
 {
+
     public function getDispatchDetails(Request $request){
+
+        if ($request->ajax()) {
+
+            $dispatch = Dispatch::with([
+                'branch:id,name',
+                'location:id,name',
+                'dispatchTo:id,name',
+                'dispatchSubs.item:id,item_code,name',
+                'dispatchSubs.uom:id,name'
+            ])->find($request->id);
+
+            if (!$dispatch) {
+                return response()->json(['error' => 'Dispatch not found'], 404);
+            }
+
+            $data = [
+                'dispatch_number' => $dispatch->dispatch_number,
+                'dispatch_date' => $dispatch->dispatch_date,
+                'from_branch' => $dispatch->branch->name,
+                'from_location' => $dispatch->location->name,
+                'dispatch_to' => $dispatch->dispatchTo->name,
+                'dispatch_type' => $dispatch->dispatch_type,
+                'items' => $dispatch->dispatchSubs->map(function($sub){
+                    return [
+                        'item' => $sub->item->item_code . '/' . $sub->item->name,
+                        'uom' => $sub->uom->name,
+                        'total_quantity' => $sub->total_quantity,
+                    ];
+                }),
+            ];
+
+            return response()->json($data);
+        }
+    }
+
+
+    public function getDispatchItems(Request $request){
         if ($request->ajax()) {
             $dispatch = Dispatch::with('dispatchSubs.item')->find($request->id);
 

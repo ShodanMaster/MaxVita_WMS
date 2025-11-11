@@ -30,7 +30,7 @@
                                 Dispatch No
                             </label>
                             <div class="col-sm-8">
-                                <select name="dispatch_number" id="dispatch_number" class="form-control form-control-sm select2" required onchange="fetchDispatchDetails()">
+                                <select name="dispatch_number" id="dispatch_number" class="form-control form-control-sm select2" required onchange="fetchDispatchItems()">
                                     <option value="" disabled selected>--Select Dispatch Number--</option>
                                     @forelse ($dispatchNumbers as $dispatchNumber)
                                         <option value="{{ $dispatchNumber->id }}">{{ $dispatchNumber->dispatch_number }}</option>
@@ -45,7 +45,7 @@
 
                     </form>
                 </div>
-                <div class="card-footer table-responsive" style="display: none" id="dispatchDetails">
+                <div class="card-footer table-responsive" style="display: none" id="dispatchItems">
                     <table class="table" id="dispatchGrid">
                         <thead>
                             <tr>
@@ -90,13 +90,13 @@
 
 <script>
     $('.select2').select2();
-    function fetchDispatchDetails(){
+    function fetchDispatchItems(){
         var dispatchNumber = document.getElementById("dispatch_number").value;
         console.log(dispatchNumber);
 
         $.ajax({
             type: "POST",
-            url: "{{ route('ajax.get-dispatch-details') }}",
+            url: "{{ route('ajax.get-dispatch-items') }}",
             data: {
                 id : dispatchNumber
             },
@@ -107,7 +107,7 @@
                 tbody.innerHTML = "";
 
                 if (Array.isArray(response) && response.length > 0) {
-                    document.getElementById("dispatchDetails").style.display = "block";
+                    document.getElementById("dispatchItems").style.display = "block";
 
                     response.forEach(item => {
                         const tr = document.createElement("tr");
@@ -119,7 +119,7 @@
                         tbody.appendChild(tr);
                     });
                 } else {
-                    document.getElementById("dispatchDetails").style.display = "none";
+                    document.getElementById("dispatchItems").style.display = "none";
                 }
             }
         });

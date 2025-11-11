@@ -275,4 +275,99 @@ class DispatchController extends Controller
 
         return $data;
     }
+
+    public function dispatchEdit(){
+        $dispatchNumbers = Dispatch::whereHas('dispatchSubs', function ($query) {
+                            $query->where('status', 0);
+                        })->get(['id', 'dispatch_number']);
+
+        return view('transactions.dispatch.dispatchedit', compact('dispatchNumbers'));
+    }
+
+    public function edit($id){
+        $locations = Location::get(['id', 'name']);
+        $customers = Customer::get(['id', 'name']);
+        $fgItems = Item::where('item_type', 'FG')->get(['id', 'item_code', 'name']);
+        $uoms = Uom::wherein('name', ['Bag', 'Box'])->get(['id', 'name']);
+
+        $dispatch = Dispatch::with('dispatchSubs.item')->find(($id));
+
+        return view('transactions.dispatch.edit', compact('locations', 'customers', 'fgItems', 'uoms', 'dispatch'));
+    }
+
+    public function update(Request $request, Dispatch $dispatch)
+    {
+        // Validate request
+        $request->validate([
+            'dispatch_type' => 'required|in:sales,transfer',
+            'dispatch_date' => 'required|date',
+            'dispatch_number' => 'required|string|unique:dispatches,dispatch_number,' . $dispatch->id,
+            'location_id' => 'nullable|exists:locations,id',
+            'customer_id' => 'nullable|exists:customers,id',
+            'items' => 'required|array|min:1',
+            'items.*.item_id' => 'required|exists:items,id',
+            'items.*.uom_id' => 'required|exists:uoms,id',
+            'items.*.quantity' => 'required|numeric|min:0.0001',
+        ]);
+
+        // Check for from and to location conflict
+        if ($request->location_id === $request->to_location_id && $request->dispatch_type === 'transfer') {
+            return redirect()->back()
+                ->withErrors(['to_location_id' => 'To Location must be different from From Location'])
+                ->withInput();
+        }
+
+        try {
+            DB::beginTransaction();
+
+            $location = Location::find($request->location_id, ['id', 'branch_id']);
+
+            $dispatchTo = match($request->dispatch_type) {
+                'sales' => Customer::find($request->customer_id, ['id', 'name']),
+                'transfer' => Location::find($request->to_location_id, ['id', 'name', 'branch_id']),
+            };
+
+            // Update dispatch details
+            $dispatch->update([
+                'dispatch_number' => $request->dispatch_number,
+                'dispatch_date' => $request->dispatch_date,
+                'from_branch_id' => $location->branch_id,
+                'from_location_id' => $location->id,
+                'dispatch_type' => $request->dispatch_type,
+                'user_id' => Auth::id(),
+            ]);
+
+            $dispatch->dispatchTo()->associate($dispatchTo);
+            $dispatch->save();
+
+            // Handle dispatch items (subs)
+            // First, delete existing items
+            DispatchSub::where('dispatch_id', $dispatch->id)->delete();
+
+            // Then, insert new items
+            $dispatchSubs = [];
+            foreach ($request->items as $item) {
+                $dispatchSubs[] = [
+                    'dispatch_id' => $dispatch->id,
+                    'item_id' => $item['item_id'],
+                    'uom_id' => $item['uom_id'],
+                    'total_quantity' => $item['quantity'],
+                ];
+            }
+
+            if (!empty($dispatchSubs)) {
+                DispatchSub::insert($dispatchSubs);
+            }
+
+            DB::commit();
+
+            Alert::toast('Dispatch updated with Number ' . $dispatch->dispatch_number, 'success')->autoClose(3000);
+            return redirect()->route('dispatch-edit');
+
+        } catch (Exception $e) {
+            DB::rollBack();
+            dd($e); // Or log and redirect with error
+        }
+    }
+
 }

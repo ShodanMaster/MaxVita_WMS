@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('dispatch_number')->unique();
             $table->date('dispatch_date');
-            $table->foreignId('from_branch_id')->contrained('branches', 'id');
-            $table->foreignId('from_location_id')->contrained('locations', 'id');
+            $table->foreignId('from_branch_id')->constrained('branches', 'id');
+            $table->foreignId('from_location_id')->constrained('locations', 'id');
             $table->morphs('dispatch_to');
             $table->dateTime('dispatch_time')->useCurrent();
             $table->enum('dispatch_type', ['sales', 'transfer']);

@@ -21,6 +21,14 @@ class Dispatch extends Model
         'status',
     ];
 
+    public function branch(){
+        return $this->belongsTo(Branch::class, 'from_branch_id');
+    }
+
+    public function location(){
+        return $this->belongsTo(Location::class, 'from_location_id');
+    }
+
     public function dispatchTo()
     {
         return $this->morphTo();
