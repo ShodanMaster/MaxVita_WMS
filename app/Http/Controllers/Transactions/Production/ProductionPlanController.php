@@ -49,6 +49,7 @@ class ProductionPlanController extends Controller
                     'production_plan_id' => $production->id,
                     'item_id' => $rmItem['item_id'],
                     'total_quantity' => $rmItem['total_quantity'],
+                    'created_at' => now()
                 ];
             }
 
@@ -200,5 +201,9 @@ class ProductionPlanController extends Controller
         }
 
         return $data;
+    }
+
+    public function purchasEdit(){
+        return view();
     }
 }

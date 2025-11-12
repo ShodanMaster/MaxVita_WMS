@@ -14,8 +14,10 @@ return new class extends Migration
         Schema::create('grn_purchase_order_subs', function (Blueprint $table) {
             $table->id();
             $table->foreignId('grn_purchase_order_id')->constrained();
+            $table->foreignId('purchase_order_id')->constrained();
             $table->string('purchase_number');
             $table->foreignId('item_id')->constrained();
+            $table->decimal('picked_quantity', 15, 4);
             $table->timestamps();
         });
     }

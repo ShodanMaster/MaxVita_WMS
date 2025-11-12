@@ -77,6 +77,7 @@ class ProductionBarcodeGenerationController extends Controller
                                 'status' => '-1',
                                 'user_id' => $user->id,
                                 'qc_approval_status' => '0',
+                                'created_at' => now()
                             ];
 
 
@@ -98,6 +99,7 @@ class ProductionBarcodeGenerationController extends Controller
                                 'best_before_date' => $request->best_before_date,
                                 'uom_id' => $uomId,
                                 'user_id' => $user->id,
+                                'created_at' => now()
                             ];
             }
 

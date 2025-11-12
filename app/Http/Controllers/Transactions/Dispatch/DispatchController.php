@@ -73,6 +73,7 @@ class DispatchController extends Controller
                     'item_id' => $item['item_id'],
                     'uom_id' => $item['uom_id'],
                     'total_quantity' => $item['quantity'],
+                    'created_at' => now()
                 ];
             }
 
@@ -134,6 +135,7 @@ class DispatchController extends Controller
                     'item_id' => $item['item_id'],
                     'uom_id' => $item['uom_id'],
                     'total_quantity' => $item['total_quantity'],
+                    'created_at' => now()
                 ];
             }
             // dd($dispatchSubs);
@@ -353,6 +355,7 @@ class DispatchController extends Controller
                     'item_id' => $item['item_id'],
                     'uom_id' => $item['uom_id'],
                     'total_quantity' => $item['quantity'],
+                    'created_at' => now()
                 ];
             }
 

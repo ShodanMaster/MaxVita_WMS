@@ -11,7 +11,9 @@ class GrnPurchaseOrderSub extends Model
 
     protected $fillable = [
         'grn_purchase_order_id',
+        'purchase_order_id',
         'purchase_number',
         'item_id',
+        'picked_quantity',
     ];
 }

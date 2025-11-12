@@ -96,6 +96,7 @@ class SalesReturnController extends Controller
                     'status' => '1',
                     'user_id' => $userId,
                     'qc_approval_status' => '0',
+                    'created_at' => now()
                 ];
 
                 $itemName = $item->name;

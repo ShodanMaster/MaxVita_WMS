@@ -107,13 +107,15 @@ class GrnController extends Controller
                     'best_before_date' => $item["bbf"],
                     'total_quantity' => $item["total_quantity"],
                     'number_of_barcodes' => $item["number_of_barcodes"],
+                    'created_at' => now()
                 ];
 
                 if ($purchaseOrderExists) {
                     $grnPurchaseOrderSubData[] = [
                         'grn_purchase_order_id' => $grnPurchaseOrder->id,
                         'purchase_number' => $purchaseOrderExists->purchase_number,
-                        'item_id' => $item["item_id"]
+                        'item_id' => $item["item_id"],
+                        'created_at' => now()
                     ];
                 }
 
@@ -160,6 +162,7 @@ class GrnController extends Controller
                         'status' => '-1',
                         'user_id' => $userid,
                         'qc_approval_status' => '0',
+                        'created_at' => now()
                     ];
 
                     $itemName = $itemData->name;
@@ -172,8 +175,7 @@ class GrnController extends Controller
                     ];
                 }
             }
-            // dd($barcodeData);
-            // dd($grnSubData, $grnPurchaseOrderSubData, $barcodeData);
+
             if (!empty($grnSubData)) {
                 GrnSub::insert($grnSubData);
             }

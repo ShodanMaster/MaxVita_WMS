@@ -88,6 +88,7 @@ class OpeningStockController extends Controller
                     'status' => '1',
                     'user_id' => $userid,
                     'qc_approval_status' => '0',
+                    'created_at' => now()
                 ];
 
                 $itemName = $item->name;

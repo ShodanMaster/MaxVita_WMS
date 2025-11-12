@@ -50,6 +50,7 @@ class PurchaseOrderController extends Controller
                     'purchase_order_id' => $purchaseOrder->id,
                     'item_id' => $item['item_id'],
                     'quantity' => $item['total_quantity'],
+                    'created_at' => now()
                 ];
             }
 
