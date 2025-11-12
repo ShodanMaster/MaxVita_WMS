@@ -211,8 +211,7 @@ class ProductionPlan extends Model
     {
         $plans = self::filteredData($filters);
         $data = $plans->flatMap(function ($plan) {
-            return $plan->productionPlanSubs->flatMap(function ($sub) use ($plan) {
-                return $sub->productionIssues->map(function ($issue) use ($plan, $sub) {
+                return $plan->productionIssues->map(function ($issue) use ($plan) {
                     return [
                         'plan_no' => $plan->plan_number,
                         'plan_date'   => !empty($plan->plan_date)
@@ -231,7 +230,6 @@ class ProductionPlan extends Model
                     ];
                 });
             });
-        });
 
         return $data;
     }
