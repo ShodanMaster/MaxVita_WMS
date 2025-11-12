@@ -122,6 +122,53 @@
         });
     }
 
+    function sweetAlertDelete(route) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Delete!',
+            text: 'Are you sure you want to delete this record?',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, Delete',
+            cancelButtonText: 'Cancel',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: "DELETE",
+                    url: route,
+                    success: function (response) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Deleted!',
+                            text: response.message || 'Item deleted successfully.',
+                            timer: 1500,
+                            showConfirmButton: false
+                        });
+
+                        // Optional: reload DataTable if present
+                        if ($('.masterTable').length) {
+                            $('.masterTable').DataTable().ajax.reload(null, false);
+                        }
+                    },
+                    error: function (xhr) {
+                        let message = 'Something went wrong.';
+                        if (xhr.status === 409) {
+                            message = xhr.responseJSON?.message || 'This record is linked to another item.';
+                        } else if (xhr.responseJSON?.message) {
+                            message = xhr.responseJSON.message;
+                        }
+
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: message
+                        });
+                    }
+                });
+            }
+        });
+    }
+
+
     </script>
 
     <!-- custom-scripts js -->

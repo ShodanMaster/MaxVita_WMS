@@ -47,13 +47,9 @@ class BinController extends Controller
                                     <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                                 </svg>
                             </a>
-                            <form method="POST" action="' . $deleteUrl . '" onsubmit="return confirm(\'Are you sure, You want to delete this bin?\')" style="display:inline;">
-                                ' . csrf_field() . '
-                                ' . method_field('DELETE') . '
-                                <button type="submit" class="btn" data-toggle="tooltip" title="Delete">
-                                    <span class="fa fa-trash text-danger"></span>
-                                </button>
-                            </form>
+                            <button type="button" class="btn p-0" onclick="sweetAlertDelete(\'' . $deleteUrl . '\')" data-toggle="tooltip" title="Delete">
+                                <span class="fa fa-trash text-danger"></span>
+                            </button>
                         </td>';
 
                     return $btn;
@@ -162,19 +158,38 @@ class BinController extends Controller
      */
     public function destroy(string $id)
     {
-        try{
+        try {
             $bin = Bin::findOrFail($id);
+
+            if ($bin->barcodes()->exists()) {
+                return response()->json([
+                    'status' => 409,
+                    'message' => 'You cannot delete this record because it is linked to other records.'
+                ], 409);
+            }
+
             $bin->delete();
 
-            Alert::toast('Bin Deleted Successfully', 'success')->autoClose(3000);
-            return redirect()->route('bin.index');
+            return response()->json([
+                'status' => 200,
+                'message' => 'Bin deleted successfully.'
+            ]);
 
-        } catch(Exception $e){
+        } catch (Exception $e) {
             Log::error('Bin Delete Error: ' . $e->getMessage());
+
+            if (request()->ajax()) {
+                return response()->json([
+                    'status' => 500,
+                    'message' => 'An unexpected error occurred while deleting the Bin.'
+                ], 500);
+            }
+
             Alert::toast('An error occurred while deleting the Bin.', 'error')->autoClose(3000);
             return redirect()->route('bin.index');
         }
     }
+
 
     public function binExcelExport()
     {

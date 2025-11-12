@@ -42,7 +42,7 @@
                         </div>
                     </div>
                     <div class="table-responsive">
-                        <table id="binsTable" class="table">
+                        <table id="binsTable" class="table masterTable">
                             <thead>
                                 <tr>
                                     <th align="center" style="width:80px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SI.No</th>
