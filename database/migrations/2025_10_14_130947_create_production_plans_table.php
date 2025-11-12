@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string(('plan_number'))->unique();
             $table->date('plan_date');
-            $table->decimal('total_quantity',15, 4);
-            $table->decimal('picked_quantity',15, 4)->default(0);
-            $table->decimal('scanned_quantity',15, 4)->default(0);
+            $table->decimal('total_quantity',17, 4);
+            $table->decimal('picked_quantity',17, 4)->default(0);
+            $table->decimal('scanned_quantity',17, 4)->default(0);
             $table->foreignId('item_id')->constrained();
             $table->foreignId('user_id')->constrained();
             $table->foreignId('branch_id')->constrained();

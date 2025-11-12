@@ -18,10 +18,10 @@ return new class extends Migration
             $table->string('batch_number');
             $table->date('date_of_manufacture');
             $table->date('best_before_date');
-            $table->decimal('total_quantity',15, 4);
-            $table->decimal('number_of_barcodes',15, 4);
-            $table->decimal('scanned_quantity',15, 4)->default(0);
-            $table->decimal('rejected_quantity',15, 4)->default(0);
+            $table->decimal('total_quantity',17, 4);
+            $table->decimal('number_of_barcodes',17, 4);
+            $table->decimal('scanned_quantity',17, 4)->default(0);
+            $table->decimal('rejected_quantity',17, 4)->default(0);
             $table->integer('grn_status')->default(0);
             $table->integer('status')->default(0);
             $table->softDeletes();
