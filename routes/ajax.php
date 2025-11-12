@@ -28,6 +28,7 @@ Route::prefix('ajax')
 
         // PurchaseOrder Ajax Functions
         Route::post('get-purchase-order', [PurchaseOrderAjaxController::class, 'getPurchaseOrder'])->name('getpurchaseorder');
+        Route::post('get-purchase-details', [PurchaseOrderAjaxController::class, 'getPurchaseDetails'])->name('getpurchasedetails');
 
         // Grn Ajax Functions
         Route::post('get-purchase-number', [GrnAjaxController::class, 'getPurchaseNumber'])->name('getpurchasenumber');

@@ -47,21 +47,13 @@
                         <tbody>
                             <tr>
                                 <td><strong>Purchase Number:</strong></td>
-                                <td id="purchase_number"></td>
+                                <td id="purchase_number1"></td>
                                 <td><strong>Purchase Date:</strong></td>
                                 <td id="purchase_date"></td>
                             </tr>
                             <tr>
-                                <td><strong>From Branch:</strong></td>
-                                <td id="purchase_branch"></td>
-                                <td><strong>From Location:</strong></td>
-                                <td id="purchase_location"></td>
-                            </tr>
-                            <tr>
-                                <td><strong>Purchase To:</strong></td>
-                                <td id="purchase_to"></td>
-                                <td><strong>Purchase Type:</strong></td>
-                                <td id="purchase_type"></td>
+                                <td><strong>Vendor:</strong></td>
+                                <td id="purchase_vendor"></td>
                             </tr>
                         </tbody>
                     </table>
@@ -70,8 +62,7 @@
                         <thead>
                             <tr>
                                 <th>Item</th>
-                                <th>Quantity</th>
-                                <th>UOM</th>
+                                <th>Total Quantity</th>
                             </tr>
                         </thead>
                         <tbody id="grid-container">
@@ -116,9 +107,9 @@
 
         $.ajax({
             type: "POST",
-            url: "{{ route('ajax.get-dispatch-details') }}",
+            url: "{{ route('ajax.getpurchasedetails') }}",
             data: {
-                id: purchasehNumber,
+                purchase_id: purchasehNumber,
             },
             dataType: "json",
             success: function(response) {
@@ -129,12 +120,9 @@
                     document.getElementById("purchaseDetails").style.display = "block";
 
                     // Populate purchase info
-                    document.getElementById("purchase_number").textContent = response.purchase_number || '';
+                    document.getElementById("purchase_number1").textContent = response.purchase_number || '';
                     document.getElementById("purchase_date").textContent = response.purchase_date || '';
-                    document.getElementById("purchase_branch").textContent = response.from_branch || '';
-                    document.getElementById("purchase_location").textContent = response.from_location || '';
-                    document.getElementById("purchase_to").textContent = response.purchase_to || '';
-                    document.getElementById("purchase_type").textContent = response.purchase_type || '';
+                    document.getElementById("purchase_vendor").textContent = response.vendor || '';
 
                     // Populate items table
                     const tbody = document.getElementById("grid-container");
@@ -145,8 +133,7 @@
                             const tr = document.createElement("tr");
                             tr.innerHTML = `
                                 <td>${item.item || ''}</td>
-                                <td>${item.total_quantity ?? ''}</td>
-                                <td>${item.uom ?? ''}</td>
+                                <td>${item.quantity ?? ''}</td>
                             `;
                             tbody.appendChild(tr);
                         });

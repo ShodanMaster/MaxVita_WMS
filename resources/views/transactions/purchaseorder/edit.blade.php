@@ -24,21 +24,15 @@
     <section class="content">
         <div class="container-fluid">
             <div class="card">
-                <div class="card-header d-flex justify-content-between">
+                <div class="card-header">
                     <h5 class="card-title">
-                        Purchase Order Entry
+                        Purchase Edit
                     </h5>
-
-                    <!-- Button trigger modal -->
-                    <button type="button" class="btn" data-toggle="modal" data-target="#uploadModal">
-                        <i data-feather="upload" class="text-primary" style="font-size: 24px;"></i><b> Upload </b>
-                    </button>
-
                 </div>
                 <div class="card-body">
-                    <form id="purchaseOrder" action="{{ route('purchase-order.store')}}" method="POST">
+                    <form id="purchaseOrder" action="{{ route('purchase-order.update', $purchaseOrder->id)}}" method="POST">
                         @csrf
-
+                        @method('PATCH')
                         <!-- User Form Fields -->
                         <div class="row">
                             {{-- <div class="col-md-6 mb-3">
@@ -64,6 +58,7 @@
                                         class="form-control form-control-sm"
                                         id="purchase_number"
                                         name="purchase_number"
+                                        value="{{ $purchaseOrder->purchase_number }}"
                                         required
                                     >
                                 </div>
@@ -80,7 +75,7 @@
                                         id="purchase_date"
                                         required
                                         class="form-control form-control-sm"
-                                        value="{{ old('purchase_date') }}"
+                                        value="{{ $purchaseOrder->purchase_date }}"
                                     >
                                 </div>
                             </div>
@@ -146,7 +141,7 @@
                                     <select id="vendor" name="vendor" class="form-control select2 form-control-sm">
                                         <option value="" selected disabled>-- select --</option>
                                         @forelse ($vendors as $vendor)
-                                            <option value="{{ $vendor->id }}" {{ old('vendor') == $vendor->id ? 'selected' : '' }}>
+                                            <option value="{{ $vendor->id }}" {{ $purchaseOrder->vendor_id == $vendor->id ? 'selected' : '' }}>
                                                 {{ $vendor->name }}
                                             </option>
                                         @empty
@@ -175,6 +170,19 @@
                                     </tr>
                                 </thead>
                                 <tbody id="grngridbody">
+                                    @foreach ($purchaseOrder->purchaseOrderSubs as $purchaseOrderSub)
+                                        <tr data-item-id="{{ $purchaseOrderSub->item->id }}">
+                                            <td>{{ $loop->iteration }}</td>
+                                            <td>{{ $purchaseOrderSub->item->item_code }}/{{ $purchaseOrderSub->item->name }}</td>
+                                            <td>{{ $purchaseOrderSub->item->spq_quantity }}</td>
+                                            <td>{{ $purchaseOrderSub->quantity }}</td>
+                                            <td><button type="button" class="btn btn-danger btn-sm remove-item">Remove</button></td>
+
+                                            <input type="hidden" name="items[{{ $loop->iteration }}][item_id]" value="{{ $purchaseOrderSub->item_id }}" data-row="{{ $loop->iteration }}">
+                                            <input type="hidden" name="items[{{ $loop->iteration }}][spq]" value="{{ $purchaseOrderSub->item->spq_quantity }}" data-row="{{ $loop->iteration }}">
+                                            <input type="hidden" name="items[{{ $loop->iteration }}][total_quantity]" value="{{ $purchaseOrderSub->quantity }}" data-row="{{ $loop->iteration }}">
+                                        </tr>
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>
@@ -182,7 +190,7 @@
                         <!-- Action Buttons -->
                         <div class="card-body">
                             <button type="button" class="btn btn-primary" id="submitButton">
-                                Save
+                                Update
                             </button>
                             <input type="reset" class="btn btn-default" value="Clear" />
                         </div>
@@ -191,33 +199,6 @@
             </div>
         </div>
     </section>
-</div>
-
-<div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="uploadModalLabel">Purchase Order Excel Upload</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form action="{{ route('purchase-order-excel-upload') }}" method="POST" enctype="multipart/form-data">
-                @csrf
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="excelFile" class="form-label"></label>
-                        <input type="file" class="form-control" id="excelFile" name="excel_file" accept=".xls,.xlsx" required>
-                    </div>
-                    <span class="mt-2">You can download excel in predefined format by <a href="{{ URL::to( '/excel_templates/transaction_templates/purchase_order_template.xlsx')}}" class="text-primary ">Clicking Here</a></span>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary" id="uploadButton">Upload</button>
-                </div>
-            </form>
-        </div>
-    </div>
 </div>
 
 @endsection
@@ -249,7 +230,7 @@
 <script>
     $(document).ready(function() {
 
-        let itemCount = 0;
+        let itemCount = $('#grngridbody tr').length;
 
         $('.select2').select2();
 
@@ -337,9 +318,7 @@
                 return;
             }
 
-            if ($('#grngridbody').find('tr').filter(function() {
-                return $(this).find('td').eq(1).text() === itemName;
-            }).length > 0) {
+            if ($('#grngridbody').find(`tr[data-item-id="${itemId}"]`).length > 0) {
                 sweetAlertMessage('warning', 'Already Exists', 'This item has already been added!');
                 return;
             }

@@ -7,6 +7,7 @@ use App\Models\Item;
 use App\Models\PurchaseOrder;
 use App\Models\PurchaseOrderCancel;
 use App\Models\PurchaseOrderSub;
+use App\Models\TransactionEditLog;
 use App\Models\Vendor;
 use Exception;
 use Illuminate\Http\Request;
@@ -212,9 +213,83 @@ class PurchaseOrderController extends Controller
         return view('transactions.purchaseorder.purchaseedit', compact('purchaseNumbers'));
     }
 
+    public function edit($id){
+        $purchaseOrder = PurchaseOrder::with('purchaseOrderSubs.item')->find($id);
+
+        $items = Item::where('item_type', 'RM')->get(['id', 'item_code', 'name']);
+        $vendors = Vendor::get(['id', 'name']);
+
+        return view('transactions.purchaseorder.edit', compact( 'items', 'vendors', 'purchaseOrder'));
+    }
+
+    public function update(Request $request, $id){
+        // dd($request->all());
+        // dd($request->items);
+        $request->validate([
+            "purchase_number" => 'required|unique:purchase_orders,purchase_number,' . $id,
+            "purchase_date" => 'required|date',
+            "vendor" => 'required|exists:vendors,id',
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            $userId = Auth::id();
+
+            $purchaseOrder = PurchaseOrder::findOrFail($id);
+
+            // Update main purchase order
+            $purchaseOrder->update([
+                'branch_id' => Auth::user()->branch_id,
+                'purchase_number' => $request->purchase_number,
+                'purchase_date' => $request->purchase_date,
+                'vendor_id' => $request->vendor,
+                'user_id' => $userId,
+            ]);
+
+            // Remove old sub records
+            $purchaseOrder->purchaseOrderSubs()->delete();
+
+            // Recreate sub data
+            $purchaseOrderSubData = [];
+            foreach ($request->items as $item) {
+                $purchaseOrderSubData[] = [
+                    'purchase_order_id' => $purchaseOrder->id,
+                    'item_id' => $item['item_id'],
+                    'quantity' => $item['total_quantity'],
+                    'created_at' => now()
+                ];
+            }
+
+            if (!empty($purchaseOrderSubData)) {
+                PurchaseOrderSub::insert($purchaseOrderSubData);
+            }
+
+            TransactionEditLog::create([
+                'transaction_type' => 'purchase',
+                'transaction_id' => $purchaseOrder->id,
+                'document_number' => $request->purchase_number,
+                'user_id' => $userId,
+            ]);
+
+            DB::commit();
+
+            Alert::toast('Purchase Order updated successfully!', 'success')->autoClose(3000);
+            return redirect()->route('purchase-edit');
+
+        } catch (Exception $e) {
+            DB::rollBack();
+            dd($e);
+            Log::error('Purchase Update Error: ' . $e->getMessage());
+            Alert::toast('An error occurred while updating the purchase order.', 'error')->autoClose(3000);
+            return redirect()->back()->withInput();
+        }
+    }
+
+
     public function purchaseOrderCancel(){
 
-        $orders = PurchaseOrder::where('status', 0)->get(['id', 'purchase_number']);
+        $orders = PurchaseOrder::whereDoesntHave('grnPurchaseOrderSubs')->where('status', 0)->get(['id', 'purchase_number']);
         return view('transactions.purchaseorder.cancel', compact('orders'));
     }
 

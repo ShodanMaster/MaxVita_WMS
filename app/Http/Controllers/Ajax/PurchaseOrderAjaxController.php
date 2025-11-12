@@ -8,6 +8,27 @@ use Illuminate\Http\Request;
 
 class PurchaseOrderAjaxController extends Controller
 {
+
+    public function getPurchaseDetails(Request $request){
+        if($request->ajax()){
+            $purchaseOrder = PurchaseOrder::with('purchaseOrderSubs.item')->find($request->purchase_id);
+            // dd($purchaseOrder);
+            $data = [
+                'purchase_number' => $purchaseOrder->purchase_number,
+                'purchase_date' => $purchaseOrder->purchase_date,
+                'vendor' => $purchaseOrder->vendor->name,
+                'items' => $purchaseOrder->purchaseOrderSubs->map(function($sub){
+                                return [
+                                    'item' => $sub->item->item_code . '/' . $sub->item->name,
+                                    'quantity' => round($sub->quantity)
+                                ];
+                            })
+            ];
+
+            return response()->json($data);
+        }
+    }
+
     public function getPurchaseOrder(Request $request){
         // dd($request->all());
         if ($request->ajax()) {
