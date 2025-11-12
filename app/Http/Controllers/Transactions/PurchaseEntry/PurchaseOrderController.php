@@ -209,7 +209,7 @@ class PurchaseOrderController extends Controller
     }
 
     public function editPurchaseOrder(){
-        $purchaseNumbers = PurchaseOrder::whereDoesntHave('grnPurchaseOrderSubs')->get(['id', 'purchase_number']);
+        $purchaseNumbers = PurchaseOrder::whereDoesntHave('grnPurchaseOrderSubs')->where('status', 0)->get(['id', 'purchase_number']);
         return view('transactions.purchaseorder.purchaseedit', compact('purchaseNumbers'));
     }
 
