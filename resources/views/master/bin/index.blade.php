@@ -124,9 +124,6 @@
         ajax: {
             url: "{{ route('get-bins') }}",
             type: "POST",
-            data: function(d) {
-                d._token = "{{ csrf_token() }}";
-            }
         },
         columns: [
             { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
