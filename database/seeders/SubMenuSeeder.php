@@ -113,7 +113,9 @@ class SubMenuSeeder extends Seeder
             ],
 
             // Transaction
+
             // Purchase Entry
+            // Purchase Order
             // 13
             [
                 'menu_id' => 3,
@@ -122,7 +124,17 @@ class SubMenuSeeder extends Seeder
                 'listing_order' => 11,
                 'created_at' => now(),
             ],
+            // Purchase Edit
             // 14
+            [
+                'menu_id' => 3,
+                'title' => 'Purchase Edit',
+                'link' => 'purchase-edit',
+                'listing_order' => 11,
+                'created_at' => now(),
+            ],
+            //Purchase Cancel
+            // 15
             [
                 'menu_id' => 3,
                 'title' => 'Purchase Cancel',
@@ -130,8 +142,10 @@ class SubMenuSeeder extends Seeder
                 'listing_order' => 11,
                 'created_at' => now(),
             ],
+
+            //GRN
             // GRN Entry
-            //15
+            //16
             [
                 'menu_id' => 4,
                 'title' => 'GRN Entry',
@@ -140,7 +154,7 @@ class SubMenuSeeder extends Seeder
                 'created_at' => now(),
             ],
             // Storage Scan
-            //16
+            //17
             [
                 'menu_id' => 4,
                 'title' => 'Storage Scan',
@@ -151,7 +165,7 @@ class SubMenuSeeder extends Seeder
 
             //Production
             //Production Plan
-            // 17
+            // 18
             [
                 'menu_id' => 5,
                 'title' => 'Production Plan',
@@ -160,7 +174,7 @@ class SubMenuSeeder extends Seeder
                 'created_at' => now(),
             ],
             //Production Scan
-            // 18
+            // 19
             [
                 'menu_id' => 5,
                 'title' => 'Production Issue',
@@ -169,7 +183,7 @@ class SubMenuSeeder extends Seeder
                 'created_at' => now(),
             ],
             //Production Barcode Generation
-            // 19
+            // 20
             [
                 'menu_id' => 5,
                 'title' => 'FG Barcode Generation',
@@ -178,7 +192,7 @@ class SubMenuSeeder extends Seeder
                 'created_at' => now(),
             ],
             //Production Storage Scan
-            // 20
+            // 21
             [
                 'menu_id' => 5,
                 'title' => 'FG Storage Scan',
@@ -189,7 +203,7 @@ class SubMenuSeeder extends Seeder
 
             //Dispatch
             //Dispatch Entry
-            // 21
+            // 22
             [
                 'menu_id' => 6,
                 'title' => 'Dispatch Entry',
@@ -198,7 +212,7 @@ class SubMenuSeeder extends Seeder
                 'created_at' => now(),
             ],
             //Dispatch Edit
-            // 22
+            // 23
             [
                 'menu_id' => 6,
                 'title' => 'Dispatch Edit',
@@ -207,7 +221,7 @@ class SubMenuSeeder extends Seeder
                 'created_at' => now(),
             ],
             //Dispatch Scan
-            // 23
+            // 24
             [
                 'menu_id' => 6,
                 'title' => 'Dispatch Scan',
@@ -217,7 +231,7 @@ class SubMenuSeeder extends Seeder
             ],
 
             //Sales Return
-            // 24
+            // 25
             [
                 'menu_id' => 6,
                 'title' => 'Sales Return',
@@ -228,7 +242,7 @@ class SubMenuSeeder extends Seeder
 
             //Receipt
             // Receipt Scan
-            // 25
+            // 26
             [
                 'menu_id' => 7,
                 'title' => 'Receipt Scan',
@@ -239,7 +253,7 @@ class SubMenuSeeder extends Seeder
 
             //Stock Management
             //Opening Stock
-            // 26
+            // 27
             [
                 'menu_id' => 8,
                 'title' => 'Opening Stock',
@@ -249,7 +263,7 @@ class SubMenuSeeder extends Seeder
             ],
 
             //Stock Out
-            // 27
+            // 28
             [
                 'menu_id' => 8,
                 'title' => 'Stock Out',
@@ -260,7 +274,7 @@ class SubMenuSeeder extends Seeder
 
             //Reports
             //Purchase Order Reports
-            // 28
+            // 29
             [
                 'menu_id' => 9,
                 'title' => 'Purchase Order Report',
@@ -269,7 +283,7 @@ class SubMenuSeeder extends Seeder
                 'created_at' => now(),
             ],
 
-            // 29
+            // 30
             [
                 'menu_id' => 9,
                 'title' => 'GRN Report',
@@ -279,7 +293,7 @@ class SubMenuSeeder extends Seeder
             ],
 
             //Stock Report
-            //30
+            //31
             [
                 'menu_id' => 9,
                 'title' => 'Stock Report',
@@ -289,7 +303,7 @@ class SubMenuSeeder extends Seeder
             ],
 
             //Storage Scan Report
-            //31
+            //32
             [
                 'menu_id' => 9,
                 'title' => 'Storage Scan Report',
@@ -299,7 +313,7 @@ class SubMenuSeeder extends Seeder
             ],
 
             //Production Plan Report
-            //32
+            //33
             [
                 'menu_id' => 9,
                 'title' => 'Production Plan Report',
@@ -310,7 +324,7 @@ class SubMenuSeeder extends Seeder
 
             // Utility Submenus
             // Barcode Reprint
-            // 33
+            // 34
             [
                 'menu_id' => 10,
                 'title' => 'Barcode Reprint',
@@ -320,7 +334,7 @@ class SubMenuSeeder extends Seeder
             ],
 
             // Permission
-            // 34
+            // 35
             [
                 'menu_id' => 10,
                 'title' => 'Permission',
@@ -330,7 +344,7 @@ class SubMenuSeeder extends Seeder
             ],
 
             // Change Password
-            // 35
+            // 36
             [
                 'menu_id' => 10,
                 'title' => 'Change Password',

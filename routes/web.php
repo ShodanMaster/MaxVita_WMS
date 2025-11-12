@@ -86,6 +86,7 @@ Route::group(['middleware' => ['auth']], function () {
 
         // PurchaseOrder
         Route::resource('purchase-order', PurchaseOrderController::class);
+        Route::get('purchase-edit', [PurchaseOrderController::class, 'editPurchaseOrder'])->name('purchase-edit');
 
         // GRN
         Route::resource('grn', GrnController::class);

@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class GrnPurchaseOrderSub extends Model
 {
-    use SoftDeletes;
 
     protected $fillable = [
         'grn_purchase_order_id',

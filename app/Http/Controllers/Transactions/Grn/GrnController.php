@@ -113,8 +113,10 @@ class GrnController extends Controller
                 if ($purchaseOrderExists) {
                     $grnPurchaseOrderSubData[] = [
                         'grn_purchase_order_id' => $grnPurchaseOrder->id,
+                        'purchase_order_id' => $purchaseOrderExists->id,
                         'purchase_number' => $purchaseOrderExists->purchase_number,
                         'item_id' => $item["item_id"],
+                        'picked_quantity' => $item["total_quantity"],
                         'created_at' => now()
                     ];
                 }

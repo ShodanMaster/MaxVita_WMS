@@ -202,8 +202,4 @@ class ProductionPlanController extends Controller
 
         return $data;
     }
-
-    public function purchasEdit(){
-        return view();
-    }
 }

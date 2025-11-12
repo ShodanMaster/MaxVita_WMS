@@ -45,6 +45,10 @@ class PurchaseOrder extends Model
         return $this->belongsTo(Vendor::class);
     }
 
+    public function grnPurchaseOrderSubs(){
+        return $this->hasMany(GrnPurchaseOrderSub::class);
+    }
+
     public static function reportSummary($filters = [])
     {
         $purchaseOrders = self::filteredData($filters);
