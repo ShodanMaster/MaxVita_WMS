@@ -30,8 +30,6 @@ class BrandController extends Controller
                 ->addColumn('action', function ($row) {
                     $editUrl = route('brand.edit', $row->id);
                     $deleteUrl = route('brand.destroy', $row->id);
-                    $csrf = csrf_field();
-                    $method = method_field('DELETE');
 
                     $btn = '
                     <td width="150px">
@@ -41,15 +39,9 @@ class BrandController extends Controller
                                 <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                             </svg>
                         </a>
-                        <div class="btn-group">
-                            <form method="POST" action="' . $deleteUrl . '" onsubmit="return confirm(\'Are you sure, You want to delete this Brand?\')" style="display:inline;">
-                                ' . $csrf . '
-                                ' . $method . '
-                                <button type="submit" class="btn" data-toggle="tooltip" title="Delete">
-                                    <span class="fa fa-trash text-danger"></span>
-                                </button>
-                            </form>
-                        </div>
+                        <button type="button" class="btn p-0" onclick="sweetAlertDelete(\'' . $deleteUrl . '\')" data-toggle="tooltip" title="Delete">
+                            <span class="fa fa-trash text-danger"></span>
+                        </button>
                     </td>';
 
                     return $btn;
@@ -117,17 +109,29 @@ class BrandController extends Controller
         }
     }
 
-    public function destroy(Brand $brand){
+    public function destroy($id){
         try{
+            $brand = Brand::findOrFail($id);
+
             $brand->delete();
 
-            Alert::toast('Brand Deleted Successfully', 'success')->autoClose(3000);
-            return redirect()->route('brand.index');
+            return response()->json([
+                'status' => 200,
+                'message' => 'Location deleted successfully.'
+            ]);
+
         } catch (Exception $e) {
             Log::error('Brand Delete Error: ' . $e->getMessage());
 
+            if (request()->ajax()) {
+                return response()->json([
+                    'status' => 500,
+                    'message' => 'An unexpected error occurred while deleting the brand.'
+                ], 500);
+            }
+
             Alert::toast('An error occurred while deleting the brand.', 'error')->autoClose(3000);
-            return redirect()->route('brand.index');
+            return redirect()->route(route: 'brand.index');
         }
     }
 

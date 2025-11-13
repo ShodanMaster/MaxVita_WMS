@@ -1,34 +1,33 @@
 @extends('layout.master')
 
 @push('plugin-styles')
-<link href="{{ asset('assets/plugins/select2/select2.min.css') }}" rel="stylesheet" />
-<link href="{{ asset('assets/plugins/jquery-tags-input/jquery.tagsinput.min.css') }}" rel="stylesheet" />
-<link href="{{ asset('assets/plugins/dropzone/dropzone.min.css') }}" rel="stylesheet" />
-<link href="{{ asset('assets/plugins/dropify/css/dropify.min.css') }}" rel="stylesheet" />
-<link href="{{ asset('assets/plugins/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet" />
-<link href="{{ asset('assets/plugins/tempusdominus-bootstrap-4/tempusdominus-bootstrap-4.min.css') }}" rel="stylesheet" />
-<link href="{{ asset('assets/plugins/@mdi/css/materialdesignicons.min.css') }}" rel="stylesheet" />
-<link href="{{ asset('assets/plugins/datatables-net/dataTables.bootstrap4.css') }}" rel="stylesheet" />
+    <link href="{{ asset('assets/plugins/select2/select2.min.css') }}" rel="stylesheet" />
+    <link href="{{ asset('assets/plugins/jquery-tags-input/jquery.tagsinput.min.css') }}" rel="stylesheet" />
+    <link href="{{ asset('assets/plugins/dropzone/dropzone.min.css') }}" rel="stylesheet" />
+    <link href="{{ asset('assets/plugins/dropify/css/dropify.min.css') }}" rel="stylesheet" />
+    <link href="{{ asset('assets/plugins/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet" />
+    <link href="{{ asset('assets/plugins/tempusdominus-bootstrap-4/tempusdominus-bootstrap-4.min.css') }}" rel="stylesheet" />
+    <link href="{{ asset('assets/plugins/@mdi/css/materialdesignicons.min.css') }}" rel="stylesheet" />
+    <link href="{{ asset('assets/plugins/datatables-net/dataTables.bootstrap4.css') }}" rel="stylesheet" />
 @endpush
 
-<style>
-    #brand_code {
-        text-transform: uppercase;
-    }
-</style>
-
-<div class="content-header">
-    @include('messages')
-    <section class="content">
-        <div class="container-fluid">
+@section('content')
+    @include('sweetalert::alert')
+    <div class="content-header">
+        @include('messages')
+        <section class="content">
+            <div class="container-fluid">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">
+                            @if (isset($brand))
+                                Update Brand
+                            @else
+                                Add Brand
+                            @endif
+                        </h5>
+                    </div>
                 <div class="card-body">
-                    <h5 class="card-title">
-                        @if (isset($brand))
-                            Update Brand
-                        @else
-                            Add Brand
-                        @endif
-                    </h5>
 
                     <form
                         action="{{ isset($brand) ? route('brand.update', $brand->id) : route('brand.store') }}"
