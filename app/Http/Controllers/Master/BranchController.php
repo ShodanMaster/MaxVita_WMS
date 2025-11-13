@@ -35,8 +35,6 @@ class BranchController extends Controller
                 ->addColumn('action', function ($row) {
                     $editUrl = route('branch.edit', $row->id);
                     $deleteUrl = route('branch.destroy', $row->id);
-                    $csrf = csrf_field();
-                    $method = method_field('DELETE');
 
                     $btn = '
                     <td width="150px">
@@ -164,10 +162,10 @@ class BranchController extends Controller
         try{
             $branch = Branch::findOrFail($id);
 
-            if($branch->locations()->exists() || $branch->barcodes()->exists()){
+            if($branch->locations()->exists()){
                 return response()->json([
                     'status' => 409,
-                    'message' => 'You cannot delete this record because it is linked to other records.'
+                    'message' => 'You cannot delete this Branch because it is linked to other records.'
                 ], 409);
             }
 

@@ -161,13 +161,6 @@ class BinController extends Controller
         try {
             $bin = Bin::findOrFail($id);
 
-            if ($bin->barcodes()->exists()) {
-                return response()->json([
-                    'status' => 409,
-                    'message' => 'You cannot delete this record because it is linked to other records.'
-                ], 409);
-            }
-
             $bin->delete();
 
             return response()->json([

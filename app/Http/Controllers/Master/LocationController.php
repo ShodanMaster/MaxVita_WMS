@@ -41,8 +41,6 @@ class LocationController extends Controller
                 ->addColumn('action', function ($row) {
                     $editUrl = route('location.edit', $row->id);
                     $deleteUrl = route('location.destroy', $row->id);
-                    $csrf = csrf_field();
-                    $method = method_field('DELETE');
 
                     $btn = '
                     <td width="150px">
@@ -52,15 +50,9 @@ class LocationController extends Controller
                                 <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                             </svg>
                         </a>
-                        <div class="btn-group">
-                            <form method="POST" action="' . $deleteUrl . '" onsubmit="return confirm(\'Are you sure, You want to delete this location?\')" style="display:inline;">
-                                ' . $csrf . '
-                                ' . $method . '
-                                <button type="submit" class="btn" data-toggle="tooltip" title="Delete">
-                                    <span class="fa fa-trash text-danger"></span>
-                                </button>
-                            </form>
-                        </div>
+                        <button type="button" class="btn p-0" onclick="sweetAlertDelete(\'' . $deleteUrl . '\')" data-toggle="tooltip" title="Delete">
+                            <span class="fa fa-trash text-danger"></span>
+                        </button>
                     </td>';
 
                     return $btn;
@@ -180,9 +172,21 @@ class LocationController extends Controller
     public function destroy(string $id)
     {
         try{
-            Location::where('id', $id)->delete();
-            Alert::toast('Location Deleted Successfully', 'success')->autoClose(3000);
-            return redirect()->route('location.index');
+            $location = Location::findOrFail($id);
+
+            if ($location->items()->exists()) {
+                return response()->json([
+                    'status' => 409,
+                    'message' => 'You cannot delete this Location because it is linked to other records.'
+                ], 409);
+            }
+
+            $location->delete();
+
+            return response()->json([
+                'status' => 200,
+                'message' => 'Location deleted successfully.'
+            ]);
         } catch(Exception $e){
             Log::error('Location Delete Error: ' . $e->getMessage());
             Alert::toast('An error occurred while deleting the location.', 'error')->autoClose(3000);
