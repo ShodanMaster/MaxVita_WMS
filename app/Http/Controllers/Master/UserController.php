@@ -52,13 +52,9 @@ class UserController extends Controller
                                     <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                                 </svg>
                             </a>
-                            <form method="POST" action="' . $deleteUrl . '" onsubmit="return confirm(\'Are you sure, You want to delete this User?\')" style="display:inline;">
-                                ' . csrf_field() . '
-                                ' . method_field('DELETE') . '
-                                <button type="submit" class="btn" data-toggle="tooltip" title="Delete">
-                                    <span class="fa fa-trash text-danger"></span>
-                                </button>
-                            </form>
+                            <button type="button" class="btn p-0" onclick="sweetAlertDelete(\'' . $deleteUrl . '\')" data-toggle="tooltip" title="Delete">
+                                <span class="fa fa-trash text-danger"></span>
+                            </button>
                         </td>';
 
                     return $btn;
@@ -164,18 +160,29 @@ class UserController extends Controller
         }
     }
 
-    public function destroy(User $user){
+    public function destroy($id){
         try{
+            $user = User::findOrFail($id);
+
             $user->delete();
 
-            Alert::toast('User deleted successfully!', 'success')->autoClose(3000);
-            return redirect()->route('user.index');
+            return response()->json([
+                'status' => 200,
+                'message' => 'Location deleted successfully.'
+            ]);
 
-        }catch(Exception $e){
+        } catch (Exception $e) {
             Log::error('User Delete Error: ' . $e->getMessage());
 
+            if (request()->ajax()) {
+                return response()->json([
+                    'status' => 500,
+                    'message' => 'An unexpected error occurred while deleting the user.'
+                ], 500);
+            }
+
             Alert::toast('An error occurred while deleting the user.', 'error')->autoClose(3000);
-            return redirect()->route('user.index');
+            return redirect()->route( 'user.index');
         }
     }
 
