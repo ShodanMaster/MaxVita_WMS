@@ -33,8 +33,6 @@ class UomController extends Controller
                 ->addColumn('action', function ($row) {
                     $editUrl = route('uom.edit', $row->id);
                     $deleteUrl = route('uom.destroy', $row->id);
-                    $csrf = csrf_field();
-                    $method = method_field('DELETE');
 
                     $btn = '
                     <td width="150px">
@@ -44,15 +42,9 @@ class UomController extends Controller
                                 <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                             </svg>
                         </a>
-                        <div class="btn-group">
-                            <form method="POST" action="' . $deleteUrl . '" onsubmit="return confirm(\'Are you sure, You want to delete this uom?\')" style="display:inline;">
-                                ' . $csrf . '
-                                ' . $method . '
-                                <button type="submit" class="btn" data-toggle="tooltip" title="Delete">
-                                    <span class="fa fa-trash text-danger"></span>
-                                </button>
-                            </form>
-                        </div>
+                        <button type="button" class="btn p-0" onclick="sweetAlertDelete(\'' . $deleteUrl . '\')" data-toggle="tooltip" title="Delete">
+                            <span class="fa fa-trash text-danger"></span>
+                        </button>
                     </td>';
 
                     return $btn;
@@ -138,13 +130,34 @@ class UomController extends Controller
     public function destroy(string $id)
     {
         try {
-            Uom::where('id', $id)->delete();
-            Alert::toast('Uom Deleted Successfully', 'success')->autoClose(3000);
-            return redirect()->route('uom.index');
+            $uom = Uom::findOrFail($id);
+
+            if ($uom->items()->exists()) {
+                return response()->json([
+                    'status' => 409,
+                    'message' => 'You cannot delete this UOM because it is linked to other records.'
+                ], 409);
+            }
+
+            $uom->delete();
+
+            return response()->json([
+                'status' => 200,
+                'message' => 'UOM deleted successfully.'
+            ]);
+
         } catch (Exception $e) {
-            Log::error('Uom Delete Error: ' . $e->getMessage());
+            Log::error('UOM Delete Error: ' . $e->getMessage());
+
+            if (request()->ajax()) {
+                return response()->json([
+                    'status' => 500,
+                    'message' => 'An unexpected error occurred while deleting the uom.'
+                ], 500);
+            }
+
             Alert::toast('An error occurred while deleting the uom.', 'error')->autoClose(3000);
-            return redirect()->route('uom.index');
+            return redirect()->route(route: 'uom.index');
         }
     }
 
