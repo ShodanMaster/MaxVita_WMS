@@ -44,7 +44,7 @@
                     </div>
 
                     <div class="table-responsive">
-                        <table id="categoriesTable" class="table">
+                        <table id="categoriesTable" class="table masterTable">
                             <thead>
                                 <tr>
                                     <th align="center" style="width:80px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SI.No</th>
