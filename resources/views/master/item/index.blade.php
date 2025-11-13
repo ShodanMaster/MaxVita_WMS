@@ -43,7 +43,7 @@
                         </div>
                     </div>
                     <div class="table-responsive">
-                        <table id="itemsTable" class="table">
+                        <table id="itemsTable" class="table masterTable">
                             <thead>
                                 <tr>
                                     <th align="center" style="width:80px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SI.No</th>
