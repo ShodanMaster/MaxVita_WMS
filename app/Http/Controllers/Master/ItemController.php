@@ -235,7 +235,7 @@ class ItemController extends Controller
             }
 
             Alert::toast('An error occurred while deleting the item.', 'error')->autoClose(3000);
-            return redirect()->route(route: 'item.index');
+            return redirect()->route('item.index');
         }
     }
 

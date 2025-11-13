@@ -157,7 +157,7 @@ class UomController extends Controller
             }
 
             Alert::toast('An error occurred while deleting the uom.', 'error')->autoClose(3000);
-            return redirect()->route(route: 'uom.index');
+            return redirect()->route('uom.index');
         }
     }
 

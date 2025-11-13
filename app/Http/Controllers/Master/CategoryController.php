@@ -158,7 +158,7 @@ class CategoryController extends Controller
             }
 
             Alert::toast('An error occurred while deleting the category.', 'error')->autoClose(3000);
-            return redirect()->route(route: 'category.index');
+            return redirect()->route('category.index');
         }
     }
 

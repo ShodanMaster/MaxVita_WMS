@@ -159,9 +159,17 @@ class VendorController extends Controller
             Alert::toast('Vendor Deleted Successfully', 'success')->autoClose(3000);
             return redirect()->route('vendr.index');
         } catch (Exception $e) {
-            Log::error('Vendor Delete Error: ' . $e->getMessage());
-            Alert::toast('An error occurred while deleting the vendor.', 'error')->autoClose(3000);
-            return redirect()->route('vendr.index');
+            Log::error('Location Delete Error: ' . $e->getMessage());
+
+            if (request()->ajax()) {
+                return response()->json([
+                    'status' => 500,
+                    'message' => 'An unexpected error occurred while deleting the location.'
+                ], 500);
+            }
+
+            Alert::toast('An error occurred while deleting the location.', 'error')->autoClose(3000);
+            return redirect()->route('location.index');
         }
     }
 

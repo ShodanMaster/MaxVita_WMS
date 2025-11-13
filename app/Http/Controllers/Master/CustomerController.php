@@ -160,7 +160,7 @@ class CustomerController extends Controller
             }
 
             Alert::toast('An error occurred while deleting the customer.', 'error')->autoClose(3000);
-            return redirect()->route(route: 'customer.index');
+            return redirect()->route('customer.index');
         }
     }
 

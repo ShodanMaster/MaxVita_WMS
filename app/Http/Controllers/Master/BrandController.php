@@ -131,7 +131,7 @@ class BrandController extends Controller
             }
 
             Alert::toast('An error occurred while deleting the brand.', 'error')->autoClose(3000);
-            return redirect()->route(route: 'brand.index');
+            return redirect()->route('brand.index');
         }
     }
 

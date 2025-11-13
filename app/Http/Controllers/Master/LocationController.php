@@ -198,7 +198,7 @@ class LocationController extends Controller
             }
 
             Alert::toast('An error occurred while deleting the location.', 'error')->autoClose(3000);
-            return redirect()->route(route: 'location.index');
+            return redirect()->route( 'location.index');
         }
     }
 
