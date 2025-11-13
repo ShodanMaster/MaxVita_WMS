@@ -11,7 +11,7 @@ class ReceiptScanController extends Controller
 {
     public function index(){
         $user = Auth::user();
-        $dispatchNumbers = Dispatch::where('status', 2)
+        $dispatchNumbers = Dispatch::where('status', 1)
                         ->where('dispatch_to_id', $user->location_id)
                         ->where('dispatch_type', 'transfer')
                         ->get(['id', 'dispatch_number']);

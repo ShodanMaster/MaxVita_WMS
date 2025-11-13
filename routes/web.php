@@ -14,6 +14,7 @@ use App\Http\Controllers\Master\SubCategoryController;
 use App\Http\Controllers\Master\UomController;
 use App\Http\Controllers\Master\UserController;
 use App\Http\Controllers\Master\VendorController;
+use App\Http\Controllers\Reports\DispatchEntryReportController;
 use App\Http\Controllers\Reports\GrnReportController;
 use App\Http\Controllers\Reports\ProductionPlanReportController;
 use App\Http\Controllers\Reports\PurchaseOrderReportController;
@@ -145,6 +146,9 @@ Route::group(['middleware' => ['auth']], function () {
 
         //Production Plan Controller
         Route::resource('production-plan-report', ProductionPlanReportController::class);
+
+        //Dispatch Entry Report
+        Route::resource('dispatch-entry-report', DispatchEntryReportController::class);
 
         // Utitlity
 
@@ -286,6 +290,18 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('get-ProductionBarcodeDetails', [ProductionPlanReportController::class, 'getProductionBarcodeDetails'])->name('get-ProductionBarcodeDetails');
     Route::get('production-plan-report/barcodewise/{id}', [ProductionPlanReportController::class, 'barcodeWise'])
         ->name('production-plan-report.barcodewise');
+
+     //Dispatch entry Report
+    Route::post('get-DispatchEntryViews', [DispatchEntryReportController::class, 'getDispatchEntryViews'])->name('get-DispatchEntryViews');
+    
+    Route::get('dispatch-entry-report/show-barcode/{id}', [DispatchEntryReportController::class, 'barcodeView'])
+        ->name('dispatch-entry-report.showbarcode');
+    Route::post('get-dispatchEntryDetailed', [DispatchEntryReportController::class, 'getdispatchEntryDetailed'])->name('get-dispatchEntryDetailed');
+    Route::post('get-DispatchBarcodeDetails', [DispatchEntryReportController::class, 'getDispatchBarcodeDetails'])->name('get-DispatchBarcodeDetails');
+    Route::post('get-receipt-details', [DispatchEntryReportController::class, 'getReceiptDetails'])
+        ->name('get-receipt-details');
+    Route::get('dispatch-entry-report/receipt-barcode/{id}', [DispatchEntryReportController::class, 'receiptBarcode'])
+        ->name('dispatch-entry-report.receiptbarcode');
 
     // Utitlity
 

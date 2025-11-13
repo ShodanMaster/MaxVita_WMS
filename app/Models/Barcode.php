@@ -83,7 +83,7 @@ class Barcode extends Model
 
     public function uom()
     {
-        return $this->belongsTo(Uom::class);
+        return $this->belongsTo(Uom::class)->withTrashed();
     }
 
     public function location()

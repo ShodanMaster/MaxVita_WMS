@@ -21,10 +21,10 @@ class DispatchSub extends Model
     }
 
     public function uom(){
-        return $this->belongsTo(Uom::class);
+        return $this->belongsTo(Uom::class)->withTrashed();
     }
 
     public function item(){
-        return $this->belongsTo(Item::class);
+        return $this->belongsTo(Item::class)->withTrashed();
     }
 }
