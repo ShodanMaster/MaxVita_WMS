@@ -32,8 +32,6 @@ class ReasonController extends Controller
                 ->addColumn('action', function ($row) {
                     $editUrl = route('reason.edit', $row->id);
                     $deleteUrl = route('reason.destroy', $row->id);
-                    $csrf = csrf_field();
-                    $method = method_field('DELETE');
 
                     $btn = '
                     <td width="150px">
@@ -43,15 +41,9 @@ class ReasonController extends Controller
                                 <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                             </svg>
                         </a>
-                        <div class="btn-group">
-                            <form method="POST" action="' . $deleteUrl . '" onsubmit="return confirm(\'Are you sure, You want to delete this Reason?\')" style="display:inline;">
-                                ' . $csrf . '
-                                ' . $method . '
-                                <button type="submit" class="btn" data-toggle="tooltip" title="Delete">
-                                    <span class="fa fa-trash text-danger"></span>
-                                </button>
-                            </form>
-                        </div>
+                        <button type="button" class="btn p-0" onclick="sweetAlertDelete(\'' . $deleteUrl . '\')" data-toggle="tooltip" title="Delete">
+                            <span class="fa fa-trash text-danger"></span>
+                        </button>
                     </td>';
 
                     return $btn;
@@ -126,18 +118,29 @@ class ReasonController extends Controller
         }
     }
 
-    public function destroy(Reason $reason){
+    public function destroy($id){
         try{
+            $reason = Reason::findOrFail($id);
+
             $reason->delete();
 
-            Alert::toast('Reason deleted successfully!', 'success')->autoClose(3000);
-            return redirect()->route('reason.index');
+            return response()->json([
+                'status' => 200,
+                'message' => 'Location deleted successfully.'
+            ]);
 
-        }  catch (Exception $e) {
+        } catch (Exception $e) {
             Log::error('Reason Delete Error: ' . $e->getMessage());
 
+            if (request()->ajax()) {
+                return response()->json([
+                    'status' => 500,
+                    'message' => 'An unexpected error occurred while deleting the reason.'
+                ], 500);
+            }
+
             Alert::toast('An error occurred while deleting the reason.', 'error')->autoClose(3000);
-            return redirect()->route('reason.index');
+            return redirect()->route( 'reason.index');
         }
     }
 
