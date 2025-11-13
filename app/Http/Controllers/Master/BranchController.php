@@ -46,15 +46,9 @@ class BranchController extends Controller
                                 <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                             </svg>
                         </a>
-                        <div class="btn-group">
-                            <form method="POST" action="' . $deleteUrl . '" onsubmit="return confirm(\'Are you sure, You want to delete this Branch?\')" style="display:inline;">
-                                ' . $csrf . '
-                                ' . $method . '
-                                <button type="submit" class="btn" data-toggle="tooltip" title="Delete">
-                                    <span class="fa fa-trash text-danger"></span>
-                                </button>
-                            </form>
-                        </div>
+                        <button type="button" class="btn p-0" onclick="sweetAlertDelete(\'' . $deleteUrl . '\')" data-toggle="tooltip" title="Delete">
+                            <span class="fa fa-trash text-danger"></span>
+                        </button>
                     </td>';
 
                     return $btn;
@@ -168,12 +162,32 @@ class BranchController extends Controller
     public function destroy(string $id)
     {
         try{
-            Branch::where('id', $id)->delete();
-            Alert::toast('Warehouse Deleted Successfully', 'success')->autoClose(3000);
-            return redirect()->route('branch.index');
-        } catch(Exception $e){
-            Log::error('Warehouse Delete Error: ' . $e->getMessage());
-            Alert::toast('An error occurred while deleting the warehouse.', 'error')->autoClose(3000);
+            $branch = Branch::findOrFail($id);
+
+            if($branch->locations()->exists() || $branch->barcodes()->exists()){
+                return response()->json([
+                    'status' => 409,
+                    'message' => 'You cannot delete this record because it is linked to other records.'
+                ], 409);
+            }
+
+            $branch->delete();
+
+            return response()->json([
+                'status' => 200,
+                'message' => 'Warehouse deleted successfully.'
+            ]);
+        } catch (Exception $e) {
+            Log::error('Branch Delete Error: ' . $e->getMessage());
+            dd($e);
+            if (request()->ajax()) {
+                return response()->json([
+                    'status' => 500,
+                    'message' => 'An unexpected error occurred while deleting the warehouse.'
+                ], 500);
+            }
+
+            Alert::toast('An error occurred while deleting the Bin.', 'error')->autoClose(3000);
             return redirect()->route('branch.index');
         }
     }

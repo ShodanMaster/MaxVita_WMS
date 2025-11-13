@@ -13,4 +13,8 @@ class Reason extends Model
         'reason',
         'description',
     ];
+
+    public function stockOuts(){
+        return $this->hasMany(StockOut::class);
+    }
 }

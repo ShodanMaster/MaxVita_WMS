@@ -36,4 +36,12 @@ class Vendor extends Model
 
         return $vendorCode[0]->vendor_code;
     }
+
+    public function purchaseOrders(){
+        return $this->hasMany(PurchaseOrder::class);
+    }
+
+    public function grns(){
+        return $this->hasMany(Grn::class);
+    }
 }

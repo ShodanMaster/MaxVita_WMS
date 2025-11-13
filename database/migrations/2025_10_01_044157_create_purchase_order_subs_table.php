@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('purchase_order_id')->constrained();
             $table->foreignId('item_id')->constrained();
-            $table->decimal('quantity', 10,5)->default(0);
-            $table->decimal('picked_quantity', 10,5)->default(0);
+            $table->decimal('quantity', 10,4)->default(0);
+            $table->decimal('picked_quantity', 10,4)->default(0);
             $table->integer('status')->default(0);
             $table->softDeletes();
             $table->timestamps();
