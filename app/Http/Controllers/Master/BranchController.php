@@ -179,7 +179,6 @@ class BranchController extends Controller
             ]);
         } catch (Exception $e) {
             Log::error('Branch Delete Error: ' . $e->getMessage());
-            dd($e);
             if (request()->ajax()) {
                 return response()->json([
                     'status' => 500,
