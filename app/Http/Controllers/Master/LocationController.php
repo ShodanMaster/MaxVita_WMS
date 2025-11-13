@@ -187,10 +187,18 @@ class LocationController extends Controller
                 'status' => 200,
                 'message' => 'Location deleted successfully.'
             ]);
-        } catch(Exception $e){
+        } catch (Exception $e) {
             Log::error('Location Delete Error: ' . $e->getMessage());
+
+            if (request()->ajax()) {
+                return response()->json([
+                    'status' => 500,
+                    'message' => 'An unexpected error occurred while deleting the location.'
+                ], 500);
+            }
+
             Alert::toast('An error occurred while deleting the location.', 'error')->autoClose(3000);
-            return redirect()->route('location.index');
+            return redirect()->route(route: 'location.index');
         }
     }
 

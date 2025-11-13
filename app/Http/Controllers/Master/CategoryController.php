@@ -45,15 +45,9 @@ class CategoryController extends Controller
                                 <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                             </svg>
                         </a>
-                        <div class="btn-group">
-                            <form method="POST" action="' . $deleteUrl . '" onsubmit="return confirm(\'Are you sure, You want to delete this category?\')" style="display:inline;">
-                                ' . $csrf . '
-                                ' . $method . '
-                                <button type="submit" class="btn" data-toggle="tooltip" title="Delete">
-                                    <span class="fa fa-trash text-danger"></span>
-                                </button>
-                            </form>
-                        </div>
+                        <button type="button" class="btn p-0" onclick="sweetAlertDelete(\'' . $deleteUrl . '\')" data-toggle="tooltip" title="Delete">
+                            <span class="fa fa-trash text-danger"></span>
+                        </button>
                     </td>';
 
                     return $btn;
@@ -137,13 +131,34 @@ class CategoryController extends Controller
     public function destroy(string $id)
     {
         try {
-            Category::where('id', $id)->delete();
-            Alert::toast('Category Deleted Successfully', 'success')->autoClose(3000);
-            return redirect()->route('category.index');
+            $category = Category::findOrFail($id);
+
+            if($category->items()->exists()){
+                return response()->json([
+                    'status' => 409,
+                    'message' => 'You cannot delete this Category because it is linked to other records.'
+                ], 409);
+            }
+
+            $category->delete();
+
+            return response()->json([
+                'status' => 200,
+                'message' => 'Category deleted successfully.'
+            ]);
+
         } catch (Exception $e) {
             Log::error('Category Delete Error: ' . $e->getMessage());
+
+            if (request()->ajax()) {
+                return response()->json([
+                    'status' => 500,
+                    'message' => 'An unexpected error occurred while deleting the category.'
+                ], 500);
+            }
+
             Alert::toast('An error occurred while deleting the category.', 'error')->autoClose(3000);
-            return redirect()->route('category.index');
+            return redirect()->route(route: 'category.index');
         }
     }
 
