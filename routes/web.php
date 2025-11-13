@@ -293,7 +293,7 @@ Route::group(['middleware' => ['auth']], function () {
 
      //Dispatch entry Report
     Route::post('get-DispatchEntryViews', [DispatchEntryReportController::class, 'getDispatchEntryViews'])->name('get-DispatchEntryViews');
-    
+
     Route::get('dispatch-entry-report/show-barcode/{id}', [DispatchEntryReportController::class, 'barcodeView'])
         ->name('dispatch-entry-report.showbarcode');
     Route::post('get-dispatchEntryDetailed', [DispatchEntryReportController::class, 'getdispatchEntryDetailed'])->name('get-dispatchEntryDetailed');

@@ -72,7 +72,7 @@
                             <div class="col-md-6 mb-3">
                                 <div class="form-group">
                                     <label for="purchase_date" class="col-sm-4 control-label">
-                                        Purchase Date <font color="#FF0000">*</font>
+                                        PO Date <font color="#FF0000">*</font>
                                     </label>
                                     <input
                                         type="date"
