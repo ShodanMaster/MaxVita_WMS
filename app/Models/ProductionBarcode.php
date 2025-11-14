@@ -15,6 +15,7 @@ class ProductionBarcode extends Model
         'generated_quantity',
         'date_of_manufacture',
         'best_before_date',
+        'brand_id',
         'uom_id',
         'user_id',
     ];

@@ -42,7 +42,7 @@
                     </div>
                 </div>
             </div>
-            <div class="card" style="display: none" id="planDetails">
+            <div class="card" id="planDetails">
                 <div class="card-header d-flex justify-content-around">
                     <h3 class="card-title" id="fg-item"></h3>
                     <div>
@@ -95,6 +95,25 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label for="brand_id" class="col-sm-4 control-label">
+                                    Brand <font color="#FF0000">*</font>
+                                </label>
+                                <div class="col-sm-8">
+                                    <select name="brand_id" id="brand_id" class="js-example-basic-single form-select mandatory" required>
+                                        <option value="" selected>--select--</option>
+                                        @forelse ($brands as $brand)
+                                            <option value="{{$brand->id}}">{{$brand->name}}</option>
+                                        @empty
+                                            <option value="" disabled>No Brands Found</option>
+                                        @endforelse
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                         <input type="hidden" id="balance-quantity-input" name="balance-quantity-input">
 
                     <div class="d-flex justify-content-between">
@@ -139,6 +158,10 @@
 
 <script>
     $('.select2').select2();
+
+    window.onload = function() {
+        document.getElementById('planDetails').style.display = 'none';
+    };
 
     function fetchPlanDetails(){
         var planNumber = document.getElementById("plan_number").value;

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Transactions\Production;
 use App\Helpers\BarcodeGenerator;
 use App\Http\Controllers\Controller;
 use App\Models\Barcode;
+use App\Models\Brand;
 use App\Models\Item;
 use App\Models\Location;
 use App\Models\ProductionBarcode;
@@ -24,7 +25,9 @@ class ProductionBarcodeGenerationController extends Controller
         $planNumbers = ProductionPlan::where('status', 1)->get(['id', 'plan_number']);
         $batch = 'F' . date('ymd');
         $uoms = Uom::wherein('name', ['Bag', 'Box'])->get(['id', 'name']);
-        return view('transactions.production.productionbarcodegeneration', compact('planNumbers', 'batch', 'uoms'));
+        $brands = Brand::get(['id', 'name']);
+
+        return view('transactions.production.productionbarcodegeneration', compact('planNumbers', 'batch', 'uoms', 'brands'));
     }
 
     public function store(Request $request){
@@ -65,6 +68,7 @@ class ProductionBarcodeGenerationController extends Controller
                                 'transaction_type' => '2',
                                 'branch_id' => $branchId,
                                 'location_id' => $location->id,
+                                'brand_id' => $request->brand_id,
                                 'item_id' => $productionPlan->item_id,
                                 'date_of_manufacture' => $request->date_of_manufacture,
                                 'best_before_date' => $request->best_before_date,
@@ -98,6 +102,7 @@ class ProductionBarcodeGenerationController extends Controller
                                 'date_of_manufacture' => $request->date_of_manufacture,
                                 'best_before_date' => $request->best_before_date,
                                 'uom_id' => $uomId,
+                                'brand_id' => $request->brand_id,
                                 'user_id' => $user->id,
                                 'created_at' => now()
                             ];
