@@ -20,6 +20,7 @@ return new class extends Migration
             $table->foreignId('vendor_id')->constrained();
             $table->foreignId('location_id')->constrained();
             $table->enum('grn_type', ['RM','FG']);
+            $table->foreignId('brand_id')->nullable()->constrained();
             $table->text('remarks')->nullable();
             $table->foreignId('branch_id')->constrained();
             $table->integer('status')->default(0)->comment('0=>storage scan pending; 1=>storage scan completed;');

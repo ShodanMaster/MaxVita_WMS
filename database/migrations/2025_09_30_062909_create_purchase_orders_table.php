@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('purchase_orders', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('location_id')->constrained();
             $table->foreignId('branch_id')->constrained();
             $table->string('purchase_number')->unique();
             $table->foreignId('vendor_id')->constrained();

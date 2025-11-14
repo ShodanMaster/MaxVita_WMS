@@ -21,6 +21,7 @@ return new class extends Migration
             $table->foreignId('item_id')->constrained();
             $table->foreignId('user_id')->constrained();
             $table->foreignId('branch_id')->constrained();
+            $table->text('packing_remarks')->nullable();
             $table->integer('status')->default(0);
             $table->softDeletes();
             $table->timestamps();
