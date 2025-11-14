@@ -16,6 +16,7 @@ use App\Http\Controllers\Master\UserController;
 use App\Http\Controllers\Master\VendorController;
 use App\Http\Controllers\Reports\DispatchEntryReportController;
 use App\Http\Controllers\Reports\GrnReportController;
+use App\Http\Controllers\Reports\OpeningStockReportController;
 use App\Http\Controllers\Reports\ProductionPlanReportController;
 use App\Http\Controllers\Reports\PurchaseOrderReportController;
 use App\Http\Controllers\Reports\StockReportController;
@@ -149,6 +150,9 @@ Route::group(['middleware' => ['auth']], function () {
 
         //Dispatch Entry Report
         Route::resource('dispatch-entry-report', DispatchEntryReportController::class);
+
+        //Opening Stock Report
+        Route::resource('opening-stock-report', OpeningStockReportController::class);
 
         // Utitlity
 
@@ -302,6 +306,12 @@ Route::group(['middleware' => ['auth']], function () {
         ->name('get-receipt-details');
     Route::get('dispatch-entry-report/receipt-barcode/{id}', [DispatchEntryReportController::class, 'receiptBarcode'])
         ->name('dispatch-entry-report.receiptbarcode');
+
+    //Opening stock entry report
+    Route::post('get-opening-stock-views', [OpeningStockReportController::class, 'getOpeningStockViews'])->name('get-opening-stock-views');
+    Route::post('get-opening-stock-detailed', [OpeningStockReportController::class, 'getOpeningStockDetailed'])->name('get-opening-stock-detailed');
+    Route::get('opening-stock-report/itemwise/{id}', [OpeningStockReportController::class, 'itemwise'])
+        ->name('opening-stock-report.itemwise');
 
     // Utitlity
 
