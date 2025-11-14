@@ -21,7 +21,9 @@ class Grn extends Model
         'grn_type',
         'remarks',
         'branch_id',
+        'brand_id',
         'status',
+        'user_id'
     ];
 
     public static function grnNumber(){

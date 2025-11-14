@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Transactions\Grn;
 use App\Helpers\BarcodeGenerator;
 use App\Http\Controllers\Controller;
 use App\Models\Barcode;
+use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Grn;
 use App\Models\GrnPurchaseOrder;
@@ -34,12 +35,13 @@ class GrnController extends Controller
         $vendors = Vendor::get(['id', 'name']);
         $locations = Location::get(['id', 'name']);
         $categories = Category::get(['id', 'name']);
-        return view('transactions.grn.index', compact('grnNumber', 'batchNumber', 'vendors', 'locations', 'categories'));
+        $brands = Brand::get(['id', 'name']);
+        return view('transactions.grn.index', compact('grnNumber', 'batchNumber', 'vendors', 'locations', 'categories', 'brands'));
     }
 
     public function store(Request $request)
     {
-
+        // dd($request->all());
         try {
 
             DB::beginTransaction();
@@ -63,10 +65,13 @@ class GrnController extends Controller
                 'purchase_number' => $purchaseNumber,
                 'invoice_number' => $request->invoice_number,
                 'invoice_date' => $request->invoice_date,
-                'remarks' => $request->remarks,
-                'location_id' => $request->location_id,
                 'vendor_id' => $request->vendor_id,
+                'location_id' => $request->location_id,
+                'grn_type' => $request->grn_type,
+                'brand_id' => $request->brand_id,
+                'remarks' => $request->remarks,
                 'branch_id' => $branchId,
+                'user_id' => $userid,
             ]);
 
             if ($request->is_purchase == 1) {

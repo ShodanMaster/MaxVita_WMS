@@ -13,8 +13,17 @@ class GrnAjaxController extends Controller
 {
     public function getPurchaseNumber(Request $request){
         if($request->ajax()){
-            $purchaseNumbers = PurchaseOrder::where('vendor_id', $request->vendor_id)
-                                            ->whereNot('status', 1)->get(['id', 'purchase_number']);
+            $query = PurchaseOrder::where('status', 0);
+
+            if($request->location_id){
+                $query->where('location_id', $request->location_id);
+            }
+
+            if($request->vendor_id){
+                $query->where('vendor_id', $request->vendor_id);
+            }
+
+            $purchaseNumbers = $query->get(['id', 'purchase_number']);
 
             return response()->json($purchaseNumbers);
         }

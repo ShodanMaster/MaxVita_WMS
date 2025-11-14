@@ -90,7 +90,7 @@
                                         Location <font color="#FF0000">*</font>
                                     </label>
                                     <div class="col-sm-8">
-                                        <select name="location_id" id="location_id" class="js-example-basic-single form-select mandatory" onchange="filterItem();" required>
+                                        <select name="location_id" id="location_id" class="js-example-basic-single form-select mandatory" onchange="filterItem(); getPurchaseNumber();" required>
                                             <option value="" disabled selected>--select--</option>
                                             @forelse ($locations as $location)
                                                 <option value="{{$location->id}}">{{$location->name}}</option>
@@ -136,6 +136,25 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label for="brand_id" class="col-sm-4 control-label">
+                                        Brand <font color="#FF0000">*</font>
+                                    </label>
+                                    <div class="col-sm-8">
+                                        <select name="brand_id" id="brand_id" class="js-example-basic-single form-select mandatory" disabled>
+                                            <option value="" selected>--select--</option>
+                                            @forelse ($brands as $brand)
+                                                <option value="{{$brand->id}}">{{$brand->name}}</option>
+                                            @empty
+                                                <option value="" disabled>No Brands Found</option>
+                                            @endforelse
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group row">
                                     <label for="prn" class="col-sm-4 control-label">
@@ -373,8 +392,14 @@
 @endpush
 
 <script>
-    console.log("qwertyu: ", @json(session()->all()));
+
     $('.select2').select2();
+
+   $(document).ready(function () {
+        $('#brand_id').prop('disabled', true);
+    });
+
+
     let itemCount = 0;
 
     function filterItem(){
@@ -384,10 +409,15 @@
         var  categoryId = $('#category_id').val();
         var  purchaseNumber = $('#purchase_number').val();
 
-        if(grnType == 'FG'){
+        if (grnType === 'FG') {
             $('#number_of_barcodes').prop('readonly', true);
-        }else{
+
+            $('#brand_id').prop('disabled', false)
+
+        } else {
             $('#number_of_barcodes').prop('readonly', false);
+
+            $('#brand_id').prop('disabled', true)
         }
 
         $.ajax({
@@ -418,12 +448,14 @@
 
     function getPurchaseNumber(){
         var  vendorId = $('#vendor_id').val();
+        var  locationId = $('#location_id').val();
 
         $.ajax({
             type: "POST",
             url: "{{ route('ajax.getpurchasenumber') }}",
             data: {
-                vendor_id : vendorId
+                vendor_id : vendorId,
+                location_id : locationId,
             },
             dataType: "json",
             success: function (response) {
@@ -437,6 +469,9 @@
                         );
                     });
 
+                }else{
+                    $('#purchase_number').empty()
+                    $('#purchase_number').append('<option value="">--select--</option>');
                 }
             }
         });
@@ -546,7 +581,9 @@
             var remainder = totalQuantity % spq;
             var totalBarcodes = remainder > 0 ? fullPacks + 1 : fullPacks;
 
-            $('#number_of_barcodes').val(totalBarcodes);
+            if($('#grn_type').val() === 'FG'){
+                $('#number_of_barcodes').val(totalBarcodes);
+            }
         }
     }
 
@@ -792,11 +829,15 @@
         var location = document.getElementById('location_id').value;
         var vendor = document.getElementById('vendor_id').value;
         var itemCount = document.getElementById('grngridbody').rows.length;
-        console.log(itemCount);
+        var brand = document.getElementById('brand_id').value;
 
 
         if(!grnType){
             sweetAlertMessage('warning', 'Select GRN Type', 'Please Select Grn Type!');
+            return false;
+        }
+        else if (grnType === 'FG' && !brand) {
+            sweetAlertMessage('warning', 'Select Brand', 'Please Select Brand!');
             return false;
         }
         else if(!vendor){
