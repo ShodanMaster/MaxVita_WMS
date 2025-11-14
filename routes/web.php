@@ -19,6 +19,7 @@ use App\Http\Controllers\Reports\GrnReportController;
 use App\Http\Controllers\Reports\OpeningStockReportController;
 use App\Http\Controllers\Reports\ProductionPlanReportController;
 use App\Http\Controllers\Reports\PurchaseOrderReportController;
+use App\Http\Controllers\Reports\SalesReturnReportController;
 use App\Http\Controllers\Reports\StockOutReportController;
 use App\Http\Controllers\Reports\StockReportController;
 use App\Http\Controllers\Reports\StorageScanReportController;
@@ -157,6 +158,9 @@ Route::group(['middleware' => ['auth']], function () {
 
         //Stock Out Report
         Route::resource('stock-out-report', StockOutReportController::class);
+
+        //Sales Return Report
+        Route::resource('sales-return-report', SalesReturnReportController::class);
 
         // Utitlity
 
@@ -322,6 +326,10 @@ Route::group(['middleware' => ['auth']], function () {
         ->name('get-stock-out-views');
     Route::post('get-stock-out-detailed', [StockOutReportController::class, 'getStockOutDetailed'])
         ->name('get-stock-out-detailed');
+
+    //Sales Return Report
+    Route::post('get-sales-report-summary', [SalesReturnReportController::class, 'getSalesReportSummaries'])->name('get-sales-report-summary');
+    Route::post('get-sales-report-detailed', [SalesReturnReportController::class, 'getSalesReportDetailed'])->name('get-sales-report-detailed');
 
     // Utitlity
 
