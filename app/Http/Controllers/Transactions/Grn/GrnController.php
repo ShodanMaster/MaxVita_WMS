@@ -155,6 +155,7 @@ class GrnController extends Controller
                         'transaction_type' => '1',
                         'branch_id' => $branchId,
                         'location_id' => $request->location_id,
+                        'brand_id' => $grn->brand_id,
                         'item_id' => $item["item_id"],
                         'date_of_manufacture' => $item["dom"],
                         'best_before_date' => $item["bbf"],

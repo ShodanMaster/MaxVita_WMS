@@ -22,6 +22,7 @@ return new class extends Migration
             $table->date('date_of_manufacture');
             $table->date('best_before_date');
             $table->foreignId('uom_id')->constrained();
+            $table->foreignId('brand_id')->constrained();
             $table->dateTime('gerated_time')->useCurrent();
             $table->foreignId('user_id')->constrained();
             $table->integer('status')->default(0);

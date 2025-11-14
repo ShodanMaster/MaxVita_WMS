@@ -18,6 +18,7 @@ return new class extends Migration
             $table->enum('transaction_type', ['1', '2', '3', '4'])->comment('1=>GRN,2=>Production,3=>opening,4=>rejection');
             $table->foreignId('branch_id')->constrained();
             $table->foreignId('location_id')->constrained();
+            $table->foreignId('brand_id')->nullable()->constrained();
             $table->foreignId('bin_id')->nullable()->constrained();
             $table->foreignId('uom_id')->constrained();
             // $table->foreignId('pallet_id')->nullable()->constrained();
