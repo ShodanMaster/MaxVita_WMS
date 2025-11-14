@@ -9,7 +9,6 @@ use App\Models\Dispatch;
 use Yajra\DataTables\Facades\DataTables;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
-use Carbon\Carbon;
 
 class DispatchEntryReportController extends Controller
 {
@@ -30,45 +29,45 @@ class DispatchEntryReportController extends Controller
         'dispatch_number'  => $request->dispatch_number,
         'dispatch_type'  => $request->dispatch_type,
         ];
-    
 
-     
+
+
         if ($request->button == 1) {
-          
+
             return view('report.dispatch.dispatch_entry_summary_report', $searchData);
         }
 
-      
+
         if ($request->button == 2) {
             $pren = Dispatch::reportSummary($searchData);
             return Excel::download(new DispatchEntryExport($pren), 'dispatch_summary_report.xlsx');
         }
 
-      
+
         if ($request->button == 3) {
             return view('report.dispatch.dispatch_entry_detailed_report',$searchData);
         }
 
-       
+
         if ($request->button == 4) {
             $pren = Dispatch::reportDetailed($searchData);
             return Excel::download(new DispatchEntryDetailedExport($pren), 'dispatch_entry_detailed_report.xlsx');
         }
 
-      
+
         if ($request->button == 5) {
             return view('report.dispatch.dispatch_barcode_report',$searchData);
         }
 
-      
+
         if ($request->button == 6) {
             $pren = Dispatch::scannedBarcodes($searchData);
             return Excel::download(new DispatchEntryBarcodeExport($pren), 'dispatch_entry_barcode_report.xlsx');
         }
 
-       
+
         if ($request->button == 7) {
-           
+
             return view('report.dispatch.dispatch_receipt_barcode_report', $searchData);
         }
 
@@ -108,7 +107,7 @@ class DispatchEntryReportController extends Controller
             ->make(true);
     }
 
-   
+
 
     public function show(string $id)
     {
@@ -118,7 +117,7 @@ class DispatchEntryReportController extends Controller
 
     public function getdispatchEntryDetailed(Request $request)
     {
-      
+
     $filters = [
 
         'from_date' => $request->fromdate,
@@ -128,9 +127,9 @@ class DispatchEntryReportController extends Controller
         'dispatch_type' => $request->dispatch_type,
         'dispatchentryid' => $request->dispatchentryid,
      ];
-        
 
-         
+
+
 
         $plans = Dispatch::reportDetailed($filters);
 
@@ -147,7 +146,7 @@ class DispatchEntryReportController extends Controller
 
     public function receiptbarcode(string $id)
     {
-        
+
         return view('report.dispatch.dispatch_receipt_barcode_report', ['id' => $id,]);
     }
 

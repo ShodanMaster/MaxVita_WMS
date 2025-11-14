@@ -3,12 +3,8 @@
 namespace App\Http\Controllers\Reports;
 use App\Exports\Report\StorageScanExport;
 use App\Http\Controllers\Controller;
-use App\Models\Grn;
 use App\Models\Item;
-use App\Models\ProductionPlan;
-use App\Models\ProductionScan;
 use App\Models\StorageScan;
-use Carbon\Carbon;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
@@ -25,7 +21,7 @@ class StorageScanReportController extends Controller
     public function store(Request $request)
     {
 
-        
+
 
         $searchData = [
             'from_date'  => $request->fromdate,
@@ -34,7 +30,7 @@ class StorageScanReportController extends Controller
             'to_barcode' => $request->to_barcode,
             'item_id' => $request->item_id,
             'transaction_type' => $request->transaction_type,
-           
+
         ];
 
 
@@ -49,7 +45,7 @@ class StorageScanReportController extends Controller
             return Excel::download(new StorageScanExport($storage_scan), 'Storage Scan Report.xlsx');
         }
     }
-    
+
 
     public function getStorageScanViews(Request $request)
     {
@@ -60,7 +56,7 @@ class StorageScanReportController extends Controller
             'to_barcode' => $request->to_barcode,
             'item_id' => $request->item_id,
             'transaction_type' => $request->transaction_type,
-           
+
         ];
         if ($request->transaction_type == 'grn') {
             $source_type = 'GRN';

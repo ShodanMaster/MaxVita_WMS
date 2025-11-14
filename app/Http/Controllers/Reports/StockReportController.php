@@ -14,7 +14,6 @@ use App\Models\Category;
 use App\Models\Item;
 use Maatwebsite\Excel\Facades\Excel;
 use Yajra\DataTables\Facades\DataTables;
-use Illuminate\Support\Facades\DB;
 use App\Models\Location;
 
 use Illuminate\Http\Request;

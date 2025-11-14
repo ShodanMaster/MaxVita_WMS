@@ -13,7 +13,7 @@
 <div class="content-header">
     <div class="card">
         <div class="card-body">
-            <h6 class="card-title">Gate Entry Summary Report </h6>
+            <h6 class="card-title">GRN Entry Summary Report </h6>
 
             <div class="table-responsive">
                 {{-- <table class="table"> --}}
@@ -36,15 +36,8 @@
                     </tbody>
                 </table>
             </div>
-
-
-
-
         </div>
-
-
     </div>
-
 </div>
 
 
