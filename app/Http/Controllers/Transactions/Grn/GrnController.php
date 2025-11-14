@@ -46,7 +46,7 @@ class GrnController extends Controller
 
             DB::beginTransaction();
 
-            $userid = Auth::user()->id;
+            $userId = Auth::user()->id;
             $batchNumber = 'B' . date("ymd");
             $purchaseNumber = null;
 
@@ -71,13 +71,13 @@ class GrnController extends Controller
                 'brand_id' => $request->brand_id,
                 'remarks' => $request->remarks,
                 'branch_id' => $branchId,
-                'user_id' => $userid,
+                'user_id' => $userId,
             ]);
 
             if ($request->is_purchase == 1) {
                 $grnPurchaseOrder = GrnPurchaseOrder::create([
                     'grn_id' => $grn->id,
-                    'user_id' => $userid
+                    'user_id' => $userId
                 ]);
             }
 
@@ -168,7 +168,7 @@ class GrnController extends Controller
                         'grn_spq_quantity' => $quantityPerBarcode,
                         'uom_id' => $itemUom,
                         'status' => '-1',
-                        'user_id' => $userid,
+                        'user_id' => $userId,
                         'qc_approval_status' => '0',
                         'created_at' => now()
                     ];
@@ -268,7 +268,7 @@ class GrnController extends Controller
         try {
             DB::beginTransaction();
 
-            $userid = Auth::user()->id;
+            $userId = Auth::user()->id;
             $batchNumber = 'B' . date("ymd");
             $purchaseNumber = null;
 
@@ -300,19 +300,22 @@ class GrnController extends Controller
                 'invoice_date' => $data["invoice_date"],
                 'vendor_id' => $data["vendor_id"],
                 'location_id' => $data["location_id"],
+                'grn_type' => strtoupper($data["grn_type"]),
+                'brand_id' => $data["brand_id"],
                 'remarks' => $data["remarks"],
                 'branch_id' => $branchId,
+                'user_id' => $userId
             ]);
 
             if ($purchaseNumber) {
                 $grnPurchaseOrder = GrnPurchaseOrder::create([
                     'grn_id' => $grn->id,
-                    'user_id' => $userid
+                    'user_id' => $userId
                 ]);
             }
 
             foreach ($data["items"] as $item) {
-
+                // dd($item);
                 $purchaseOrderExists = PurchaseOrder::where('id', '=', $data["purchase_id"])->where('status', 0)->first();
 
                 if ($purchaseOrderExists) {
@@ -366,13 +369,14 @@ class GrnController extends Controller
                             ? ($totalQuantity - ($baseQuantity * ($numberOfBarcodes - 1)))
                             : $baseQuantity;
                     }
-
+                    // dd($item);
                     Barcode::create([
                         'serial_number' => $barcode,
                         'transaction_id' => $grn->id,
                         'transaction_type' => '1',
                         'branch_id' => $branchId,
                         'location_id' => $data["location_id"],
+                        'brand_id' => $data["brand_id"],
                         'item_id' => $item["item_id"],
                         'date_of_manufacture' => $item["date_of_manufacture"],
                         'best_before_date' => $item["best_before_date"],
@@ -382,8 +386,9 @@ class GrnController extends Controller
                         'grn_net_weight' => $quantityPerBarcode,
                         'spq_quantity' => $quantityPerBarcode,
                         'grn_spq_quantity' => $quantityPerBarcode,
+                        'uom_id' => $item["item_uom"],
                         'status' => '-1',
-                        'user_id' => $userid,
+                        'user_id' => $userId,
                         'qc_approval_status' => '0',
                     ]);
 
@@ -433,34 +438,46 @@ class GrnController extends Controller
         // dd($rows);
         $data = [
             'error' => '',
+            'grn_type' => '',
             'location_id' => '',
             'vendor_id' => '',
             'invoice_number' => '',
             'invoice_date' => '',
+            'brand_id' => null,
             'purchase_id' => '',
             'remarks' => '',
             'items' => [],
         ];
 
         $grn = [
-            'vendor_name' => $rows[0][1] ?? null,
-            'invoice_number' => $rows[0][3] ?? null,
-            'purchase_number' => $rows[0][5] ?? null,
-            'location' => $rows[0][7] ?? null,
-            'vendor_code' => $rows[1][1] ?? null,
-            'invoice_date' => $rows[1][3] ?? null,
-            'remarks' => $rows[1][5] ?? null,
+            'grn_type' => $rows[0][1] ?? null,
+            'vendor_code' => $rows[0][3] ?? null,
+            'vendor_name' => $rows[0][5] ?? null,
+            'invoice_date' => $rows[1][1] ?? null,
+            'invoice_number' => $rows[1][3] ?? null,
+            'purchase_number' => $rows[1][5] ?? null,
+            'location' => $rows[2][1] ?? null,
+            'brand' => $rows[2][3] ?? null,
+            'remarks' => $rows[2][5] ?? null,
         ];
 
-        foreach (['location', 'vendor_name', 'vendor_code'] as $key) {
+        foreach (['grn_type', 'location', 'vendor_name', 'vendor_code'] as $key) {
             if (empty($grn[$key])) {
                 $label = ucwords(str_replace('_', ' ', $key));
                 $data['error'] .= $label . " is required|";
             }
         }
 
+        if(strtolower($grn['grn_type']) === 'fg' && empty($grn['brand'])){
+            $data['error'] .= 'Brand is required|';
+        }else{
+            $brand = Brand::where('name', $grn['brand'])->first();
+            $data['brand_id'] = $brand->id;
+        }
+
         if ($data['error'] !== '') return $data;
 
+        $data["grn_type"] = $grn["grn_type"];
         $data['invoice_number'] = $grn['invoice_number'];
         $data['invoice_date'] = $grn['invoice_date'];
         $data['remarks'] = $grn['remarks'];
@@ -490,21 +507,23 @@ class GrnController extends Controller
         // dd($data);
         if ($data['error'] !== '') return $data;
 
-        for ($i = 4; $i < count($rows); $i++) {
+        for ($i = 5; $i < count($rows); $i++) {
             $row = $rows[$i];
-
+            // dd($row[2]);
             if (!array_filter($row)) {
                 continue;
             }
 
             $itemArray = [
-                'item_name' => $row[0] ?? '',
-                'date_of_manufacture' => is_numeric($row[1]) ? Date::excelToDateTimeObject($row[1])->format('Y-m-d') : $row[1],
-                'best_before_date' => is_numeric($row[2]) ? Date::excelToDateTimeObject($row[2])->format('Y-m-d') : $row[2],
-                'total_quantity' => $row[3] ?? '',
+                'item_code' => $row[0] ?? '',
+                'item_name' => $row[1] ?? '',
+                'date_of_manufacture' => is_numeric($row[2]) ? Date::excelToDateTimeObject($row[2])->format('Y-m-d') : $row[2],
+                'best_before_date' => is_numeric($row[3]) ? Date::excelToDateTimeObject($row[3])->format('Y-m-d') : $row[3],
+                'total_quantity' => $row[4] ?? '',
                 'spq_quantity' => null,
-                'number_of_barcodes' => $row[4] ?? null,
+                'number_of_barcodes' => $row[5] ?? null,
                 'item_type' => null,
+                'item_uom' => null,
             ];
 
             foreach (['item_name', 'date_of_manufacture', 'best_before_date', 'total_quantity'] as $key) {
@@ -515,11 +534,16 @@ class GrnController extends Controller
                 }
             }
 
-            $item = Item::where('name', $itemArray['item_name'])
+            $item = Item::where('name', $itemArray['item_name'])->where('item_code', $itemArray['item_code'])
                 ->first();
 
             if (!$item) {
                 $data['error'] .= 'Row ' . ($i + 1) . " : Item does not exist|";
+                return $data;
+            }
+
+            if(strtolower($item->item_type) != strtolower($grn['grn_type'])){
+                $data['error'] .= 'Row ' . ($i + 1) . " : Item type and GRN type mis match|";
                 return $data;
             }
 
@@ -579,6 +603,7 @@ class GrnController extends Controller
                 'spq_quantity' => $itemArray['spq_quantity'],
                 'number_of_barcodes' => $itemArray['number_of_barcodes'],
                 'item_type' => $item->item_type,
+                'item_uom' => $item->uom_id,
             ];
         }
 
