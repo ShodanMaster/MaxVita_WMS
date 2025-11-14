@@ -26,6 +26,8 @@ class PurchaseOrderSummaryExport implements FromCollection, WithHeadings, Should
             'Vendor Name',
             'Purchase Order No',
             'Purchase Order Date',
+            'location',
+            'branch',
             'Status',
         ];
     }
@@ -44,7 +46,7 @@ class PurchaseOrderSummaryExport implements FromCollection, WithHeadings, Should
     {
         $sheet->getStyle('1')->getFont()->setBold(true);
 
-        $sheet->getStyle('A1:E1')->applyFromArray([
+        $sheet->getStyle('A1:G1')->applyFromArray([
             'fill' => [
                 'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
                 'color' => ['argb' => "FFaeaaaa"]
@@ -64,10 +66,11 @@ class PurchaseOrderSummaryExport implements FromCollection, WithHeadings, Should
             $arrayData['vendor_name'] = $d["vendor_name"];
             $arrayData['purchase_order_number'] = $d["purchase_number"];
             $arrayData['purchase_order_date'] = date('d-m-Y', strtotime($d["purchase_date"]));
+            $arrayData['location'] = $d["location"];
+            $arrayData['branch'] = $d["branch"];
             $arrayData['status'] = $d["status"];
             $excelArray[$i] = $arrayData;
             $i++;
-
         }
 
         return collect($excelArray);

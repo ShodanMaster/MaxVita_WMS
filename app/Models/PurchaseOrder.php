@@ -42,6 +42,14 @@ class PurchaseOrder extends Model
         return $this->hasMany(PurchaseOrderSub::class);
     }
 
+    public function location(){
+        return $this->belongsTo(Location::class);
+    }
+
+    public function branch(){
+        return $this->belongsTo(Branch::class);
+    }
+
     public function vendor()
     {
         return $this->belongsTo(Vendor::class);
@@ -55,7 +63,7 @@ class PurchaseOrder extends Model
     {
         $purchaseOrders = self::filteredData($filters);
 
-        $data = $purchaseOrders->map(function ($order) {
+        $data = $purchaseOrders->map(function ($order) use ($purchaseOrders) {
 
             $status = '';
             switch ($order->status) {
@@ -78,6 +86,8 @@ class PurchaseOrder extends Model
                 'purchase_number' => $order->purchase_number,
                 'purchase_date' => $order->purchase_date,
                 'vendor_name' => $order->vendor->name ?? '',
+                'location' => $order->location->name,
+                'branch' => $order->branch->name,
                 'status' => $status,
             ];
         });
@@ -106,6 +116,7 @@ class PurchaseOrder extends Model
                     'item_name' => (!empty($sub->item->item_code) && !empty($sub->item->name))
                         ? $sub->item->item_code . '/' . $sub->item->name
                         : '',
+                    // 'vendor' =>
                     'quantity' => $sub->quantity,
                     'picked_quantity' => $sub->picked_quantity,
                 ];

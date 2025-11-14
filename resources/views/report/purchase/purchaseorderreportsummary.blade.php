@@ -31,6 +31,8 @@
                             <th>Purchase Order No</th>
                             <th>Purchase Order Date</th>
                             <th>Vendor</th>
+                            <th>lcoation</th>
+                            <th>branch</th>
                             <th>Status</th>
                             <th>Action</th>
                         </tr>
@@ -102,6 +104,14 @@
                 {
                     data: 'vendor_name',
                     name: 'vendor_name'
+                },
+                {
+                    data: 'location',
+                    name: 'location'
+                },
+                {
+                    data: 'branch',
+                    name: 'branch'
                 },
                 {
                     data: 'status',
