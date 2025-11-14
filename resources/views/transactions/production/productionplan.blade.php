@@ -75,7 +75,7 @@
                                     <label for="fgItem" class="form-label">
                                         FG Item Code/Item Description <font color="#FF0000">*</font>
                                     </label>
-                                    <select id="fg-item" name="fgItem" class="form-control select2 form-control-sm">
+                                    <select id="fg-item" name="fgItem" class="form-control select2 form-control-sm" required>
                                         <option value="" selected disabled>-- select --</option>
                                         @forelse ($fgItems as $fgItem)
                                             <option value="{{$fgItem->id}}">
@@ -99,7 +99,27 @@
                                         id="quantity"
                                         class="form-control form-control-sm"
                                         value="{{ old('quantity') }}"
+                                        required
                                     >
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="form-group">
+                                    <label for="packing_remarks" class="control-label">
+                                        Packing Remarks <font color="#FF0000">*</font>
+                                    </label>
+                                    <textarea
+                                        type="number"
+                                        name="packing_remarks"
+                                        id="packing_remarks"
+                                        class="form-control form-control-sm"
+                                        value="{{ old('packing_remarks') }}"
+                                        required
+                                    >
+                                    </textarea>
                                 </div>
                             </div>
                         </div>
@@ -342,6 +362,7 @@
             var productionDate = document.getElementById('plan_date').value;
             var fgItem = document.getElementById('fg-item').value;
             var quantity = document.getElementById('quantity').value;
+            var packingRemarks = document.getElementById('packing_remarks').value;
             var itemCount = document.getElementById('grngridbody').rows.length;
 
             if (!productionDate) {
@@ -354,6 +375,10 @@
             }
             else if (!quantity) {
                 sweetAlertMessage('warning', 'Enter Quantity', 'Please Enter Quantity!');
+                return false;
+            }
+            else if (!packingRemarks.trim()) {
+                sweetAlertMessage('warning', 'Enter Packing Remarks', 'Please Enter Packing Remarks!');
                 return false;
             }
             else if (itemCount == 0) {

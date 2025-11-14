@@ -37,12 +37,11 @@ class ProductionPlanController extends Controller
                 'total_quantity' => $request->quantity,
                 'item_id' => $request->fgItem,
                 'user_id' => $user->id,
+                'packing_remarks' => $request->packing_remarks,
                 'branch_id' => $user->branch_id,
             ]);
 
-            $insertData = [
-
-            ];
+            $insertData = [];
 
             foreach($request->rmItems as $rmItem){
                 $insertData[] = [

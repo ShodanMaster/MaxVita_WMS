@@ -20,6 +20,7 @@ class ProductionPlan extends Model
         'item_id',
         'user_id',
         'branch_id',
+        'packing_remarks',
         'status',
     ];
 
