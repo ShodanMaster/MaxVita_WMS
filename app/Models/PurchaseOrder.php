@@ -11,11 +11,13 @@ class PurchaseOrder extends Model
     use SoftDeletes;
 
     protected $fillable = [
+        'location_id',
         'branch_id',
         'purchase_number',
         'vendor_id',
         'purchase_date',
         'status',
+        'user_id',
     ];
 
     // public static function nextNumber()

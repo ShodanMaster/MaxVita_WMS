@@ -19,6 +19,7 @@ return new class extends Migration
             $table->foreignId('vendor_id')->constrained();
             $table->date('purchase_date');
             $table->integer('status')->default(0);
+            $table->foreignId('user_id')->constrained();
             $table->softDeletes();
             $table->timestamps();
         });

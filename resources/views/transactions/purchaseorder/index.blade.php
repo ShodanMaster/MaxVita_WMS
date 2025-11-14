@@ -68,7 +68,25 @@
                                     >
                                 </div>
                             </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="location" class="form-label">
+                                    Location <font color="#FF0000">*</font>
+                                </label>
+                                <select id="location" name="location" class="form-control select2 form-control-sm">
+                                    <option value="" selected disabled>-- select --</option>
+                                    @forelse ($locations as $location)
+                                        <option value="{{$location->id}}">
+                                            {{ $location->name }}
+                                        </option>
+                                    @empty
+                                        <option value="" disabled>No Items Available</option>
+                                    @endforelse
+                                </select>
+                            </div>
+                        </div>
 
+                        <!-- User Name & Address -->
+                        <div class="row">
                             <div class="col-md-6 mb-3">
                                 <div class="form-group">
                                     <label for="purchase_date" class="col-sm-4 control-label">
@@ -84,16 +102,12 @@
                                     >
                                 </div>
                             </div>
-                        </div>
-
-                        <!-- User Name & Address -->
-                        <div class="row">
                             <div class="col-md-6 mb-3">
                                 <div class="form-group">
                                     <label for="item" class="form-label">
                                         Item Code/Item Description <font color="#FF0000">*</font>
                                     </label>
-                                    <select id="item" name="item" class="form-control select2 form-control-sm">
+                                    <select id="item" name="item" class="form-control select2 form-control-sm" required>
                                         <option value="" selected disabled>-- select --</option>
                                         @forelse ($items as $item)
                                             <option value="{{$item->id}}">
@@ -106,6 +120,9 @@
                                 </div>
                             </div>
 
+                        </div>
+
+                        <div class="row">
                             <div class="col-md-6 mb-3">
                                 <div class="form-group">
                                     <label for="spq_quantity" class="col-sm-4 control-label">
@@ -121,9 +138,6 @@
                                     >
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="row">
                             <div class="col-md-6 mb-3">
                                 <div class="form-group">
                                     <label for="total_quantity" class="col-sm-4 control-label">
@@ -138,12 +152,15 @@
                                     >
                                 </div>
                             </div>
+                        </div>
+
+                        <div class="row">
                             <div class="col-md-6 mb-3">
                                 <div class="form-group">
                                     <label for="vendor" class="col-sm-4 control-label">
                                         Vendor <font color="#FF0000">*</font>
                                     </label>
-                                    <select id="vendor" name="vendor" class="form-control select2 form-control-sm">
+                                    <select id="vendor" name="vendor" class="form-control select2 form-control-sm" required>
                                         <option value="" selected disabled>-- select --</option>
                                         @forelse ($vendors as $vendor)
                                             <option value="{{ $vendor->id }}" {{ old('vendor') == $vendor->id ? 'selected' : '' }}>

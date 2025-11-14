@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Transactions\PurchaseEntry;
 
 use App\Http\Controllers\Controller;
 use App\Models\Item;
+use App\Models\Location;
 use App\Models\PurchaseOrder;
 use App\Models\PurchaseOrderCancel;
 use App\Models\PurchaseOrderSub;
@@ -21,14 +22,17 @@ class PurchaseOrderController extends Controller
 {
     public function index(){
         // $purchaseNumber = PurchaseOrder::nextNumber();
+        $locations = Location::get(['id', 'name']);
         $items = Item::where('item_type', 'RM')->get(['id', 'item_code', 'name']);
         $vendors = Vendor::get(['id', 'name']);
-        return view('transactions.purchaseorder.index', compact( 'items', 'vendors'));
+        return view('transactions.purchaseorder.index', compact( 'locations', 'items', 'vendors'));
     }
 
     public function store(Request $request){
+        // dd($request->all());
         $request->validate([
             "purchase_number" => 'required|unique:purchase_orders,purchase_number',
+            "location" => 'required|exists:locations,id',
             "purchase_date" => 'required|date',
             "vendor" => 'required|exists:vendors,id',
         ]);
@@ -37,12 +41,15 @@ class PurchaseOrderController extends Controller
 
             DB::beginTransaction();
             // $purchaseNumber = PurchaseOrder::nextNumber();
+            $location = Location::find($request->location, ['id', 'branch_id']);
             $purchaseNumber = $request->purchase_number;
             $purchaseOrder = PurchaseOrder::create([
-                'branch_id' => Auth::user()->branch_id,
+                'location_id' => $location->branch_id,
+                'branch_id' => $location->branch_id,
                 'purchase_number' => $purchaseNumber,
                 'purchase_date' => $request->purchase_date,
-                'vendor_id' => $request->vendor
+                'vendor_id' => $request->vendor,
+                'user_id' => Auth::id()
             ]);
 
             $purchaseOrderSubData = [];

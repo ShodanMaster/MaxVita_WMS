@@ -24,6 +24,7 @@ return new class extends Migration
             $table->text('remarks')->nullable();
             $table->foreignId('branch_id')->constrained();
             $table->integer('status')->default(0)->comment('0=>storage scan pending; 1=>storage scan completed;');
+            $table->foreignId('user_id')->constrained();
             $table->softDeletes();
             $table->timestamps();
         });
